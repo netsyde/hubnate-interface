@@ -1,0 +1,39 @@
+{
+  "name": "hubnate-frontend",
+  "version": "0.0.2",
+  "description": "Random Donate System",
+  "main": "server.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.ts",
+    "start": "node server.js"
+  },
+  "author": "netsyde",
+  "devDependencies": {
+    "@babel/core": "^7.13.8",
+    "@babel/register": "^7.13.8",
+    "@types/node": "^14.14.31",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-router-config": "^5.0.2",
+    "@types/react-router-dom": "^5.1.7",
+    "express": "^4.17.1",
+    "ts-loader": "^8.0.17",
+    "typescript": "^4.2.2",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "css-loader": "^5.1.1",
+    "history": "^5.0.0",
+    "mobx": "^6.1.8",
+    "mobx-react": "^7.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "sass": "^1.32.8",
+    "sass-loader": "^11.0.1",
+    "style-loader": "^2.0.0"
+  }
+}

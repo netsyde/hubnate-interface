@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "jsx": "react-jsx",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "allowSyntheticDefaultImports": true,
+      "sourceMap": true,
+      "outDir": "dist", 
+      "module": "CommonJS",
+      "target": "ES2020",
+      "baseUrl": "./",
+      "paths": {
+        "@src/*": ["src/*"],
+        "@images/*": ["src/images/*"],
+        "@components/*": ["src/components/*"],
+        "@routes/*": ["src/routes/*"],
+        "@store/*": ["src/store/*"],
+    },
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    "include": ["src"],
+  }
