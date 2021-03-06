@@ -1,0 +1,63 @@
+.statistic {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+
+    &_item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &__value {
+            font-size: 48px;
+            font-family: "Inter-SemiBold";
+            margin: 0;
+
+            span {
+                opacity: 0.1;
+            }
+        }
+
+        &__title {
+            font-size: 14px;
+            font-family: "Inter-SemiBold";
+        }
+    }
+}
+
+/* Large desktops and laptops */
+@media (max-width: 1200px) {
+    
+}
+
+/* Portrait tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    
+}
+
+/* Landscape phones and smaller */
+@media (max-width: 480px) {
+    .statistic {
+        &_item {    
+            &__value {
+                font-size: 30px;
+            }
+    
+            &__title {
+                font-size: 10px;
+            }
+        }
+    }
+}

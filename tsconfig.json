@@ -16,7 +16,8 @@
         "@components/*": ["src/components/*"],
         "@routes/*": ["src/routes/*"],
         "@store/*": ["src/store/*"],
-    },
+        "@fonts/*": ["src/fonts/*"],
+      },
     },
     "typeRoots": [
       "./node_modules/@types",

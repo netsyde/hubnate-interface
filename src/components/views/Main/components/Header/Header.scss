@@ -1,0 +1,71 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 2% 0 2%;
+    &_logo {
+        p {
+            font-size: 48px;
+            font-family: "GT Haptik Regular";
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    &_menu {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        p {
+            font-size: 16px;
+            font-family: "GT Haptik Regular";
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        &__link {
+            text-decoration: none;
+            margin-right: 30px;
+        }
+    }
+}
+
+/* Large desktops and laptops */
+@media (max-width: 1200px) {
+    
+}
+
+/* Portrait tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    
+}
+
+/* Landscape phones and smaller */
+@media (max-width: 480px) {
+    .header {
+        margin: 0;
+        padding-left: 30px;
+        &_logo {
+            p {
+                font-size: 30px;
+            }
+        }
+
+        &_menu {
+            display: none;
+        }
+    }
+}

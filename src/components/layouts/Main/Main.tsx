@@ -9,11 +9,9 @@ const Main = observer((props: any) => {
   const { route } = props;
 
   return (
-    <div className="root">
-      <Suspense fallback={<h1></h1>}>
-        {renderRoutes(route.routes)}
-      </Suspense>
-    </div>
+    <Suspense fallback={<h1></h1>}>
+      {renderRoutes(route.routes)}
+    </Suspense>
   );
 });
 

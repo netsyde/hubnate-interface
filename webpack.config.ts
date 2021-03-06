@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  // mode: 'production',
-  mode: "development",
-	watch: true,
+  mode: 'production',
+  // mode: "development",
+	// watch: true,
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -26,7 +26,16 @@ module.exports = {
             'css-loader',
             'sass-loader',
           ],
-			  },
+			},
+      {
+				test: /\.(png|jpg|svg|ttf|eot|woff|woff2)$/,
+				loader: 'file-loader',
+				options: {
+					name: '[name].[ext]',
+					outputPath: '/dist/assets/',
+          publicPath: '/dist/assets/',
+				}
+			},
     ],
   },
   resolve: {
@@ -36,6 +45,7 @@ module.exports = {
       '@store': path.resolve(__dirname, 'src/store'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@routes': path.resolve(__dirname, 'src/routes'),
+      '@fonts': path.resolve(__dirname, 'src/fonts'),
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
