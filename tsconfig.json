@@ -1,27 +1,59 @@
 {
-    "compilerOptions": {
-      "jsx": "react-jsx",
-      "noImplicitAny": true,
-      "removeComments": true,
-      "preserveConstEnums": true,
-      "allowSyntheticDefaultImports": true,
-      "sourceMap": true,
-      "outDir": "dist", 
-      "module": "CommonJS",
-      "target": "ES2020",
-      "baseUrl": "./",
-      "paths": {
-        "@src/*": ["src/*"],
-        "@images/*": ["src/images/*"],
-        "@components/*": ["src/components/*"],
-        "@routes/*": ["src/routes/*"],
-        "@store/*": ["src/store/*"],
-        "@fonts/*": ["src/fonts/*"],
-      },
+  "compilerOptions": {
+    "jsx": "preserve",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "module": "CommonJS",
+    "target": "ES2020",
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ],
+      "@images/*": [
+        "src/images/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@fonts/*": [
+        "src/fonts/*"
+      ]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "include": ["src"],
-  }
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "typeRoots": [
+    "./node_modules/@types",
+    "./src/types"
+  ],
+  "include": [
+    "src",
+    "pages"
+, "types/index.d.ts"  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

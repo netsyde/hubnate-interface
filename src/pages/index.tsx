@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Main.scss";
-import { Header, Statistic } from './components'
-import Description from "./components/Description";
+import { Header, Statistic, Description } from '../components/Main'
 
 const Main = () => {
     return <div className = "main">

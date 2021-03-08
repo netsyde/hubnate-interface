@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from "react";
-import "./Description.scss";
-
 interface IButton {
     name: string,
     link: string,

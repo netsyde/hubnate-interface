@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from "react";
-import "./Header.scss";
-
 interface IMenuItem {
     name: string,
     link: string,

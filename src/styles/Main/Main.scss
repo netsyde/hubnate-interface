@@ -1,10 +1,14 @@
+@import "./Header/index.scss";
+@import "./Description/index.scss";
+@import "./Statistic/index.scss";
+
 .main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     height: 100vh;
-    background-image: url(../../../images/druid.jpg);
+    background-image: url(../../images/druid.jpg);
 
     &_opacity {
         background-color: #000;

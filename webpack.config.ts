@@ -4,7 +4,7 @@ module.exports = {
   mode: 'production',
   // mode: "development",
 	// watch: true,
-  entry: './src/index.tsx',
+  entry: './src/pages/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'build.js',
