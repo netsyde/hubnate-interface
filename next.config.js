@@ -1,6 +1,7 @@
 const path = require('path')
+const withImages = require('next-images')
 
-module.exports = {
+module.exports = withImages({
   assetPrefix: '',
   distDir: 'dist',
   generateEtags: false,
@@ -8,5 +9,5 @@ module.exports = {
     includePaths: [path.join(__dirname, 'styles')],
   },
   pageExtensions: ['tsx', 'ts'],
-  telemetry: false
-}
+  telemetry: false,
+})

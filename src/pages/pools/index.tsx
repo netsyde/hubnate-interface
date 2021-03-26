@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Header, Statistic, Description } from '../components/Main'
+import { Header } from '@components/Main'
+import { Container } from '@components/Pools'
 
-const Main = () => {
+const BNB = require('@images/logotypes/bnb.svg')
+const UNI = require('@images/logotypes/uni.svg')
+
+const Pools = () => {
     return <div className = "main">
         <div className = "main_opacity">
             <Header 
@@ -20,7 +24,7 @@ const Main = () => {
                         },
                         {
                             name: "Chain",
-                            link: '/chain',
+                            link: '#',
                             isButton: false
                         },
                         {
@@ -41,47 +45,31 @@ const Main = () => {
                     ]
                 }}
             />
-            <Description 
-                title = "Random Donate System"
-                description = "Donate to random people and increase the chance to get a reward from someone else."
-                buttons = {{
-                    items: [
+            <div className = "pools">
+                <Container 
+                pools = {
+                    [
                         {
-                            name: 'Use Hubnate',
-                            link: "#",
-                            isTransparent: false
+                            name: 'BNB',
+                            logotype: BNB,
+                            totalDonated: 10000,
+                            chance: 3,
+                            yourDeposit: 24000,
+                            donaters: 37899
                         },
                         {
-                            name: 'FAQ',
-                            link: "/faq",
-                            isTransparent: true
+                            name: 'UNI',
+                            logotype: UNI,
+                            totalDonated: 58000,
+                            chance: 0.25,
+                            yourDeposit: 3542,
+                            donaters: 1785
                         },
-                        {
-                            name: 'Documentation',
-                            link: "/documentation",
-                            isTransparent: true
-                        }
                     ]
-                }}
-            />
-            <Statistic 
-                items = {[
-                    {
-                        title: "All Time Volume",
-                        value: "$100B"
-                    },
-                    {
-                        title: "Total Donaters",
-                        value: "11K"
-                    },
-                    {
-                        title: "Daily Volume",
-                        value: "$50K"
-                    }
-                ]}
-            />
+                }/>
+            </div>
         </div>
     </div>
 }
 
-export default Main;
+export default Pools;

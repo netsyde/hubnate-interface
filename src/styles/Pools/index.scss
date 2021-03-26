@@ -1,0 +1,98 @@
+.pools {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    height: 100%;
+    // padding: 50px;
+
+    &_container {
+        background-color: #fff;
+        border-top-left-radius: 40px;
+        border-top-right-radius: 40px;
+        width: 82%;
+        height: 100%;
+        padding: 50px;
+        min-height: calc(100vh - 248px);
+
+        &__title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 48px;
+                font-family: "GT Haptik Regular";
+                padding: 0;
+                margin: 0;
+                color: #000;
+            }
+
+            img {
+                height: 37px;
+                cursor: pointer;
+            }
+            
+        }
+
+        &__table {
+            color: #000;
+            display: flex;
+
+            &_token {
+                display: flex;
+                flex-direction: row;
+
+                &__icon {
+                    height: 32px;
+                    width: 32px;
+                }
+
+                &__ticker {
+                    font-size: 24px;
+                    font-family: "Inter-Regular";
+                    padding: 0;
+                    margin: 0;
+                    margin-left: 5px;
+                }
+            }
+
+            &_meta {
+                font-size: 14px;
+                font-family: "Inter-Regular";
+                color: #717781;
+                padding: 0;
+                margin: 0;
+            }
+
+            &_meta-number {
+                font-size: 18px;
+                font-family: "Inter-Medium";
+                padding: 0;
+                margin: 0;
+            }
+
+            tbody {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                flex-direction: column-reverse;
+
+                tr {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 40px;
+                }
+
+                td {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}

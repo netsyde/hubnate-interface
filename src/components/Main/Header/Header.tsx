@@ -40,9 +40,9 @@ const Menu = (props: IMenu) => {
 }
 
 const Logo = (props: ILogo) => {
-    return <div className={props.className}>
+    return <a href={"/"} className={props.className}>
         <p>{props.name}</p>
-    </div>
+    </a>
 }
 
 const Header = (props: IHeader) => {

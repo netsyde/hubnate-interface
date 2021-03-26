@@ -1,4 +1,5 @@
-@import './Main/Main.scss';
+@import './Main/index.scss';
+@import './Pools/index.scss';
 
 @font-face {
 	font-family: 'Inter-SemiBold'; 
@@ -6,13 +7,24 @@
 }
 
 @font-face {
+	font-family: 'Inter-Regular'; 
+	src: url(../fonts/Inter/Inter-Regular.ttf); 
+}
+
+@font-face {
+	font-family: 'Inter-Medium'; 
+	src: url(../fonts/Inter/Inter-Medium.ttf); 
+}
+
+@font-face {
 	font-family: 'gt-haptik-regular'; 
 	src: url(../fonts/GT-Haptik/gt-haptik-regular-webfont.ttf); 
 }
 
-html, body {
+html, body, #__next {
     margin: 0;
     padding: 0;
     color: #fff;
+	// min-height: 100vh;
     
 }

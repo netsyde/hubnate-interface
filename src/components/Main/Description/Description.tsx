@@ -1,7 +1,10 @@
+import { Button } from '@components/Utility'
+
 interface IButton {
     name: string,
     link: string,
-    isTransparent: boolean
+    isTransparent: boolean,
+    padding?: string
 }
 
 interface IButtonList {
@@ -12,14 +15,6 @@ interface IDescription {
     title: string,
     description: string,
     buttons: IButtonList
-}
-
-const Button = (props: IButton) => {
-    return <a className={props.isTransparent ? "transparent-button" : "hubnate-button"} href={props.link}>
-        <p>
-            {props.name}
-        </p>
-    </a>
 }
 
 const ButtonList = (props: IButtonList) => {
