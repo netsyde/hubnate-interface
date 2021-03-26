@@ -8,8 +8,8 @@ interface IPool {
     totalDonated: number,
     chance: number,
     yourDeposit: number,
-    donaters: number
-
+    donaters: number,
+    active: boolean
 }
 
 interface IPoolContainer {
@@ -29,8 +29,8 @@ const PoolContainer = (props: IPoolContainer) => {
       
        <table className = "pools_container__table">
            <tbody>
-               {props.pools.map((pool: IPool) =>
-                    <tr>
+               {props.pools.map((pool: IPool, index: number) =>
+                    <tr key = {index} style={pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}>                       
                         <td>
                             <div className = "pools_container__table_token">
                                 <img className = "pools_container__table_token__icon" src={pool.logotype} alt="BNB"/>
@@ -57,7 +57,7 @@ const PoolContainer = (props: IPoolContainer) => {
                             <Button 
                                 name = "Donate"
                                 link = {`#${pool.name}`}
-                                isTransparent = {false}
+                                type = {pool.active ? 'default' : 'disabled'}
                                 padding = "10px 100px"
                             
                             />

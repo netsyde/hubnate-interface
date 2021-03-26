@@ -3,9 +3,11 @@ import { Button } from '@components/Utility'
 interface IButton {
     name: string,
     link: string,
-    isTransparent: boolean,
-    padding?: string
+    type: ButtonType,
+    padding?: string,
 }
+
+type ButtonType = 'transparent' | 'default' | 'disabled';
 
 interface IButtonList {
     items: IButton[]
@@ -20,7 +22,7 @@ interface IDescription {
 const ButtonList = (props: IButtonList) => {
     return <div className="description_buttons">
         {props.items.map((item, index) => 
-            <Button key={index} name={item.name} link={item.link} isTransparent={item.isTransparent} />
+            <Button key={index} name={item.name} link={item.link} type={item.type} />
         )}
     </div>
 }

@@ -55,7 +55,8 @@ const Pools = () => {
                             totalDonated: 10000,
                             chance: 3,
                             yourDeposit: 24000,
-                            donaters: 37899
+                            donaters: 37899,
+                            active: true
                         },
                         {
                             name: 'UNI',
@@ -63,8 +64,55 @@ const Pools = () => {
                             totalDonated: 58000,
                             chance: 0.25,
                             yourDeposit: 3542,
-                            donaters: 1785
+                            donaters: 1785,
+                            active: true
                         },
+                        {
+                            name: 'BNB',
+                            logotype: BNB,
+                            totalDonated: 10000,
+                            chance: 3,
+                            yourDeposit: 24000,
+                            donaters: 37899,
+                            active: false
+                        },
+                        {
+                            name: 'UNI',
+                            logotype: UNI,
+                            totalDonated: 58000,
+                            chance: 0.25,
+                            yourDeposit: 3542,
+                            donaters: 1785,
+                            active: false
+                        },
+                        {
+                            name: 'BNB',
+                            logotype: BNB,
+                            totalDonated: 10000,
+                            chance: 3,
+                            yourDeposit: 24000,
+                            donaters: 37899,
+                            active: false
+                        },
+                        {
+                            name: 'UNI',
+                            logotype: UNI,
+                            totalDonated: 58000,
+                            chance: 0.25,
+                            yourDeposit: 3542,
+                            donaters: 1785,
+                            active: false
+                        },
+                        {
+                            name: 'BNB',
+                            logotype: BNB,
+                            totalDonated: 10000,
+                            chance: 3,
+                            yourDeposit: 24000,
+                            donaters: 37899,
+                            active: false
+                        },
+                        
                     ]
                 }/>
             </div>

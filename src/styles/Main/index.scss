@@ -21,8 +21,8 @@
     }
 }
 
-.hubnate-button {
-    background: linear-gradient(128.17deg, #4ce98d -14.78%, #14b949 110.05%);
+.default-button {
+    background: linear-gradient(128.17deg, #dbacee -14.78%, #8e44ad 110.05%);
     color: white;
     padding: 10px 20px;
     border-radius: 12px;
@@ -43,6 +43,23 @@
     border-radius: 12px;
     text-decoration: none;
     margin-left: 15px;
+    p {
+        font-size: 17px !important;
+        font-family: Inter-SemiBold !important;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.disabled-button {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+    background: linear-gradient(128.17deg, #95a5a6 -14.78%, #7f8c8d 110.05%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+
     p {
         font-size: 17px !important;
         font-family: Inter-SemiBold !important;

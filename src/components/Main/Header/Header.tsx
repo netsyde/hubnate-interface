@@ -22,7 +22,7 @@ interface ILogo {
 }
 
 const MenuItem = (props: IMenuItem) => {
-    return <a className={props.isButton ? "hubnate-button" : "header_menu__link"} href={props.link}>
+    return <a className={props.isButton ? "default-button" : "header_menu__link"} href={props.link}>
         <p>
             {props.name}
         </p>

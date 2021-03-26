@@ -49,17 +49,17 @@ const Main = () => {
                         {
                             name: 'Use Hubnate',
                             link: "#",
-                            isTransparent: false
+                            type: 'default'
                         },
                         {
                             name: 'FAQ',
                             link: "/faq",
-                            isTransparent: true
+                            type: 'transparent'
                         },
                         {
                             name: 'Documentation',
                             link: "/documentation",
-                            isTransparent: true
+                            type: 'transparent'
                         }
                     ]
                 }}
