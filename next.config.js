@@ -10,4 +10,10 @@ module.exports = withImages({
   },
   pageExtensions: ['tsx', 'ts'],
   telemetry: false,
+  webpack: (config, options) => {
+    console.log(config.resolve.alias)
+    config.resolve.alias['@types'] = path.resolve(__dirname, 'src/types')
+
+    return config
+  },
 })

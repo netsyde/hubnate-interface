@@ -50,6 +50,7 @@ module.exports = {
       '@components': path.resolve(__dirname, 'src/components'),
       '@routes': path.resolve(__dirname, 'src/routes'),
       '@fonts': path.resolve(__dirname, 'src/fonts'),
+      '@types': path.resolve(__dirname, 'src/types'),
     },
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },

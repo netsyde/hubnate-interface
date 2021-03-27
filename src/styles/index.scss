@@ -1,5 +1,6 @@
 @import './Main/index.scss';
 @import './Pools/index.scss';
+@import './DonateModal/index.scss';
 
 @font-face {
 	font-family: 'Inter-SemiBold'; 
@@ -27,4 +28,10 @@ html, body, #__next {
     color: #fff;
 	// min-height: 100vh;
     
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

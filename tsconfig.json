@@ -28,6 +28,9 @@
       ],
       "@fonts/*": [
         "src/fonts/*"
+      ],
+      "@types/*": [
+        "src/types/*"
       ]
     },
     "lib": [
@@ -51,8 +54,8 @@
   ],
   "include": [
     "src",
-    "pages"
-, "types/index.d.ts"  ],
+    "pages",
+    "types/index.d.ts"  ],
   "exclude": [
     "node_modules"
   ]

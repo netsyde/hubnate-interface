@@ -36,6 +36,16 @@
     }
 }
 
+.default-button:hover {
+    opacity: 0.7;
+    transform: translate3d(2px, 2px, 10px);
+}
+
+.blocked-selection {
+    pointer-events: none;
+    cursor: default;
+}
+
 .transparent-button {
     border: 1px solid rgba(255, 255, 255, 0.19);
     color: white;
@@ -49,6 +59,11 @@
         margin: 0;
         padding: 0;
     }
+}
+
+.transparent-button:hover {
+    opacity: 0.7;
+    transform: translate3d(2px, 2px, 10px);
 }
 
 .disabled-button {
