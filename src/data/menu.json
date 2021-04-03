@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Pools",
+        "link": "/pools",
+        "isButton": false
+    },
+    {
+        "name": "Chain",
+        "link": "#",
+        "isButton": false
+    },
+    {
+        "name": "Community",
+        "link": "#",
+        "isButton": false
+    },
+    {
+        "name": "About",
+        "link": "#",
+        "isButton": false
+    },
+    {
+        "name": "Use Hubnate",
+        "link": "#",
+        "isButton": true
+    }
+]
