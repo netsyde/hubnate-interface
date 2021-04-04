@@ -4,42 +4,26 @@ const settings = require('@images/ui/settings.svg')
 import DonateModal from '@components/DonateModal'
 import { Pools } from '@src/types' //'../../../types/'
 
-const PoolContainer = (props: Pools.IPoolContainer) => {
+interface IContainer {
+    title: string,
+    className?: string,
+    onClick?: MouseEventHandler<HTMLDivElement>,
+    children: React.ReactNode
+}
+const PoolContainer = (props: IContainer) => {
 
     const onClickSettings = (e: any) => {
         alert('not implemented')
     }
 
-    const onClickDonate = (pool: Pools.IPool) => {
-        props.setSelectedPool(pool.name)
-        props.setOpenDonateModal(true)
-    }
-
-    const closeDonatModal = () => {
-        props.setOpenDonateModal(false)
-    }
-
-    const calcShadow = (donateModalState: any) => {
-        switch (donateModalState) {
-            case 'initial': return ''
-            case true: return 'pools_container-shadow';
-            case false: return 'pools_container-shadowOut'
-        }
-    }
-
-
-    return <div className = {`pools_container ${calcShadow(props.openDonateModal)}`} onClick={() => props.openDonateModal === true ? closeDonatModal() : null}>
+    return <div className = {`pools_container ${props.className}`} onClick={props.onClick}>
         <div className="pools_container__title">
-            <h1>Pools</h1>
+            <h1>{props.title}</h1>
             <img onClick = {(e) => onClickSettings(e)}src={settings} alt="settings"/>
         </div>
-        
-       <Table 
-            elements = {props.pools}
-            onClickDonate = {onClickDonate}
-            openDonateModal = {props.openDonateModal}
-       />
+       {props.children}
     </div>
 }
 
 export default PoolContainer;
+

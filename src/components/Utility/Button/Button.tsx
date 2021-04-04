@@ -10,4 +10,4 @@ const Button = (props: Utility.IButton) => {
     </a>
 }
 
-export default Button
+export default Button;

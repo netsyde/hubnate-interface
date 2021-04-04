@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Header } from '@components/Main'
+import { Main } from '@src/layouts'
 import { Container } from '@components/Pools'
 import DonateModal from '@components/DonateModal'
-
-const BNB = require('@images/logotypes/bnb.svg')
-const UNI = require('@images/logotypes/uni.svg')
+import IPool from '@src/types/Pools/IPool'
+import { Utility } from '@src/types'
+import { Button, Table } from '@components/Utility';
+import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
+import { IButton } from "@src/types/Utility";
+const BNB = require('@images/logotypes/bnb.png')
+const UNI = require('@images/logotypes/uni.png')
+const BUX = require('@images/logotypes/bux.png')
 
 const poolList = [
     {
@@ -26,13 +31,13 @@ const poolList = [
         active: true
     },
     {
-        name: 'BNB',
-        logotype: BNB,
-        totalDonated: 10000,
+        name: 'BUX',
+        logotype: BUX,
+        totalDonated: 15892,
         chance: 3,
         yourDeposit: 24000,
         donaters: 37899,
-        active: false
+        active: true
     },
     {
         name: 'UNI',
@@ -73,38 +78,14 @@ const poolList = [
     
 ]
 
-const menuItems = [
-    {
-        name: "Pools",
-        link: '/pools',
-        isButton: false
-    },
-    {
-        name: "Chain",
-        link: '#',
-        isButton: false
-    },
-    {
-        name: "Community",
-        link: '#',
-        isButton: false
-    },
-    {
-        name: "About",
-        link: '#',
-        isButton: false
-    },
-    {
-        name: "Use Hubnate",
-        link: '#',
-        isButton: true
-    }
-]
+const convertNumber = (number: number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 
 const Pools = () => {
     type DonateModalState = boolean | 'initial'
     const [openDonateModal, setOpenDonateModal] = useState<DonateModalState>('initial');
-    const [selectedPool, setSelectedPool] = useState<number>(0);
+    const [selectedPool, setSelectedPool] = useState<string>();
 
     const calcFade = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
@@ -120,19 +101,25 @@ const Pools = () => {
         }
     }
 
-    return <div className = "main">
-        <div className = "main_opacity">
-            <Header 
-                className = "header"
-                logo = {{
-                    className: "header_logo",
-                    name: "Hubnate"
-                }}
-                menu = {{
-                    className: "header_menu",
-                    items: menuItems
-                }}
-            />
+    const onClickDonate = (pool: IPool) => {
+        setSelectedPool(pool.name)
+        setOpenDonateModal(true)
+    }
+
+    const closeDonatModal = () => {
+        setOpenDonateModal(false)
+    }
+
+    const calcShadow = (donateModalState: DonateModalState) => {
+        switch (donateModalState) {
+            case 'initial': return ''
+            case true: return 'pools_container-shadow';
+            case false: return 'pools_container-shadowOut'
+        }
+    }
+
+    return (
+        <Main>
             <div className = "pools">
                 <div className = "donate-modal-wrapper">
                     <DonateModal 
@@ -143,14 +130,58 @@ const Pools = () => {
                     />
                 </div>
                 <Container 
-                    pools = {poolList}
-                    openDonateModal = {openDonateModal}
-                    setOpenDonateModal = {setOpenDonateModal}
-                    setSelectedPool = {setSelectedPool}
-                />
+                    title = {"Pools"}
+                    className = {calcShadow(openDonateModal)}
+                    onClick = {() => openDonateModal === true ? closeDonatModal() : null}
+                >
+                    <Table
+                        elements = {poolList}
+                        onClickDonate = {onClickDonate}
+                        openDonateModal = {openDonateModal}
+                    >
+                        {poolList.map((pool: IPool, index: number) => 
+                            <TableRow
+                                key = {index}
+                                style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
+                            >
+                                <TableRowTokenItem 
+                                    ticker = {pool.name}
+                                    logo = {pool.logotype}
+                                />
+                                <TableRowMetaItem
+                                    title = {"Total donated"}
+                                    value = {`$${convertNumber(pool.totalDonated)}`}
+                                />
+                                <TableRowMetaItem
+                                    title = {"Chance"}
+                                    value = {`${convertNumber(pool.chance)}`}
+                                />
+                                <TableRowMetaItem
+                                    title = {"Your Deposit"}
+                                    value = {`$${convertNumber(pool.totalDonated)}`}
+                                />
+                                <TableRowMetaItem
+                                    title = {"Donaters"}
+                                    value = {`${convertNumber(pool.donaters)}`}
+                                />
+                                <TableRowItem>
+                                    <Button 
+                                        name = "Donate"
+                                        link = {`#${pool.name}`}
+                                        type = {pool.active ? 'default' : 'disabled'}
+                                        padding = "10px 100px"
+                                        onClick = {pool.active ? () => onClickDonate(pool) : null}
+                                        className = {openDonateModal == true ? 'blocked-selection' : ''}
+                                    />
+                                </TableRowItem>
+                            </TableRow>
+                        )}
+                        
+                    </Table>
+                </Container>
             </div>
-        </div>
-    </div>
+        </Main>
+    )
 }
 
 export default Pools;

@@ -1,46 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Header, Statistic, Description } from '../components/Main'
+import { Main as MainLayout } from '@src/layouts'
 
 const Main = () => {
-    return <div className = "main">
-        <div className = "main_opacity">
-            <Header 
-                className = "header"
-                logo = {{
-                    className: "header_logo",
-                    name: "Hubnate"
-                }}
-                menu = {{
-                    className: "header_menu",
-                    items: [
-                        {
-                            name: "Pools",
-                            link: '/pools',
-                            isButton: false
-                        },
-                        {
-                            name: "Chain",
-                            link: '/chain',
-                            isButton: false
-                        },
-                        {
-                            name: "Community",
-                            link: '#',
-                            isButton: false
-                        },
-                        {
-                            name: "About",
-                            link: '#',
-                            isButton: false
-                        },
-                        {
-                            name: "Use Hubnate",
-                            link: '#',
-                            isButton: true
-                        }
-                    ]
-                }}
-            />
+    return (
+        <MainLayout>
             <Description 
                 title = "Random Donate System"
                 description = "Donate to random people and increase the chance to get a reward from someone else."
@@ -80,8 +44,8 @@ const Main = () => {
                     }
                 ]}
             />
-        </div>
-    </div>
+        </MainLayout>
+    )
 }
 
 export default Main;

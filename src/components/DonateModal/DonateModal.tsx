@@ -4,7 +4,7 @@ import { Button } from '@components/Utility'
 interface IDonateModal {
     fade: Fade,
     pools: Pools.IPool[],
-    selectedPool: number,
+    selectedPool: string,
     setSelectedPool: any
 }
 
