@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Main } from '@src/layouts'
-import { Container } from '@components/Pools'
+import { Container } from '@components/Utility'
 import DonateModal from '@components/DonateModal'
 import IPool from '@src/types/Pools/IPool'
 import { Utility } from '@src/types'
@@ -113,9 +113,13 @@ const Pools = () => {
     const calcShadow = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
             case 'initial': return ''
-            case true: return 'pools_container-shadow';
-            case false: return 'pools_container-shadowOut'
+            case true: return 'container-shadow';
+            case false: return 'container-shadowOut'
         }
+    }
+
+    const onClickSettings = () => {
+        alert('not implemented')
     }
 
     return (
@@ -133,12 +137,9 @@ const Pools = () => {
                     title = {"Pools"}
                     className = {calcShadow(openDonateModal)}
                     onClick = {() => openDonateModal === true ? closeDonatModal() : null}
+                    onClickElement = {() => onClickSettings()}
                 >
-                    <Table
-                        elements = {poolList}
-                        onClickDonate = {onClickDonate}
-                        openDonateModal = {openDonateModal}
-                    >
+                    <Table>
                         {poolList.map((pool: IPool, index: number) => 
                             <TableRow
                                 key = {index}

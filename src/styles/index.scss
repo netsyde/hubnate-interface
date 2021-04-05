@@ -1,5 +1,6 @@
 @import './Main/index.scss';
 @import './Pools/index.scss';
+@import './Account/index.scss';
 @import './DonateModal/index.scss';
 @import './Utility/index.scss';
 
@@ -27,8 +28,11 @@ html, body, #__next {
     margin: 0;
     padding: 0;
     color: #fff;
-	// min-height: 100vh;
-    
+}
+
+p, h1 {
+	padding: 0;
+	margin: 0;
 }
 
 input::-webkit-outer-spin-button,

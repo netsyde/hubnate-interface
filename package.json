@@ -26,10 +26,13 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "@loadable/component": "^5.14.1",
+    "@types/loadable__component": "^5.13.3",
     "cors": "^2.8.5",
     "css-loader": "^5.1.1",
     "file-loader": "^6.2.0",
     "history": "^5.0.0",
+    "lightweight-charts": "https://github.com/Sgoldik/lightweight-charts-ssr",
     "mobx": "^6.1.8",
     "mobx-react": "^7.1.0",
     "next": "^10.0.8",
@@ -41,5 +44,8 @@
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0"
-  }
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!(lightweight-charts|fancy-canvas)/)"
+  ]
 }

@@ -11,8 +11,8 @@ const menuItems = [
         isButton: false
     },
     {
-        name: "Chain",
-        link: '#',
+        name: "Account",
+        link: '/account',
         isButton: false
     },
     {
