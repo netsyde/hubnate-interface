@@ -1,4 +1,4 @@
-import ITableRow from '@src/types/Utility/Table/ITableRow';
+import { ITableRow } from '@src/types/Utility/Table';
 
 const TableRow = (props: ITableRow) => {
     return (

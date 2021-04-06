@@ -1,1 +1,1 @@
-export { default } from './Account';
+export {default as PoolSelector} from './PoolSelector';

@@ -1,4 +1,4 @@
-import ITableRowMetaItem from '@src/types/Utility/Table/ITableRowMetaItem';
+import { ITableRowMetaItem } from '@src/types/Utility/Table';
 
 const TableRowMetaItem = (props: ITableRowMetaItem) => {
     return (

@@ -12,7 +12,7 @@ const menuItems = [
     },
     {
         name: "Account",
-        link: '/account',
+        link: '/account/0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d',
         isButton: false
     },
     {

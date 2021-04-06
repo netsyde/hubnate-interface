@@ -1,6 +1,4 @@
-import { MouseEventHandler } from "react";
-
-interface IButton {
+export interface IButton {
     name: string,
     link: string,
     type: ButtonType,
@@ -9,6 +7,4 @@ interface IButton {
     className?: string
 }
 
-type ButtonType = 'transparent' | 'default' | 'disabled';
-
-export default IButton;
+export type ButtonType = 'transparent' | 'default' | 'disabled';

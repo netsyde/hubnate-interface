@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Main } from '@src/layouts'
 import { Container } from '@components/Utility'
 import DonateModal from '@components/DonateModal'
-import IPool from '@src/types/Pools/IPool'
+import { IPool } from '@src/types/Pools'
 import { Utility } from '@src/types'
 import { Button, Table } from '@components/Utility';
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';

@@ -1,17 +1,5 @@
-import { Button, Table } from '@components/Utility';
-import { MouseEventHandler } from 'react';
 const settings = require('@images/ui/settings.svg')
-import DonateModal from '@components/DonateModal'
-import { Pools } from '@src/types' //'../../../types/'
-
-interface IContainer {
-    title: string,
-    className?: string,
-    onClick?: MouseEventHandler<HTMLDivElement>,
-    children: React.ReactNode,
-    onClickElement?: MouseEventHandler<HTMLDivElement>,
-    address?: string
-}
+import { IContainer } from '@src/types/Utility'
 
 const Container = (props: IContainer) => {
 

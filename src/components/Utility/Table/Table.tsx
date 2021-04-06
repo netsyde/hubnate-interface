@@ -1,6 +1,4 @@
-interface ITable {
-    children: React.ReactNode
-}
+import { ITable } from '@src/types/Utility/Table'
 
 const Table = (props: ITable) => {
     return (

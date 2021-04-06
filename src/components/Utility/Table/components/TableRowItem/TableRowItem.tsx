@@ -1,4 +1,4 @@
-import ITableRowItem from '@src/types/Utility/Table/ITableRowItem';
+import { ITableRowItem } from '@src/types/Utility/Table';
 
 const TableRowItem = (props: ITableRowItem) => {
     return (
