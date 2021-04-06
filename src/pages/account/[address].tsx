@@ -33,20 +33,20 @@ const Account = () => {
                                 <p className = {"account_text"}>Total donated: 327</p>
                             </div>
                             <div className = "account_main__buttons">
-                            <Button 
-                                name = "Sended"
-                                link = {`/account/${address}/sended`}
-                                type = {'default'}
-                                padding = "10px 20px"
-                                className = {"mr10"}
-                                
-                            />
-                            <Button 
-                                name = "Recieved"
-                                link = {`/account/${address}/recieved`}
-                                type = {'default'}
-                                padding = "10px 20px"
-                            />
+                                <Button 
+                                    name = "Sended"
+                                    link = {`/account/${address}/sended`}
+                                    type = {'disabled'}
+                                    padding = "10px 20px"
+                                    className = {"mr10"}
+                                    
+                                />
+                                <Button 
+                                    name = "Recieved"
+                                    link = {`/account/${address}/recieved`}
+                                    type = {'default'}
+                                    padding = "10px 20px"
+                                />
                             </div>
                         </div>
                         <Chart

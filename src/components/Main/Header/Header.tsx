@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 interface IMenuItem {
     name: string,
     link: string,
@@ -22,33 +24,42 @@ interface ILogo {
 }
 
 const MenuItem = (props: IMenuItem) => {
-    return <a className={props.isButton ? "default-button" : "header_menu__link"} href={props.link}>
-        <p>
-            {props.name}
-        </p>
-    </a>
+    return (
+        <Link href = {props.link} >
+            <a className = {props.isButton ? "default-button" : "header_menu__link"} >
+                <p>
+                    {props.name}
+                </p>
+            </a>
+        </Link>
+    )
 }
 
 const Menu = (props: IMenu) => {
-    console.log(props.items)
-    return <div className={props.className}>
-        {props.items.map((item, index) => 
-            <MenuItem key={index} link={item.link} name={item.name} isButton={item.isButton}/>
-        )}
-    </div>
+    return (
+        <div className={props.className}>
+            {props.items.map((item, index) => 
+                <MenuItem key = {index} link = {item.link} name = {item.name} isButton = {item.isButton}/>
+            )}
+        </div>
+    )
 
 }
 
 const Logo = (props: ILogo) => {
-    return <a href={"/"} className={props.className}>
-        <p>{props.name}</p>
-    </a>
+    return (
+        <Link href = {"/"} >
+            <a className = {props.className}>
+                <p>{props.name}</p>
+            </a>
+        </Link>
+    )
 }
 
 const Header = (props: IHeader) => {
-    return <header className={props.className}>
-        <Logo className={props.logo.className} name={props.logo.name}/>
-        <Menu className={props.menu.className} items={props.menu.items}/>
+    return <header className = {props.className}>
+        <Logo className = {props.logo.className} name = {props.logo.name}/>
+        <Menu className = {props.menu.className} items = {props.menu.items}/>
     </header>
 }
 

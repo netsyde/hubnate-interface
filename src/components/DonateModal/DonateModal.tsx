@@ -1,9 +1,9 @@
-import { Pools } from '@src/types'
+import { IPool } from '@src/types/Pools'
 import { Button } from '@components/Utility'
 
 interface IDonateModal {
     fade: Fade,
-    pools: Pools.IPool[],
+    pools: IPool[],
     selectedPool: string,
     setSelectedPool: any
 }
@@ -24,7 +24,7 @@ const DonateModal = (props: IDonateModal) => {
                 onChange = {(e) => props.setSelectedPool(e.target.value)}
             >
                 
-                {props.pools.map((pool: Pools.IPool, index: number) => 
+                {props.pools.map((pool: IPool, index: number) => 
                     <option className="donate-modal__input_option"
                         key = {index}
                         value = {pool.name}
