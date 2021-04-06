@@ -97,7 +97,7 @@ const Recieved = () => {
                                     />
                                     <TableRowItem>
                                         <Button 
-                                            name = "View on bscscan"
+                                            name = "View"
                                             link = {`https://bscscan.com/tx/${donate.txHash}`}
                                             type = {'default'}
                                             padding = "10px 100px"
