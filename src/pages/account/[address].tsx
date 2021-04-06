@@ -7,9 +7,12 @@ import { IChartApi } from 'lightweight-charts'
 import poolList from '@src/data/userInPools'
 import { PoolSelector } from '@components/Account';
 
-const Account = () => {
-    const router = useRouter()
-    const { address } = router.query
+interface IAccount {
+    data: any
+}
+
+const Account = (props: IAccount) => {
+    const address = props.data.address;
     const [selectedPool, setSelectedPool] = useState<number>(0);
     const [chart, setChart] = useState<IChartApi>(null);
 
@@ -62,6 +65,13 @@ const Account = () => {
     } else {
         return null
     }
+}
+
+export const getServerSideProps = async (contex: any) => {
+    const data = {
+        address: contex.query.address
+    }
+    return { props: { data } }
 }
 
 export default Account;

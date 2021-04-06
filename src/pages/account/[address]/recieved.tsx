@@ -35,9 +35,12 @@ const getTotalAmount = (donates: IDonate[]) => {
     return total;
 }
 
-const Recieved = () => {
-    const router = useRouter()
-    const { address } = router.query
+interface IRecieved {
+    data: any
+}
+
+const Recieved = (props: IRecieved) => {
+    const address = props.data.address;
 
     if (address) {
         return (
@@ -114,6 +117,13 @@ const Recieved = () => {
     } else {
         return null
     }
+}
+
+export const getServerSideProps = async (contex: any) => {
+    const data = {
+        address: contex.query.address
+    }
+    return { props: { data } }
 }
 
 export default Recieved;
