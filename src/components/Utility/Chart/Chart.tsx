@@ -40,6 +40,8 @@ const Chart =  (props: IChart) => {
                 timeScale: {
                     visible: false,
                 },
+                handleScale: false,
+                handleScroll: false,
                 layout: {
                     backgroundColor: '#fff',
                 },
@@ -63,6 +65,7 @@ const Chart =  (props: IChart) => {
                 lineWidth: 2,
                 baseLineVisible: false,
                 priceLineVisible: false, 
+                
             });
 
             chart.applyOptions({
@@ -72,6 +75,8 @@ const Chart =  (props: IChart) => {
                     fixLeftEdge: true,
                     lockVisibleTimeRangeOnResize: true,
                     secondsVisible: false,
+                    
+                    
                 },
             });
             
