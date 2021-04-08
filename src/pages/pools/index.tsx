@@ -5,7 +5,8 @@ import DonateModal from '@components/DonateModal'
 import { IPool } from '@src/types/Pools'
 import { Button, Table } from '@components/Utility';
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
-import poolList from '@src/data/pools'
+import poolList from '@src/data/pools';
+import Head from 'next/head';
 
 const convertNumber = (number: number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -52,65 +53,70 @@ const Pools = () => {
     }
 
     return (
-        <Main>
-            <div className = "pools">
-                <div className = "donate-modal-wrapper">
-                    <DonateModal 
-                        fade = {calcFade(openDonateModal)}
-                        pools = {poolList.filter((pool) => pool.active)}
-                        selectedPool = {selectedPool}
-                        setSelectedPool = {setSelectedPool}
-                    />
-                </div>
-                <Container 
-                    title = {"Pools"}
-                    className = {calcShadow(openDonateModal)}
-                    onClick = {() => openDonateModal === true ? closeDonatModal() : null}
-                    onClickElement = {() => onClickSettings()}
-                >
-                    <Table>
-                        {poolList.map((pool: IPool, index: number) => 
-                            <TableRow
-                                key = {index}
-                                style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
-                            >
-                                <TableRowTokenItem 
-                                    ticker = {pool.name}
-                                    logo = {pool.logotype}
-                                />
-                                <TableRowMetaItem
-                                    title = {"Total donated"}
-                                    value = {`$${convertNumber(pool.totalDonated)}`}
-                                />
-                                <TableRowMetaItem
-                                    title = {"Chance"}
-                                    value = {`${convertNumber(pool.chance)}`}
-                                />
-                                <TableRowMetaItem
-                                    title = {"Your Deposit"}
-                                    value = {`$${convertNumber(pool.totalDonated)}`}
-                                />
-                                <TableRowMetaItem
-                                    title = {"Donaters"}
-                                    value = {`${convertNumber(pool.donaters)}`}
-                                />
-                                <TableRowItem>
-                                    <Button 
-                                        name = "Donate"
-                                        link = {`#${pool.name}`}
-                                        type = {pool.active ? 'default' : 'disabled'}
-                                        padding = "10px 100px"
-                                        onClick = {pool.active ? () => onClickDonate(pool) : null}
-                                        className = {openDonateModal == true ? 'blocked-selection' : ''}
+        <>
+            <Head>
+                <title>Hubnate | Pools</title>
+            </Head>
+            <Main>
+                <div className = "pools">
+                    <div className = "donate-modal-wrapper">
+                        <DonateModal 
+                            fade = {calcFade(openDonateModal)}
+                            pools = {poolList.filter((pool) => pool.active)}
+                            selectedPool = {selectedPool}
+                            setSelectedPool = {setSelectedPool}
+                        />
+                    </div>
+                    <Container 
+                        title = {"Pools"}
+                        className = {calcShadow(openDonateModal)}
+                        onClick = {() => openDonateModal === true ? closeDonatModal() : null}
+                        onClickElement = {() => onClickSettings()}
+                    >
+                        <Table>
+                            {poolList.map((pool: IPool, index: number) => 
+                                <TableRow
+                                    key = {index}
+                                    style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
+                                >
+                                    <TableRowTokenItem 
+                                        ticker = {pool.name}
+                                        logo = {pool.logotype}
                                     />
-                                </TableRowItem>
-                            </TableRow>
-                        )}
-                        
-                    </Table>
-                </Container>
-            </div>
-        </Main>
+                                    <TableRowMetaItem
+                                        title = {"Total donated"}
+                                        value = {`$${convertNumber(pool.totalDonated)}`}
+                                    />
+                                    <TableRowMetaItem
+                                        title = {"Chance"}
+                                        value = {`${convertNumber(pool.chance)}`}
+                                    />
+                                    <TableRowMetaItem
+                                        title = {"Your Deposit"}
+                                        value = {`$${convertNumber(pool.totalDonated)}`}
+                                    />
+                                    <TableRowMetaItem
+                                        title = {"Donaters"}
+                                        value = {`${convertNumber(pool.donaters)}`}
+                                    />
+                                    <TableRowItem>
+                                        <Button 
+                                            name = "Donate"
+                                            link = {`#${pool.name}`}
+                                            type = {pool.active ? 'default' : 'disabled'}
+                                            padding = "10px 100px"
+                                            onClick = {pool.active ? () => onClickDonate(pool) : null}
+                                            className = {openDonateModal == true ? 'blocked-selection' : ''}
+                                        />
+                                    </TableRowItem>
+                                </TableRow>
+                            )}
+                            
+                        </Table>
+                    </Container>
+                </div>
+            </Main>
+        </>
     )
 }
 

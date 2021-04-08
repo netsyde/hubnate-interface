@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { IChartApi } from 'lightweight-charts'
 import poolList from '@src/data/userInPools'
 import { PoolSelector } from '@components/Account';
+import Head from 'next/head'
 
 interface IAccount {
     data: any
@@ -18,49 +19,54 @@ const Account = (props: IAccount) => {
 
     if (address) {
         return (
-            <Main>
-                <div className = "account">
-                    <Container
-                        className = {"account_container"}
-                        title = {"Account"}
-                        address = {address ? address.toString() : "0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d"}
-                    >
-                        <div className = "account_main">
-                            <div className = "account_main__info">
-                                <PoolSelector 
-                                    pools = {poolList}
-                                    selectedPool = {selectedPool}
-                                    setSelectedPool = {setSelectedPool}
-                                />
-                                <p className = {"account_text"}>Chance: 21.4% (1589 tickets)</p>
-                                <p className = {"account_text"}>Total donated: 327</p>
+            <>
+                <Head>
+                    <title>Hubnate | Account</title>
+                </Head>
+                <Main>
+                    <div className = "account">
+                        <Container
+                            className = {"account_container"}
+                            title = {"Account"}
+                            address = {address ? address.toString() : "0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d"}
+                        >
+                            <div className = "account_main">
+                                <div className = "account_main__info">
+                                    <PoolSelector 
+                                        pools = {poolList}
+                                        selectedPool = {selectedPool}
+                                        setSelectedPool = {setSelectedPool}
+                                    />
+                                    <p className = {"account_text"}>Chance: 21.4% (1589 tickets)</p>
+                                    <p className = {"account_text"}>Total donated: 327</p>
+                                </div>
+                                <div className = "account_main__buttons">
+                                    <Button 
+                                        name = "Sended"
+                                        link = {`/account/${address}/sended`}
+                                        type = {'disabled'}
+                                        padding = "10px 20px"
+                                        className = {"mr10"}
+                                        
+                                    />
+                                    <Button 
+                                        name = "Recieved"
+                                        link = {`/account/${address}/recieved`}
+                                        type = {'default'}
+                                        padding = "10px 20px"
+                                    />
+                                </div>
                             </div>
-                            <div className = "account_main__buttons">
-                                <Button 
-                                    name = "Sended"
-                                    link = {`/account/${address}/sended`}
-                                    type = {'disabled'}
-                                    padding = "10px 20px"
-                                    className = {"mr10"}
-                                    
-                                />
-                                <Button 
-                                    name = "Recieved"
-                                    link = {`/account/${address}/recieved`}
-                                    type = {'default'}
-                                    padding = "10px 20px"
-                                />
-                            </div>
-                        </div>
-                        <Chart
-                            chart = {chart}
-                            setChart = {setChart}
-                            data = {poolList[selectedPool]}
-                            selectedPool = {selectedPool}
-                        />
-                    </Container>
-                </div>
-            </Main>
+                            <Chart
+                                chart = {chart}
+                                setChart = {setChart}
+                                data = {poolList[selectedPool]}
+                                selectedPool = {selectedPool}
+                            />
+                        </Container>
+                    </div>
+                </Main>
+            </>
         )
     } else {
         return null
