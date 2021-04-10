@@ -153,8 +153,12 @@
 }
 
 .donate-modal-wrapper {
-    display: flex;
+    // display: flex;
+    height: 100%;
+    width: 100%;
     justify-content: center;
     position: fixed;
     z-index: 2;
+    display: flex;
+    align-items: center;
 }

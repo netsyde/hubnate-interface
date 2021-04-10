@@ -2,6 +2,16 @@
     color: #000;
     display: flex;
 
+
+    &_arrow {
+        width: 16px;
+
+        &-open {
+            transform: rotate(-180deg);
+            -ms-transform: rotate(-1800deg);
+            -webkit-transform: rotate(-180deg);
+        }
+    }
     &_token {
         display: flex;
         flex-direction: row;
@@ -54,6 +64,24 @@
         td {
             display: flex;
             flex-direction: column;
+        }
+    }
+}
+
+.row_expanded {
+    display: flex;
+
+    td {
+        width: 100%;
+    }
+    &__line {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        &-center {
+            margin-top: 20px;
+            justify-content: center;
         }
     }
 }

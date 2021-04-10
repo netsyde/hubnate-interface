@@ -1,9 +1,10 @@
+import React, { useState, useEffect, useRef, MouseEventHandler } from "react";
 export interface IButton {
     name: string,
-    link: string,
+    link?: string,
     type: ButtonType,
     padding?: string,
-    onClick?: MouseEventHandler<HTMLAnchorElement>,
+    onClick?: any//MouseEventHandler<HTMLAnchorElement>,
     className?: string
 }
 

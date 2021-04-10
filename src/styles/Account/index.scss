@@ -89,3 +89,28 @@
     margin-right: -50px;
     margin-bottom: -50px;
 }
+
+/* Large desktops and laptops */
+@media (max-width: 1200px) {
+    
+}
+
+/* Portrait tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    
+}
+
+/* Landscape phones and smaller */
+@media (max-width: 480px) {
+
+}

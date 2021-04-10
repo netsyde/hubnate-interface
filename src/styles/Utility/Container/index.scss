@@ -117,3 +117,10 @@
 .mr10 {
     margin-right: 10px;
 }
+
+/* Landscape phones and smaller */
+@media (max-width: 480px) {
+    .container {
+        overflow: hidden;
+    }
+}

@@ -1,21 +1,29 @@
 import { IPool } from '@src/types/Pools'
 import { Button } from '@components/Utility'
+import React from "react";
 
 interface IDonateModal {
-    fade: Fade,
+    fade?: Fade,
     pools: IPool[],
     selectedPool: string,
-    setSelectedPool: any
+    setSelectedPool: any,
+    style?: any,
+    // onClick
 }
 
 type Fade = 'fadeIn' | 'fadeOut' | ''
 
-const DonateModal = (props: IDonateModal) => {
+const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
 
     const onClickDonate = () => {
         alert('not implemented')
     }
-    return <div className = {`donate-modal ${props.fade}`}>
+
+    const modalOnClick = (e: any) => {
+        console.log(e)
+        e.stopPropagation();
+    }
+    return <div className = {`donate-modal ${props.fade}`} style={props.style} ref = {ref} onClick = {modalOnClick}>
         <div className="donate-modal_group">
             <h2 className="donate-modal__title">Asset</h2>
             <select 
@@ -56,6 +64,6 @@ const DonateModal = (props: IDonateModal) => {
             </div>
         </div>
     </div>
-}
+})
 
 export default DonateModal;

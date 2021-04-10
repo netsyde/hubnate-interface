@@ -1,7 +1,9 @@
 export interface ITableRow {
     style?: any,
     className?: any,
-    children: React.ReactNode
+    children: React.ReactNode,
+    onClick?: MouseEventHandler<HTMLTableRowElemen>,
+    // ref?: LegacyRef<HTMLTableRowElement>
 }
 
 export interface ITableRowItem {
@@ -17,6 +19,10 @@ export interface ITableRowMetaItem {
 export interface ITableRowTokenItem {
     ticker: string,
     logo: any
+}
+
+export interface ITableDetailsRowItem {
+    isOpen: boolean
 }
 
 export interface ITable {
