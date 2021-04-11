@@ -4,6 +4,11 @@
     justify-content: space-between;
     align-items: center;
     margin: 30px 2% 0 2%;
+
+    &-bgColorNone {
+        background: none !important;
+    }
+
     &_logo {
         text-decoration: none;
         color: #fff;
@@ -13,12 +18,20 @@
             padding: 0;
             margin: 0;
         }
+
+        &-mobile {
+            width: 64px;
+        }
     }
 
     &_menu {
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        &-mobile {
+            width: 32px;
+        }
 
         p {
             font-size: 16px;
@@ -66,14 +79,10 @@
     .header {
         margin: 0;
         padding-left: 30px;
-        &_logo {
-            p {
-                font-size: 30px;
-            }
-        }
+        background-color: #fff;
+        // padding-top: 10px;
+        justify-content: center;
+        padding-left: 0px;
 
-        &_menu {
-            display: none;
-        }
     }
 }

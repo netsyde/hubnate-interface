@@ -88,6 +88,7 @@
     margin-left: -50px;
     margin-right: -50px;
     margin-bottom: -50px;
+    overflow: hidden;
 }
 
 /* Large desktops and laptops */
@@ -106,8 +107,32 @@
 }
 
 /* Landscape phones and portrait tablets */
-@media (max-width: 767px) {
-    
+@media (max-width: 882px) {
+    .account {
+        margin-top: 0px;
+
+        &_main {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            &__buttons {
+                margin-top: 20px;
+            }
+        }
+
+        &_text {
+            text-align: center;
+        }
+
+        &_poolSelector {
+            justify-content: center;
+        }
+    }
+
+    .container {
+        
+    }
 }
 
 /* Landscape phones and smaller */

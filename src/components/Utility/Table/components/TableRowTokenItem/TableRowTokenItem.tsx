@@ -1,6 +1,8 @@
 import { ITableRowTokenItem } from '@src/types/Utility/Table';
 
 const TableRowTokenItem = (props: ITableRowTokenItem) => {
+    if (!props.displayOnMobile) return null;
+    
     return (
         <td>
             <div className = "table_token">

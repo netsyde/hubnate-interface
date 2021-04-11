@@ -9,7 +9,10 @@ const Main = () => {
             <Head>
                 <title>Hubnate</title>
             </Head>
-            <MainLayout>
+            <MainLayout
+                headerClassName = {'header-bgColorNone'}
+                logoColor = {'white'}
+            >
                 <Description 
                     title = "Random Donate System"
                     description = "Donate to random people and increase the chance to get a reward from someone else."

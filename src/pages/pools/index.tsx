@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef, MouseEventHandler } from "react";
+import React, { useState } from "react";
 import { Main } from '@src/layouts'
 import { Container } from '@components/Utility'
 import DonateModal from '@components/DonateModal'
 import { IPool } from '@src/types/Pools'
 import { Button, Table } from '@components/Utility';
-import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem, TableDetailsRowItem } from '@components/Utility/Table/components';
+import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
 import poolList from '@src/data/pools';
 import Head from 'next/head';
-import useWindowSize from '@src/utils/useWindowSize';
-
-const convertNumber = (number: number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
+import { useWindowSize, convertNumber } from '@src/utils';
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -59,7 +55,6 @@ const Pools = () => {
     const [openDonateModal, setOpenDonateModal] = useState<DonateModalState>('initial');
     const [selectedPool, setSelectedPool] = useState<string>();
     const size = useWindowSize();
-    const refs = poolList.map(() => useRef(null))
     const [fade, setFade] = useState<Fade>('')
     const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
 
@@ -67,15 +62,9 @@ const Pools = () => {
 
     const calcFade = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
-            case 'initial': 
-            // console.log('current null ')
-            return ''
-            case true: 
-            // console.log('current fadeIn')
-            return 'fadeIn';
-            case false: 
-            // console.log('current fadeout')
-            return 'fadeOut'
+            case 'initial': return '';
+            case true: return 'fadeIn';
+            case false: return 'fadeOut';
         }
     }
 
@@ -89,15 +78,14 @@ const Pools = () => {
 
     const closeDonatModal = () => {
         setFade(calcFade(false))
-        // setOpenDonateModal(false) // сначала фейд потом убираем
         setTimeout(() => setOpenDonateModal(false), 700)
     }
 
     const calcShadow = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
-            case 'initial': return ''
+            case 'initial': return '';
             case true: return 'container-shadow';
-            case false: return 'container-shadowOut'
+            case false: return 'container-shadowOut';
         }
     }
 
@@ -116,16 +104,16 @@ const Pools = () => {
             <Head>
                 <title>Hubnate | Pools</title>
             </Head>
-            <Main>
+            <Main
+                // className = {calcShadow(openDonateModal)}
+            >
                 {openDonateModal == true ?
-                    <div className = "donate-modal-wrapper" onClick = {openDonateModal === true ? () => closeDonatModal() : null}>
+                    <div className = {`donate-modal-wrapper`} onClick = {openDonateModal === true ? () => closeDonatModal() : null}>
                         <DonateModal 
                             fade = {fade}
                             pools = {poolList.filter((pool) => pool.active)}
                             selectedPool = {selectedPool}
                             setSelectedPool = {setSelectedPool}
-                            // onClick = {onClickDonateModal}
-                            // style = {openDonateModal == true ? {display: 'flex'} : {display: 'none'}}
                         />
                     </div> : null
                     }
@@ -133,73 +121,65 @@ const Pools = () => {
                     <Container 
                         title = {"Pools"}
                         className = {calcShadow(openDonateModal)}
-                        // onClick = {() => openDonateModal === true ? closeDonatModal() : null}
                         onClickElement = {() => onClickSettings()}
                     >
                         <Table>
                             {poolList.map((pool: IPool, index: number) => 
                                 <React.Fragment key={index}>
                                     <TableRow
-                                        key = {`row` + index}
                                         style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
                                         onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
-                                        ref = {refs[index]}
+                                        isMobile = {isMobile(size.width)}
+                                        isOpen = {chevrons[index]}
                                     >
                                         <TableRowTokenItem 
                                             ticker = {pool.name}
                                             logo = {pool.logotype}
+                                            displayOnMobile = {true}
                                         />
                                         <TableRowMetaItem
                                             title = {"Chance"}
                                             value = {`${convertNumber(pool.chance)}`}
+                                            displayOnMobile = {true}
                                         />
-                                        {isMobile(size.width) ? null : 
-                                        <>
-                                            <TableRowMetaItem
-                                                title = {"Total donated"}
-                                                value = {`$${convertNumber(pool.totalDonated)}`}
-                                            />
-                                            
-                                            
-                                            <TableRowMetaItem
-                                                title = {"Your Deposit"}
-                                                value = {`$${convertNumber(pool.totalDonated)}`}
-                                            />
-                                            <TableRowMetaItem
-                                                title = {"Donaters"}
-                                                value = {`${convertNumber(pool.donaters)}`}
-                                            />
-                                            <TableRowItem>
-                                                <Button 
-                                                    name = "Donate"
-                                                    link = {`#${pool.name}`}
-                                                    type = {pool.active ? 'default' : 'disabled'}
-                                                    padding = "10px 100px"
-                                                    onClick = {pool.active ? () => onClickDonate(pool) : null}
-                                                    className = {openDonateModal == true ? 'blocked-selection' : ''}
-                                                />
-                                            </TableRowItem>
-                                        </>
-                                    }
-                                    {isMobile(size.width) ? 
-                                        <TableDetailsRowItem
-                                            isOpen = {chevrons[index]}
+                                        <TableRowMetaItem
+                                            title = {"Total donated"}
+                                            value = {`$${convertNumber(pool.totalDonated)}`}
+                                            displayOnMobile = {!isMobile(size.width)}
+                                        />  
+                                        <TableRowMetaItem
+                                            title = {"Your Deposit"}
+                                            value = {`$${convertNumber(pool.totalDonated)}`}
+                                            displayOnMobile = {!isMobile(size.width)}
                                         />
-                                            : null
-                                    }
+                                        <TableRowMetaItem
+                                            title = {"Donaters"}
+                                            value = {`${convertNumber(pool.donaters)}`}
+                                            displayOnMobile = {!isMobile(size.width)}
+                                        />
+                                        <TableRowItem
+                                            displayOnMobile = {!isMobile(size.width)}
+                                        >
+                                            <Button 
+                                                name = "Donate"
+                                                link = {`#${pool.name}`}
+                                                type = {pool.active ? 'default' : 'disabled'}
+                                                padding = "10px 100px"
+                                                onClick = {pool.active ? () => onClickDonate(pool) : null}
+                                                className = {openDonateModal == true ? 'blocked-selection' : ''}
+                                            
+                                            />
+                                        </TableRowItem>
                                     </TableRow>
-                                    {chevrons[index] ?
+                                    {chevrons[index] && isMobile(size.width) ?
                                         <ExpandedRow
                                             index = {index}
                                             onClick = {() => onClickDonate(poolList[index])}
                                             openDonateModal = {openDonateModal}
-                                            key = {`expanded-` + index}
                                         /> : null
                                     }
                                 </React.Fragment>
-                                
                             )}
-                            
                         </Table>
                     </Container>
                 </div>

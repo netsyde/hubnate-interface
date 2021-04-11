@@ -1,7 +1,17 @@
 import { Header } from '@components/Main'
+import { Menu, MenuItem, Logo, MobileMenu } from '@components/Main/Header/components'
+import { useWindowSize } from '@src/utils';
+
+const isMobile = (width: number) => {
+    if (width <= 882) return true
+    return false;
+}
 
 interface IMain {
-    children: React.ReactNode
+    children: React.ReactNode,
+    headerClassName?: string,
+    logoColor?: 'white' | 'blue',
+    className?: string
 }
 
 const menuItems = [
@@ -33,20 +43,34 @@ const menuItems = [
 ]
 
 const Main = (props: IMain) => {
+    const size = useWindowSize();
+
     return (
-        <div className = "main">
+        <div className = {`main ${props.className}`}>
             <div className = "main_opacity">
                 <Header 
-                    className = "header"
-                    logo = {{
-                        className: "header_logo",
-                        name: "Hubnate"
-                    }}
-                    menu = {{
-                        className: "header_menu",
-                        items: menuItems
-                    }}
-                />
+                    className = {`header ${props.headerClassName}`}
+                >
+                    <Logo 
+                        className = {`header_logo`}
+                        name = "Hubnate"
+                        isMobile = {isMobile(size.width)}
+                        color = {props.logoColor}
+                    />
+                    <Menu
+                        className = {'header_menu'}
+                        isMobile = {isMobile(size.width)}
+                    >
+                        {menuItems.map((item, index) =>
+                            <MenuItem 
+                                key = {index}
+                                name = {item.name}
+                                link = {item.link}
+                                isButton = {item.isButton}
+                            />
+                        )}
+                    </Menu>
+                </Header>
                 {props.children}
             </div>
         </div>

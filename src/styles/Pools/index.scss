@@ -5,3 +5,10 @@
     margin-top: 60px;
     height: 100%;
 }
+
+/* Landscape phones and smaller */
+@media (max-width: 882px) {
+    .pools {
+        margin-top: 0px;
+    }
+}

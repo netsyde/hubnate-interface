@@ -7,6 +7,12 @@ import { IChartApi } from 'lightweight-charts'
 import poolList from '@src/data/userInPools'
 import { PoolSelector } from '@components/Account';
 import Head from 'next/head'
+import { useWindowSize, convertNumber, minifyString } from '@src/utils';
+
+const isMobile = (width: number) => {
+    if (width <= 882) return true
+    return false;
+}
 
 interface IAccount {
     data: any
@@ -16,6 +22,7 @@ const Account = (props: IAccount) => {
     const address = props.data.address;
     const [selectedPool, setSelectedPool] = useState<number>(0);
     const [chart, setChart] = useState<IChartApi>(null);
+    const size = useWindowSize();
 
     if (address) {
         return (
@@ -28,7 +35,7 @@ const Account = (props: IAccount) => {
                         <Container
                             className = {"account_container"}
                             title = {"Account"}
-                            address = {address ? address.toString() : "0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d"}
+                            address = {isMobile(size.width) ? minifyString(address) : address}
                         >
                             <div className = "account_main">
                                 <div className = "account_main__info">

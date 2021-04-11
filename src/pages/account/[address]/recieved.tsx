@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import React, { useState } from "react";
 import { Main } from '@src/layouts'
 import { Container } from '@components/Utility'
 import { Button, Table } from '@components/Utility'
@@ -7,9 +7,11 @@ import recivedDonates from '@src/data/donates'
 import { IPool } from '@src/types/Pools';
 import donates from '@src/data/donates';
 import Head from 'next/head';
+import { minifyString, convertNumber, useWindowSize } from '@src/utils';
 
-const convertNumber = (number: number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+const isMobile = (width: number) => {
+    if (width <= 882) return true
+    return false;
 }
 
 interface IPoolMinifyInfo {
@@ -40,8 +42,50 @@ interface IRecieved {
     data: any
 }
 
+interface IExpandedRow {
+    index: number,
+    link: string,
+}
+
+const ExpandedRow = (props: IExpandedRow) => {
+    return (
+        <tr className = "row_expanded">
+            <td>
+                <div className = "row_expanded__line">
+                    <p className = "table_meta">Donater</p>
+                    <p className = "table_meta-number">{minifyString(donates[props.index].donater)}</p>
+                </div>
+                <div className = "row_expanded__line">
+                    <p className = "table_meta">Fiat Equivalent</p>
+                    <p className = "table_meta-number">${convertNumber(donates[props.index].fiatEquivalent)}</p>
+                </div>
+                <div className = "row_expanded__line">
+                    <p className = "table_meta">Win Ticket</p>
+                    <p className = "table_meta-number">{convertNumber(donates[props.index].winTicket)}</p>
+                </div>
+                <div className = "row_expanded__line row_expanded__line-center">
+                    <Button 
+                        name = "View"
+                        type = {'default'}
+                        padding = "10px 100px"
+                        link = {props.link}
+                    />
+                </div>
+            </td>
+        </tr>
+    )
+}
+
 const Recieved = (props: IRecieved) => {
     const address = props.data.address;
+    const size = useWindowSize();
+    const [chevrons, setChevrons] = useState<boolean[]>(donates.map(() => false))
+
+    const handleTableRowClick = (index: number) => {
+        let newChevrons = chevrons.concat()
+        newChevrons[index] = !newChevrons[index]
+        setChevrons(newChevrons)
+    }
 
     if (address) {
         return (
@@ -54,7 +98,7 @@ const Recieved = (props: IRecieved) => {
                         <Container
                             className = {"account_container"}
                             title = {"Account Recieved"}
-                            address = {address ? address.toString() : "0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d"}
+                            address = {isMobile(size.width) ? minifyString(address) : address}
                         >
                             <div className = "account_main account_recieved">
                                 <div className = "account_main__info">
@@ -80,38 +124,56 @@ const Recieved = (props: IRecieved) => {
                             </div>
                             <Table>
                                 {recivedDonates.map((donate: IDonate, index: number) => 
-                                    <TableRow
-                                        key = {index}
-                                    >
-                                        <TableRowTokenItem 
-                                            ticker = {donate.pool.name}
-                                            logo = {donate.pool.logotype}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Amount"}
-                                            value = {convertNumber(donate.amount)}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Donater"}
-                                            value = {donate.donater}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Fiat Equivalent"}
-                                            value = {`$${convertNumber(donate.fiatEquivalent)}`}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Win Ticket"}
-                                            value = {convertNumber(donate.winTicket)}
-                                        />
-                                        <TableRowItem>
-                                            <Button 
-                                                name = "View"
-                                                link = {`https://bscscan.com/tx/${donate.txHash}`}
-                                                type = {'default'}
-                                                padding = "10px 100px"
+                                    <React.Fragment key = {index}>
+                                        <TableRow
+                                            key = {index}
+                                            onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
+                                            isMobile = {isMobile(size.width)}
+                                            isOpen = {chevrons[index]}
+                                        >
+                                            <TableRowTokenItem 
+                                                ticker = {donate.pool.name}
+                                                logo = {donate.pool.logotype}
+                                                displayOnMobile = {true}
                                             />
-                                        </TableRowItem>
-                                    </TableRow>
+                                            <TableRowMetaItem
+                                                title = {"Amount"}
+                                                value = {convertNumber(donate.amount)}
+                                                displayOnMobile = {true}
+                                            />
+                                            <TableRowMetaItem
+                                                title = {"Donater"}
+                                                value = {donate.donater}
+                                                displayOnMobile = {!isMobile(size.width)}
+                                            />
+                                            <TableRowMetaItem
+                                                title = {"Fiat Equivalent"}
+                                                value = {`$${convertNumber(donate.fiatEquivalent)}`}
+                                                displayOnMobile = {!isMobile(size.width)}
+                                            />
+                                            <TableRowMetaItem
+                                                title = {"Win Ticket"}
+                                                value = {convertNumber(donate.winTicket)}
+                                                displayOnMobile = {!isMobile(size.width)}
+                                            />
+                                            <TableRowItem
+                                                displayOnMobile = {!isMobile(size.width)}
+                                            >
+                                                <Button 
+                                                    name = "View"
+                                                    link = {`https://bscscan.com/tx/${donate.txHash}`}
+                                                    type = {'default'}
+                                                    padding = "10px 100px"
+                                                />
+                                            </TableRowItem>
+                                        </TableRow>
+                                        {chevrons[index] && isMobile(size.width) ?
+                                            <ExpandedRow
+                                                index = {index}
+                                                link = {`https://bscscan.com/tx/${donate.txHash}`}
+                                            /> : null
+                                        }
+                                    </React.Fragment>
                                 )}
                                 
                             </Table>

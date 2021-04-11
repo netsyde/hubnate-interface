@@ -119,8 +119,21 @@
 }
 
 /* Landscape phones and smaller */
-@media (max-width: 480px) {
+@media (max-width: 882px) {
     .container {
         overflow: hidden;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        padding-top: 0px;
+        width: 100%;
+
+        &__title {
+            flex-direction: column;
+            text-align: center;
+
+            img {
+                display: none;
+            }
+        }
     }
 }
