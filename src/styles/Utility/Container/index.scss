@@ -1,19 +1,14 @@
 .container {
     display: flex;
-    // justify-content: center;
     flex-direction: column;
-    // align-items: center;
     background-color: #fff;
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
     width: 82%;
-    height: 100%;
+    flex: 1;
     padding: 50px;
-    min-height: calc(100vh - 248px);
 
     &-shadow {
-        // opacity: 0.7;
-        // pointer-events: none;
         cursor: default;
         -webkit-animation-name: shadowIn;
         animation-name: shadowIn;
@@ -28,43 +23,43 @@
 
     @-webkit-keyframes shadowIn {
         from {
-          opacity: 1;
+            background-color:rgba(0,0,0, 0);
         }
-      
+    
         to {
-            opacity: 0.6;
+            background-color: rgba(0,0,0, 0.6);
         }
     }
     
     @keyframes shadowIn {
         from {
-            opacity: 1;
+            background-color:rgba(0,0,0, 0);
         }
     
         to {
-            opacity: 0.6;
+            background-color: rgba(0,0,0, 0.6);
         }
     }
 
     
     @-webkit-keyframes shadowOut {
         from {
-          opacity: 0.6;
+            background-color: rgba(0,0,0, 0.6);
           
         }
       
         to {
-          opacity: 1;
+            background-color:rgba(0,0,0, 0);
         }
     }
     
     @keyframes shadowOut {
         from {
-            opacity: 0.6;
+            background-color: rgba(0,0,0, 0.6);
         }
     
         to {
-            opacity: 1;
+            background-color:rgba(0,0,0, 0);
         }
     }
       
@@ -126,6 +121,7 @@
         border-top-right-radius: 0px;
         padding-top: 0px;
         width: 100%;
+        box-sizing: border-box;
 
         &__title {
             flex-direction: column;

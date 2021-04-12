@@ -56,9 +56,11 @@ const Pools = () => {
     const [selectedPool, setSelectedPool] = useState<string>();
     const size = useWindowSize();
     const [fade, setFade] = useState<Fade>('')
+    const [shadow, setShadow] = useState<Shadow>('')
     const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
 
     type Fade = 'fadeIn' | 'fadeOut' | ''
+    type Shadow = '' | 'container-shadow' | 'container-shadowOut'
 
     const calcFade = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
@@ -72,13 +74,15 @@ const Pools = () => {
         console.log('open modal')
         setSelectedPool(pool.name)
         setFade(calcFade(true))
+        setShadow(calcShadow(true))
         
         setOpenDonateModal(true)
     }
 
     const closeDonatModal = () => {
         setFade(calcFade(false))
-        setTimeout(() => setOpenDonateModal(false), 700)
+        setShadow(calcShadow(false))
+        setTimeout(() => setOpenDonateModal(false), 1000)
     }
 
     const calcShadow = (donateModalState: DonateModalState) => {
@@ -105,10 +109,9 @@ const Pools = () => {
                 <title>Hubnate | Pools</title>
             </Head>
             <Main
-                // className = {calcShadow(openDonateModal)}
             >
                 {openDonateModal == true ?
-                    <div className = {`donate-modal-wrapper`} onClick = {openDonateModal === true ? () => closeDonatModal() : null}>
+                    <div className = {`donate-modal-wrapper ${shadow}`} onClick = {openDonateModal === true ? () => closeDonatModal() : null}>
                         <DonateModal 
                             fade = {fade}
                             pools = {poolList.filter((pool) => pool.active)}
@@ -120,7 +123,6 @@ const Pools = () => {
                 <div className = "pools">
                     <Container 
                         title = {"Pools"}
-                        className = {calcShadow(openDonateModal)}
                         onClickElement = {() => onClickSettings()}
                     >
                         <Table>
