@@ -106,22 +106,14 @@
 
 /* Landscape phones and smaller */
 @media (max-width: 480px) {
-    .hubnate-button {
-        margin-bottom: 20px;
-        padding: 20px 40px;
-        border-radius: 24px;
-        p {
-            font-size: 22px !important;
+    .description_buttons {
+        .default-button {
+            margin-bottom: 20px;
         }
-    }
-
-    .transparent-button {
-        margin-bottom: 20px;
-        margin-left: 0;
-        padding: 20px 40px;
-        border-radius: 24px;
-        p {
-            font-size: 22px !important;
+    
+        .transparent-button {
+            margin-bottom: 20px;
+            margin-left: 0;
         }
     }
 }

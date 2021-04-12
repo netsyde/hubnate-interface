@@ -1,6 +1,7 @@
 import { Header } from '@components/Main'
 import { Menu, MenuItem, Logo, MobileMenu } from '@components/Main/Header/components'
 import { useWindowSize } from '@src/utils';
+import { useState } from 'react';
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -11,7 +12,8 @@ interface IMain {
     children: React.ReactNode,
     headerClassName?: string,
     logoColor?: 'white' | 'blue',
-    className?: string
+    className?: string,
+    mobileMenuType?: 'transparent' | 'default'
 }
 
 const menuItems = [
@@ -44,6 +46,14 @@ const menuItems = [
 
 const Main = (props: IMain) => {
     const size = useWindowSize();
+    const [openMenu, setOpenMenu] = useState<boolean>(false); // mobile menu
+    const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
+
+    const handleClickLogo = () => {
+        // console.log('click')
+        setOpenMenu(!openMenu);
+        console.log('open menu', openMenu)
+    }
 
     return (
         <div className = {`main ${props.className}`}>
@@ -72,6 +82,7 @@ const Main = (props: IMain) => {
                     </Menu>
                 </Header>
                 {props.children}
+                {isMobile(size.width) ? <MobileMenu current = {current} setCurrent = {setCurrent} transparent = {props.mobileMenuType == 'transparent'}/> : null}
             </div>
         </div>
     )

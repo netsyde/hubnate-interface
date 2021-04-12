@@ -12,6 +12,7 @@ const Main = () => {
             <MainLayout
                 headerClassName = {'header-bgColorNone'}
                 logoColor = {'white'}
+                mobileMenuType = {'transparent'}
             >
                 <Description 
                     title = "Random Donate System"

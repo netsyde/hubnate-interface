@@ -50,6 +50,8 @@
 /* Landscape phones and smaller */
 @media (max-width: 480px) {
     .statistic {
+        // display: none;
+        margin-bottom: 80px;
         &_item {    
             &__value {
                 font-size: 30px;
