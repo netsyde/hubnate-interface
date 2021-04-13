@@ -1,6 +1,14 @@
 const path = require('path')
 const withImages = require('next-images')
 
+const withPWA = require('next-pwa')
+
+// module.exports = withPWA({
+//   pwa: {
+//     dest: 'public'
+//   }
+// })
+
 module.exports = withImages({
   assetPrefix: '',
   distDir: 'dist',
@@ -15,4 +23,11 @@ module.exports = withImages({
 
     return config
   },
-})
+},
+withPWA({
+    pwa: {
+      dest: 'public'
+    }
+  })
+)
+

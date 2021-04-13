@@ -1,24 +1,24 @@
 import React, { useRef, useEffect } from 'react'
 import { IChartApi } from 'lightweight-charts'
 import { IUserInPool } from '@src/types/Pools'
-
 interface IChart {
     chart: IChartApi,
     setChart: any,
-    data: IUserInPool
-    selectedPool: number
+    data: IUserInPool,
+    selectedPool: number,
+    isMobile: boolean
 }
 
 const Chart =  (props: IChart) => {
     let ref = useRef(null)
     const toolTipRef = useRef(null)
-
+    console.log(props.isMobile)
     const drawGraph = async () => {
         try {
             const { createChart } = await import("lightweight-charts"); 
 
             let chart = createChart(ref.current, {
-                height: 500,
+                height: props.isMobile ? 300 : 500,
                 leftPriceScale: {
                     visible: false,
                 },

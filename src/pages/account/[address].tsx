@@ -69,6 +69,7 @@ const Account = (props: IAccount) => {
                                 setChart = {setChart}
                                 data = {poolList[selectedPool]}
                                 selectedPool = {selectedPool}
+                                isMobile = {isMobile(size.width)}
                             />
                         </Container>
                     </div>
