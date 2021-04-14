@@ -8,6 +8,7 @@ import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@co
 import poolList from '@src/data/pools';
 import Head from 'next/head';
 import { useWindowSize, convertNumber } from '@src/utils';
+import { Shadow, Fade } from '@src/types'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -58,9 +59,6 @@ const Pools = () => {
     const [fade, setFade] = useState<Fade>('')
     const [shadow, setShadow] = useState<Shadow>('')
     const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
-
-    type Fade = 'fadeIn' | 'fadeOut' | ''
-    type Shadow = '' | 'container-shadow' | 'container-shadowOut'
 
     const calcFade = (donateModalState: DonateModalState) => {
         switch (donateModalState) {
@@ -119,7 +117,7 @@ const Pools = () => {
                             setSelectedPool = {setSelectedPool}
                         />
                     </div> : null
-                    }
+                }
                 <div className = "pools">
                     <Container 
                         title = {"Pools"}

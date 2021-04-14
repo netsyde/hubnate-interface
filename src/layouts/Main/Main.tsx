@@ -1,7 +1,11 @@
 import { Header } from '@components/Main'
 import { Menu, MenuItem, Logo, MobileMenu } from '@components/Main/Header/components'
+import { Button } from '@components/Utility'
 import { useWindowSize } from '@src/utils';
+import useAuth from '@src/hooks/useAuth'
 import { useState } from 'react';
+import { Shadow, Fade } from '@src/types'
+import WalletModal from '@components/WalletModal'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -36,23 +40,45 @@ const menuItems = [
         name: "About",
         link: '#',
         isButton: false
-    },
-    {
-        name: "Use Hubnate",
-        link: '#',
-        isButton: true
     }
 ]
 
 const Main = (props: IMain) => {
+    type WalletModalState = boolean | 'initial'
     const size = useWindowSize();
-    const [openMenu, setOpenMenu] = useState<boolean>(false); // mobile menu
+    const [openWalletModal, setOpenWalletModal] = useState<WalletModalState>(false); // mobile menu
     const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
+    const [fade, setFade] = useState<Fade>('')
+    const [shadow, setShadow] = useState<Shadow>('')
+    const { login, logout } = useAuth()
 
-    const handleClickLogo = () => {
-        // console.log('click')
-        setOpenMenu(!openMenu);
-        console.log('open menu', openMenu)
+    const calcShadow = (walletModalState: WalletModalState) => {
+        switch (walletModalState) {
+            case 'initial': return '';
+            case true: return 'container-shadow';
+            case false: return 'container-shadowOut';
+        }
+    }
+
+    const calcFade = (walletModalState: WalletModalState) => {
+        switch (walletModalState) {
+            case 'initial': return '';
+            case true: return 'fadeIn';
+            case false: return 'fadeOut';
+        }
+    }
+
+    const openDonatModal = () => {
+        setFade(calcFade(true))
+        setShadow(calcShadow(true))
+        
+        setOpenWalletModal(true)
+    }
+
+    const closeDonatModal = () => {
+        setFade(calcFade(false))
+        setShadow(calcShadow(false))
+        setTimeout(() => setOpenWalletModal(false), 1000)
     }
 
     return (
@@ -78,9 +104,25 @@ const Main = (props: IMain) => {
                                 link = {item.link}
                                 isButton = {item.isButton}
                             />
+                            
                         )}
+                        <Button 
+                            name = "Connect"
+                            type = {'default'}
+                            padding = "10px 20px"
+                            onClick = {openDonatModal}
+                        />
                     </Menu>
                 </Header>
+                {openWalletModal == true ?
+                    <div className = {`donate-modal-wrapper ${shadow}`} onClick = {openWalletModal === true ? () => closeDonatModal() : null}>
+                        <WalletModal 
+                            fade = {fade}
+                            login = {login}
+                            closeModal = {closeDonatModal}
+                        />
+                    </div> : null
+                }
                 {props.children}
                 {isMobile(size.width) ? <MobileMenu current = {current} setCurrent = {setCurrent} transparent = {props.mobileMenuType == 'transparent'}/> : null}
             </div>

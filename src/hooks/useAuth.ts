@@ -9,7 +9,6 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorWalletConnect,
   WalletConnectConnector,
 } from '@web3-react/walletconnect-connector'
-// import { useToast } from 'state/hooks'
 import { connectorsByName } from '@src/utils/web3react'
 import { setupNetwork } from '@src/utils/wallet'
 
@@ -21,14 +20,17 @@ enum ConnectorNames {
 
 const useAuth = () => {
   const { activate, deactivate } = useWeb3React()
-
   const login = useCallback((connectorID: ConnectorNames) => {
     const connector = connectorsByName[connectorID]
+    console.log(connector)
     if (connector) {
+      console.log('connector exist')
       activate(connector, async (error: Error) => {
         if (error instanceof UnsupportedChainIdError) {
+          console.log('UnsupportedChainIdError')
           const hasSetup = await setupNetwork()
           if (hasSetup) {
+            console.log('hasSetup')
             activate(connector)
           }
         } else {
