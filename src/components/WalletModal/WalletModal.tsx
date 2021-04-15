@@ -4,9 +4,9 @@ import wallets from '@src/data/wallets'
 
 interface IWalletModal {
     login: any,
-    fade: Fade,
+    fade?: Fade,
     style?: any,
-    closeModal: any
+    onDismiss?: any
 }
 
 const WalletModal = (props: IWalletModal) => {
@@ -22,7 +22,7 @@ const WalletModal = (props: IWalletModal) => {
             </div>
             <div className="wallet_cards">
             {wallets.map((wallet: IWallet, index: number) => (
-                <WalletCard key = {index} login = {props.login} wallet = {wallet} closeModal = {props.closeModal}/>
+                <WalletCard key = {index} login = {props.login} wallet = {wallet} closeModal = {props.onDismiss}/>
             ))}
             </div>
         </div>

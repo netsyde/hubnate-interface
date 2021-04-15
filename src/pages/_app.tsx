@@ -5,7 +5,8 @@ import Head from 'next/head';
 import { Web3ReactProvider } from '@web3-react/core';
 import { getLibrary } from '@src/utils/web3react';
 import { Provider } from 'mobx-react';
-import rootStore from '@src/store/RootStore'
+import rootStore from '@src/store/RootStore';
+import { ModalProvider } from '@src/widgets/Modal'
 
 const druid = require('@images/druid.jpg')
 const APP_NAME = 'Hubnate';
@@ -37,7 +38,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Head>
       <Provider { ...stores }>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <Component {...pageProps} />
+          <ModalProvider>
+            <Component {...pageProps} />
+          </ModalProvider>
         </Web3ReactProvider>
       </Provider>
     </>

@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Main } from '@src/layouts'
-import { Container } from '@components/Utility'
-import DonateModal from '@components/DonateModal'
-import { IPool } from '@src/types/Pools'
+import React, { useState, useEffect } from "react";
+import { Main } from '@src/layouts';
+import { Container } from '@components/Utility';
+import DonateModal from '@components/DonateModal';
+import { IPool } from '@src/types/Pools';
 import { Button, Table } from '@components/Utility';
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
 import poolList from '@src/data/pools';
 import Head from 'next/head';
 import { useWindowSize, convertNumber } from '@src/utils';
-import { Shadow, Fade } from '@src/types'
+import { Shadow, Fade } from '@src/types';
+import { useModal } from '@src/widgets/Modal';
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -18,7 +19,7 @@ const isMobile = (width: number) => {
 interface IExpandedRow {
     index: number,
     onClick: any,
-    openDonateModal: any
+    openDonateModal?: any
 }
 
 const ExpandedRow = (props: IExpandedRow) => {
@@ -43,7 +44,7 @@ const ExpandedRow = (props: IExpandedRow) => {
                         type = {poolList[props.index].active ? 'default' : 'disabled'}
                         padding = "10px 100px"
                         onClick = {props.onClick}
-                        className = {props.openDonateModal == true ? 'blocked-selection' : ''}
+                        // className = {props.openDonateModal == true ? 'blocked-selection' : ''}
                     />
                 </div>
             </td>
@@ -52,43 +53,21 @@ const ExpandedRow = (props: IExpandedRow) => {
 }
 
 const Pools = () => {
-    type DonateModalState = boolean | 'initial'
-    const [openDonateModal, setOpenDonateModal] = useState<DonateModalState>('initial');
-    const [selectedPool, setSelectedPool] = useState<string>();
+    let [selectedPool, setSelectedPool] = useState<string>();
     const size = useWindowSize();
-    const [fade, setFade] = useState<Fade>('')
-    const [shadow, setShadow] = useState<Shadow>('')
     const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
 
-    const calcFade = (donateModalState: DonateModalState) => {
-        switch (donateModalState) {
-            case 'initial': return '';
-            case true: return 'fadeIn';
-            case false: return 'fadeOut';
-        }
-    }
+    let [onPresentDonateModal] = useModal(
+        <DonateModal 
+            pools = {poolList.filter((pool) => pool.active)}
+            selectedPool = {selectedPool}
+            setSelectedPool = {setSelectedPool}
+        />
+    )
 
     const onClickDonate = (pool: IPool) => {
-        console.log('open modal')
         setSelectedPool(pool.name)
-        setFade(calcFade(true))
-        setShadow(calcShadow(true))
-        
-        setOpenDonateModal(true)
-    }
-
-    const closeDonatModal = () => {
-        setFade(calcFade(false))
-        setShadow(calcShadow(false))
-        setTimeout(() => setOpenDonateModal(false), 1000)
-    }
-
-    const calcShadow = (donateModalState: DonateModalState) => {
-        switch (donateModalState) {
-            case 'initial': return '';
-            case true: return 'container-shadow';
-            case false: return 'container-shadowOut';
-        }
+        onPresentDonateModal() // TODO: fix updating selectedPool ^
     }
 
     const onClickSettings = () => {
@@ -108,16 +87,6 @@ const Pools = () => {
             </Head>
             <Main
             >
-                {openDonateModal == true ?
-                    <div className = {`donate-modal-wrapper ${shadow}`} onClick = {openDonateModal === true ? () => closeDonatModal() : null}>
-                        <DonateModal 
-                            fade = {fade}
-                            pools = {poolList.filter((pool) => pool.active)}
-                            selectedPool = {selectedPool}
-                            setSelectedPool = {setSelectedPool}
-                        />
-                    </div> : null
-                }
                 <div className = "pools">
                     <Container 
                         title = {"Pools"}
@@ -166,8 +135,6 @@ const Pools = () => {
                                                 type = {pool.active ? 'default' : 'disabled'}
                                                 padding = "10px 100px"
                                                 onClick = {pool.active ? () => onClickDonate(pool) : null}
-                                                className = {openDonateModal == true ? 'blocked-selection' : ''}
-                                            
                                             />
                                         </TableRowItem>
                                     </TableRow>
@@ -175,7 +142,6 @@ const Pools = () => {
                                         <ExpandedRow
                                             index = {index}
                                             onClick = {() => onClickDonate(poolList[index])}
-                                            openDonateModal = {openDonateModal}
                                         /> : null
                                     }
                                 </React.Fragment>
