@@ -1,4 +1,4 @@
-import { Shadow, Fade, IWallet } from '@src/types'
+import { Fade, IWallet } from '@src/types'
 import { WalletCard } from './components'
 import wallets from '@src/data/wallets'
 
@@ -12,7 +12,6 @@ interface IWalletModal {
 const WalletModal = (props: IWalletModal) => {
 
     const modalOnClick = (e: any) => {
-        console.log(e)
         e.stopPropagation();
     }
 

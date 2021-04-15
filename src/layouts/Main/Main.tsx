@@ -1,11 +1,13 @@
 import { Header } from '@components/Main'
 import { Menu, MenuItem, Logo, MobileMenu } from '@components/Main/Header/components'
 import { Button } from '@components/Utility'
-import { useWindowSize } from '@src/utils';
+import { useWindowSize, minifyString } from '@src/utils';
 import useAuth from '@src/hooks/useAuth'
 import { useState } from 'react';
 import { Shadow, Fade } from '@src/types'
-import WalletModal from '@components/WalletModal'
+import WalletModal from '@components/WalletModal';
+import { inject, observer } from "mobx-react";
+import { RootStore } from '@src/store/RootStore'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -17,7 +19,8 @@ interface IMain {
     headerClassName?: string,
     logoColor?: 'white' | 'blue',
     className?: string,
-    mobileMenuType?: 'transparent' | 'default'
+    mobileMenuType?: 'transparent' | 'default',
+    rootStore?: RootStore
 }
 
 const menuItems = [
@@ -43,7 +46,9 @@ const menuItems = [
     }
 ]
 
-const Main = (props: IMain) => {
+import { useWeb3React } from '@web3-react/core';
+
+const Main = inject("rootStore")(observer((props: IMain) => {
     type WalletModalState = boolean | 'initial'
     const size = useWindowSize();
     const [openWalletModal, setOpenWalletModal] = useState<WalletModalState>(false); // mobile menu
@@ -51,6 +56,7 @@ const Main = (props: IMain) => {
     const [fade, setFade] = useState<Fade>('')
     const [shadow, setShadow] = useState<Shadow>('')
     const { login, logout } = useAuth()
+    const { account } = useWeb3React()
 
     const calcShadow = (walletModalState: WalletModalState) => {
         switch (walletModalState) {
@@ -68,14 +74,14 @@ const Main = (props: IMain) => {
         }
     }
 
-    const openDonatModal = () => {
+    const handleOpenWalletModal = () => {
         setFade(calcFade(true))
         setShadow(calcShadow(true))
         
         setOpenWalletModal(true)
     }
 
-    const closeDonatModal = () => {
+    const handleCloseWalletModal = () => {
         setFade(calcFade(false))
         setShadow(calcShadow(false))
         setTimeout(() => setOpenWalletModal(false), 1000)
@@ -107,19 +113,19 @@ const Main = (props: IMain) => {
                             
                         )}
                         <Button 
-                            name = "Connect"
+                            name = {props.rootStore.user.isConnected ? minifyString(account) :"Connect"}
                             type = {'default'}
                             padding = "10px 20px"
-                            onClick = {openDonatModal}
+                            onClick = {handleOpenWalletModal}
                         />
                     </Menu>
                 </Header>
                 {openWalletModal == true ?
-                    <div className = {`donate-modal-wrapper ${shadow}`} onClick = {openWalletModal === true ? () => closeDonatModal() : null}>
+                    <div className = {`donate-modal-wrapper ${shadow}`} onClick = {openWalletModal === true ? () => handleCloseWalletModal() : null}>
                         <WalletModal 
                             fade = {fade}
                             login = {login}
-                            closeModal = {closeDonatModal}
+                            closeModal = {handleCloseWalletModal}
                         />
                     </div> : null
                 }
@@ -128,6 +134,6 @@ const Main = (props: IMain) => {
             </div>
         </div>
     )
-}
+}))
 
 export default Main

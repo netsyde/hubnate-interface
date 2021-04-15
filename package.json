@@ -1,6 +1,6 @@
 {
   "name": "hubnate-frontend",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Random Donate System",
   "main": "server.js",
   "scripts": {

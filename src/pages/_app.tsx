@@ -1,12 +1,17 @@
 import "../styles/index.scss";
-import type { AppProps /*, AppContext */ } from 'next/app'
+import type { AppProps } from 'next/app';
 import React from "react";
 import Head from 'next/head';
 import { Web3ReactProvider } from '@web3-react/core';
-import { getLibrary } from '@src/utils/web3react'
+import { getLibrary } from '@src/utils/web3react';
+import { Provider } from 'mobx-react';
+import rootStore from '@src/store/RootStore'
+
 const druid = require('@images/druid.jpg')
 const APP_NAME = 'Hubnate';
-const APP_DESCRIPTION = 'Donate to random people and increase the chance to get a reward from someone else'
+const APP_DESCRIPTION = 'Donate to random people and increase the chance to get a reward from someone else';
+const stores = { rootStore };
+
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
@@ -30,9 +35,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <link rel='manifest' href='/manifest.json' />
         {/* <link rel='shortcut icon' href='/favicon.ico' /> */}
       </Head>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Component {...pageProps} />
-      </Web3ReactProvider>
+      <Provider { ...stores }>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Component {...pageProps} />
+        </Web3ReactProvider>
+      </Provider>
     </>
   )
 }

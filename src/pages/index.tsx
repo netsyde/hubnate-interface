@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Header, Statistic, Description } from '../components/Main'
+import React from "react";
+import { Statistic, Description } from '../components/Main'
 import { Main as MainLayout } from '@src/layouts'
 import Head from 'next/head';
 
 const Main = () => {
+
     return (
         <>
             <Head>

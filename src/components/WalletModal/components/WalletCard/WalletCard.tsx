@@ -1,17 +1,18 @@
-import { IWallet, Login } from '@src/types'
+import { IWallet, Login } from '@src/types';
+import { inject, observer } from "mobx-react";
+import { RootStore } from '@src/store/RootStore';
 
 interface IWalletCard {
     login: Login,
     wallet: IWallet,
-    closeModal: any
+    closeModal: any,
+    rootStore?: RootStore
 }
 
-// export type Login = (connectorId: ConnectorNames) => void;
-
-const WalletCard = (props: IWalletCard) => {
-
+const WalletCard = inject("rootStore")(observer((props: IWalletCard) => {
     const handleClick = () => {
         props.login(props.wallet.connectorId)
+        props.rootStore.user.connectAccount()
         props.closeModal()
     }
 
@@ -21,6 +22,6 @@ const WalletCard = (props: IWalletCard) => {
             <p>{props.wallet.title}</p>
         </div>
     )
-}
+}))
 
 export default WalletCard;
