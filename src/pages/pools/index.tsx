@@ -44,7 +44,6 @@ const ExpandedRow = (props: IExpandedRow) => {
                         type = {poolList[props.index].active ? 'default' : 'disabled'}
                         padding = "10px 100px"
                         onClick = {props.onClick}
-                        // className = {props.openDonateModal == true ? 'blocked-selection' : ''}
                     />
                 </div>
             </td>

@@ -5,10 +5,10 @@ import { useWindowSize, minifyString } from '@src/utils';
 import useAuth from '@src/hooks/useAuth'
 import { useState } from 'react';
 import { Shadow, Fade } from '@src/types'
-import WalletModal from '@components/WalletModal';
+// import WalletModal from '@components/WalletModal';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore'
-import { useModal } from '@src/widgets/Modal'
+import { useWalletModal } from '@src/widgets/WalletModal'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -54,12 +54,8 @@ const Main = inject("rootStore")(observer((props: IMain) => {
     const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
     const { login, logout } = useAuth()
     const { account } = useWeb3React()
-
-    const [onPresentWalletModal] = useModal(
-        <WalletModal 
-            login = {login}
-        />
-    )
+    const user = props.rootStore.user;
+    const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(login, logout, account)
 
     return (
         <div className = {`main ${props.className}`}>
@@ -86,10 +82,10 @@ const Main = inject("rootStore")(observer((props: IMain) => {
                             />   
                         )}
                         <Button 
-                            name = {props.rootStore.user.isConnected ? minifyString(account) :"Connect"}
+                            name = {account ? minifyString(account) : "Connect"}
                             type = {'default'}
                             padding = "10px 20px"
-                            onClick = {onPresentWalletModal}
+                            onClick = {account ? onPresentAccountModal : onPresentConnectModal}
                         />
                     </Menu>
                 </Header>

@@ -17,6 +17,16 @@
     -moz-animation-delay: 0.4s;
     animation-delay: 0.4s;
 
+    &_body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .default-button {
+            margin-top: 15px;
+        }
+    }
     &_title {
         display: flex;
         flex-direction: row;

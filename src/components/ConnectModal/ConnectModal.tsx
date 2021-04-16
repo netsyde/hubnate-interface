@@ -2,14 +2,14 @@ import { Fade, IWallet } from '@src/types'
 import { WalletCard } from './components'
 import wallets from '@src/data/wallets'
 
-interface IWalletModal {
+interface IConnectModal {
     login: any,
     fade?: Fade,
     style?: any,
     onDismiss?: any
 }
 
-const WalletModal = (props: IWalletModal) => {
+const ConnectModal = (props: IConnectModal) => {
 
     const modalOnClick = (e: any) => {
         e.stopPropagation();
@@ -29,4 +29,4 @@ const WalletModal = (props: IWalletModal) => {
     )
 }
 
-export default WalletModal;
+export default ConnectModal;
