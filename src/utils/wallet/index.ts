@@ -17,21 +17,21 @@ interface WindowChain {
 export const setupNetwork = async () => {
   const provider = (window as WindowChain).ethereum
   if (provider) {
-    const chainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10)
+    const chainId = 97;
     try {
       await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
             chainId: `0x${chainId.toString(16)}`,
-            chainName: 'Binance Smart Chain Mainnet',
+            chainName: 'Binance Smart Chain Testnet',
             nativeCurrency: {
               name: 'BNB',
               symbol: 'bnb',
               decimals: 18,
             },
             rpcUrls: nodes,
-            blockExplorerUrls: ['https://bscscan.com/'],
+            blockExplorerUrls: ['https://testnet.bscscan.com'], // https://bscscan.com/ - mainnet
           },
         ],
       })
