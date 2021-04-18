@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 
 const Button = (props: IButton) => {
-    // console.log(props.onClick)
     if (props.link) {
         return (
             <Link href={props.link} >

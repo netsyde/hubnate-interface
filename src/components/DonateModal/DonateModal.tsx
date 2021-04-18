@@ -6,10 +6,9 @@ import { useDonate } from '@src/hooks/useContract'
 interface IDonateModal {
     fade?: Fade,
     pools: IPool[],
-    selectedPool: string,
+    selectedPool: number,
     setSelectedPool: any,
     style?: any,
-    // onClick
 }
 
 type Fade = 'fadeIn' | 'fadeOut' | ''
@@ -24,7 +23,6 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
     }
 
     const modalOnClick = (e: any) => {
-        console.log(e)
         e.stopPropagation();
     }
 
@@ -33,7 +31,6 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
     }
 
     const onChangePool = (e: any) => {
-        console.log(e.target.value)
         props.setSelectedPool(Number(e.target.value))
 
     }
@@ -42,7 +39,7 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
         const getTicketCost = async () => {
             let fixAmount = amount ? amount : 0;
             let costToBuyTickets = await donateContract.methods.costToBuyTickets(1, fixAmount).call()
-            console.log(costToBuyTickets)
+
             setCost(Number((costToBuyTickets / Math.pow(10, 18)).toFixed(0)))
         }
 

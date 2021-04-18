@@ -34,7 +34,7 @@ const useAuth = () => {
             activate(connector)
           }
         } else {
-          // window.localStorage.removeItem(connectorLocalStorageKey)
+          window.localStorage.removeItem("connectorId")
           if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
               console.log('Provider Error', 'No provider was found')
           } else if (

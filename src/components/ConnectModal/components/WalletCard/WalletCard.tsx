@@ -13,6 +13,7 @@ const WalletCard = inject("rootStore")(observer((props: IWalletCard) => {
     const handleClick = () => {
         props.login(props.wallet.connectorId)
         props.rootStore.user.connectAccount()
+        window.localStorage.setItem("connectorId", props.wallet.connectorId);
         props.closeModal()
     }
 

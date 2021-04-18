@@ -17,6 +17,7 @@ const ConnectModal = (props: IConnectModal) => {
 
     const onClickLogout = () => {
         props.logout()
+        window.localStorage.removeItem("connectorId")
         props.onDismiss()
     }
 

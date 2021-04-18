@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Main } from '@src/layouts';
 import { Container } from '@components/Utility';
 import DonateModal from '@components/DonateModal';
+import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
 import { Button, Table } from '@components/Utility';
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
 import poolList from '@src/data/pools';
 import Head from 'next/head';
 import { useWindowSize, convertNumber } from '@src/utils';
-import { Shadow, Fade } from '@src/types';
 import { useModal } from '@src/widgets/Modal';
+import { useWeb3React } from '@web3-react/core';
+import useAuth from '@src/hooks/useAuth'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -23,6 +25,7 @@ interface IExpandedRow {
 }
 
 const ExpandedRow = (props: IExpandedRow) => {
+    const { account } = useWeb3React()
     return (
         <tr className = "row_expanded">
             <td>
@@ -40,7 +43,7 @@ const ExpandedRow = (props: IExpandedRow) => {
                 </div>
                 <div className = "row_expanded__line row_expanded__line-center">
                     <Button 
-                        name = "Donate"
+                        name = {account ? `Donate` : `Unlock Wallet`}
                         type = {poolList[props.index].active ? 'default' : 'disabled'}
                         padding = "10px 100px"
                         onClick = {props.onClick}
@@ -52,9 +55,11 @@ const ExpandedRow = (props: IExpandedRow) => {
 }
 
 const Pools = () => {
-    let [selectedPool, setSelectedPool] = useState<string>();
+    let [selectedPool, setSelectedPool] = useState<number>();
     const size = useWindowSize();
     const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
+    const { account } = useWeb3React()
+    const { login } = useAuth()
 
     let [onPresentDonateModal] = useModal(
         <DonateModal 
@@ -64,8 +69,14 @@ const Pools = () => {
         />
     )
 
-    const onClickDonate = (pool: IPool) => {
-        setSelectedPool(pool.name)
+    let [onPresentConnectModal] = useModal(
+        <ConnectModal 
+            login = {login}
+        />
+    )
+
+    const onClickDonate = (index: number) => {
+        setSelectedPool(index)
         onPresentDonateModal() // TODO: fix updating selectedPool ^
     }
 
@@ -129,18 +140,18 @@ const Pools = () => {
                                             displayOnMobile = {!isMobile(size.width)}
                                         >
                                             <Button 
-                                                name = "Donate"
+                                                name = {account ? "Donate" : "Unlock Wallet"}
                                                 link = {`#${pool.name}`}
                                                 type = {pool.active ? 'default' : 'disabled'}
                                                 padding = "10px 100px"
-                                                onClick = {pool.active ? () => onClickDonate(pool) : null}
+                                                onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
                                             />
                                         </TableRowItem>
                                     </TableRow>
                                     {chevrons[index] && isMobile(size.width) ?
                                         <ExpandedRow
                                             index = {index}
-                                            onClick = {() => onClickDonate(poolList[index])}
+                                            onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
                                         /> : null
                                     }
                                 </React.Fragment>

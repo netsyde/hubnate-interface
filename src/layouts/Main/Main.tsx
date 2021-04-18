@@ -4,11 +4,11 @@ import { Button } from '@components/Utility'
 import { useWindowSize, minifyString } from '@src/utils';
 import useAuth from '@src/hooks/useAuth'
 import { useState } from 'react';
-import { Shadow, Fade } from '@src/types'
-// import WalletModal from '@components/WalletModal';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore'
 import { useWalletModal } from '@src/widgets/WalletModal'
+import { useWeb3React } from '@web3-react/core';
+import useEagerConnect from '@src/hooks/useEagerConnect'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -47,9 +47,8 @@ const menuItems = [
     }
 ]
 
-import { useWeb3React } from '@web3-react/core';
-
 const Main = inject("rootStore")(observer((props: IMain) => {
+    useEagerConnect()
     const size = useWindowSize();
     const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
     const { login, logout } = useAuth()
