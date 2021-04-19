@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 import web3NoAccount from '@src/utils/web3'
+import bep20Abi from '@src/data/abi/erc20.json'
 
 // Addresses
 import {
@@ -17,4 +18,8 @@ const getContract = (abi: any, address: string, web3?: Web3) => {
 
 export const getDonateContract = (web3?: Web3) => {
   return getContract(donateAbi, getDonateAddress(), web3)
+}
+
+export const getBep20Contract = (address: string, web3?: Web3) => {
+  return getContract(bep20Abi, address, web3)
 }

@@ -1,7 +1,9 @@
 import { IPool } from '@src/types/Pools'
 import { Button } from '@components/Utility'
 import React, { useState, useEffect } from "react";
-import { useDonate } from '@src/hooks/useContract'
+import { useDonate, useERC20 } from '@src/hooks/useContract'
+import { useWeb3React } from '@web3-react/core';
+import { approve } from '@src/utils/callHelpers'
 
 interface IDonateModal {
     fade?: Fade,
@@ -15,11 +17,50 @@ type Fade = 'fadeIn' | 'fadeOut' | ''
 
 const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
     const donateContract = useDonate()
+    const token = useERC20('0x8587591f38A197737B43Cd9415d5819100D623f9')
     const [amount, setAmount] = useState<number>(0);
     const [cost, setCost] = useState<number>(0);
+    const { account } = useWeb3React()
+
+    const receiveDonates = async () => {
+        let pool = await donateContract.methods.getBasicPoolInfo(1).call()
+        const getDonate = async (index: number) => {
+                let donate = await donateContract.methods.getBasicDonateInfo(1, index).call()
+                console.log(donate)
+        }
+
+        for (let i = 1; i < pool.donateIdCounter + 1; i++) {
+            getDonate(i)
+        }
+
+        console.log(pool.donateIdCounter)
+    }
+    // receiveDonates()
 
     const onClickDonate = async () => {
-        alert('not implemented')
+        // alert('not implemented')
+        let pool = await donateContract.methods.getBasicPoolInfo(1).call()
+        console.log(pool)
+        let donates = []
+        let price = await donateContract.methods.costToBuyTickets(1, amount).call()
+        console.log("price", price)
+        let tokenApprove = await approve(token, donateContract, account, price)
+        console.log(tokenApprove)
+        console.log(amount)
+
+        // const getDonate = async (index: number) => {
+        //     let donate = await donateContract.methods.getBasicDonateInfo(1, index).call()
+        //     console.log(donate)
+        // }
+
+        // for (let i = 0; i < pool.donateIdCounter; i++) {
+        //     getDonate(i)
+        // }
+
+        // console.log(pool.donateIdCounter)
+
+        let donate = await donateContract.methods.donate(124, 1, amount).send({ from: account })
+        console.log(donate)
     }
 
     const modalOnClick = (e: any) => {
