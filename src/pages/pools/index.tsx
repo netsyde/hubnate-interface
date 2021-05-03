@@ -6,12 +6,16 @@ import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
 import { Button, Table } from '@components/Utility';
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
-import poolList from '@src/data/pools';
 import Head from 'next/head';
 import { useWindowSize, convertNumber } from '@src/utils';
 import { useModal } from '@src/widgets/Modal';
 import { useWeb3React } from '@web3-react/core';
-import useAuth from '@src/hooks/useAuth'
+import useAuth from '@src/hooks/useAuth';
+import { inject, observer } from "mobx-react";
+import { RootStore } from '@src/store/RootStore';
+import { useDonate, useERC20 } from '@src/hooks/useContract'
+import Skeleton from 'react-loading-skeleton';
+import poolsGap from '@src/data/constants/pools'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -20,26 +24,28 @@ const isMobile = (width: number) => {
 
 interface IExpandedRow {
     index: number,
+    poolList: IPool[],
     onClick: any,
     openDonateModal?: any
 }
 
 const ExpandedRow = (props: IExpandedRow) => {
     const { account } = useWeb3React()
+    const poolList = props.poolList;
     return (
         <tr className = "row_expanded">
             <td>
                 <div className = "row_expanded__line">
-                    <p className = "table_meta">Total Donated</p>
-                    <p className = "table_meta-number">${convertNumber(poolList[props.index].totalDonated)}</p>
+                    <p className = "table_meta">Chance</p>
+                    <p className = "table_meta-number">{convertNumber(poolList[props.index].chance)}% || <Skeleton/></p>
                 </div>
                 <div className = "row_expanded__line">
-                    <p className = "table_meta">Your Deposit</p>
-                    <p className = "table_meta-number">${convertNumber(poolList[props.index].yourDeposit)}</p>
+                    <p className = "table_meta">Donated (your)</p>
+                    <p className = "table_meta-number">{(account ? convertNumber(poolList[props.index].userDonated) : 'locked') || <Skeleton/>}</p>
                 </div>
                 <div className = "row_expanded__line">
-                    <p className = "table_meta">Donaters</p>
-                    <p className = "table_meta-number">{convertNumber(poolList[props.index].donaters)}</p>
+                    <p className = "table_meta">Recieved (your)</p>
+                    <p className = "table_meta-number">{(account ? convertNumber(poolList[props.index].userRecieved) : 'locked') || <Skeleton/>}</p>
                 </div>
                 <div className = "row_expanded__line row_expanded__line-center">
                     <Button 
@@ -54,16 +60,51 @@ const ExpandedRow = (props: IExpandedRow) => {
     )
 }
 
-const Pools = () => {
-    let [selectedPool, setSelectedPool] = useState<number>();
+
+interface IPools {
+    rootStore?: RootStore
+}
+
+const metaNumber = (number: number) => {
+    try {
+        return typeof(number) == 'number' && `${convertNumber(number)}` || <Skeleton/>
+    } catch (e) {
+        return <Skeleton/>
+    }
+}
+
+const metaAccountNumber = (number: number, account: string) => {
+    try {
+        return typeof(number) == 'number' && (account ? `${convertNumber(number)}` : `locked`) || <Skeleton/>
+    } catch (e) {
+        return <Skeleton/>
+    }
+}
+
+const Pools = inject("rootStore")(observer((props: IPools) => {
+    let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
-    const [chevrons, setChevrons] = useState<boolean[]>(poolList.map(() => false))
+    const [poolList, setPoolList] = useState<IPool[] || false>(false)
+    const [chevrons, setChevrons] = useState<boolean[]>(poolList ? poolList.map(() => false) : [false])
     const { account } = useWeb3React()
     const { login } = useAuth()
+    const donateContract = useDonate()
+    
+    useEffect(() => {
+        const getPoolList = async () => {
+            let fetchPoolList =  await props.rootStore.user.getPools(donateContract, account) || poolsGap;
+            console.log(fetchPoolList)
+            if (fetchPoolList) {
+                setPoolList(fetchPoolList)
+            }
+        }
+        
+        getPoolList()
+    }, [account]);
 
     let [onPresentDonateModal] = useModal(
         <DonateModal 
-            pools = {poolList.filter((pool) => pool.active)}
+            pools = {poolList ? poolList : false} // poolList.filter((pool) => pool.active)
             selectedPool = {selectedPool}
             setSelectedPool = {setSelectedPool}
         />
@@ -102,38 +143,44 @@ const Pools = () => {
                         title = {"Pools"}
                         onClickElement = {() => onClickSettings()}
                     >
+                        
                         <Table>
                             {poolList.map((pool: IPool, index: number) => 
                                 <React.Fragment key={index}>
                                     <TableRow
-                                        style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
+                                        // style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
                                         onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
                                         isMobile = {isMobile(size.width)}
                                         isOpen = {chevrons[index]}
                                     >
                                         <TableRowTokenItem 
-                                            ticker = {pool.name}
-                                            logo = {pool.logotype}
+                                            ticker = {pool.token.name}
+                                            logo = {pool.token.logotype}
                                             displayOnMobile = {true}
                                         />
                                         <TableRowMetaItem
-                                            title = {"Chance"}
-                                            value = {`${convertNumber(pool.chance)}`}
+                                            title = {"Cost per Ticket"}
+                                            value = {metaNumber(pool.costPerTicket)}
                                             displayOnMobile = {true}
-                                        />
+                                        /> 
                                         <TableRowMetaItem
-                                            title = {"Total donated"}
-                                            value = {`$${convertNumber(pool.totalDonated)}`}
-                                            displayOnMobile = {!isMobile(size.width)}
+                                            title = {"Total Donated"}
+                                            value = {metaNumber(pool.totalDonated)}
+                                            displayOnMobile = {true}
                                         />  
                                         <TableRowMetaItem
-                                            title = {"Your Deposit"}
-                                            value = {`$${convertNumber(pool.totalDonated)}`}
+                                            title = {"Chance"}
+                                            value = {metaAccountNumber(pool.chance, account)}
                                             displayOnMobile = {!isMobile(size.width)}
                                         />
                                         <TableRowMetaItem
-                                            title = {"Donaters"}
-                                            value = {`${convertNumber(pool.donaters)}`}
+                                            title = {"Donated (your)"}
+                                            value = {metaAccountNumber(pool.userDonated, account)}
+                                            displayOnMobile = {!isMobile(size.width)}
+                                        />
+                                        <TableRowMetaItem
+                                            title = {"Recieved (your)"}
+                                            value = {metaAccountNumber(pool.userRecieved, account)}
                                             displayOnMobile = {!isMobile(size.width)}
                                         />
                                         <TableRowItem
@@ -141,7 +188,7 @@ const Pools = () => {
                                         >
                                             <Button 
                                                 name = {account ? "Donate" : "Unlock Wallet"}
-                                                link = {`#${pool.name}`}
+                                                link = {`#${pool.token.name}`}
                                                 type = {pool.active ? 'default' : 'disabled'}
                                                 padding = "10px 100px"
                                                 onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
@@ -151,6 +198,7 @@ const Pools = () => {
                                     {chevrons[index] && isMobile(size.width) ?
                                         <ExpandedRow
                                             index = {index}
+                                            poolList = {poolList}
                                             onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
                                         /> : null
                                     }
@@ -162,6 +210,9 @@ const Pools = () => {
             </Main>
         </>
     )
-}
+}))
 
 export default Pools;
+
+//
+// <h2 className="failed_text">Pools fetch data is failed</h2>

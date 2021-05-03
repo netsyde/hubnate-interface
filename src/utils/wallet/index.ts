@@ -17,21 +17,37 @@ interface WindowChain {
 export const setupNetwork = async () => {
   const provider = (window as WindowChain).ethereum
   if (provider) {
-    const chainId = 97;
+    const chainId = 4;//97;
     try {
+      // await provider.request({
+      //   method: 'wallet_addEthereumChain',
+      //   params: [
+      //     {
+      //       chainId: `0x${chainId.toString(16)}`,
+      //       chainName: 'Binance Smart Chain Testnet',
+      //       nativeCurrency: {
+      //         name: 'BNB',
+      //         symbol: 'bnb',
+      //         decimals: 18,
+      //       },
+      //       rpcUrls: nodes,
+      //       blockExplorerUrls: ['https://testnet.bscscan.com'], // https://bscscan.com/ - mainnet
+      //     },
+      //   ],
+      // })
       await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
             chainId: `0x${chainId.toString(16)}`,
-            chainName: 'Binance Smart Chain Testnet',
+            chainName: 'Rinkeby Test Network',
             nativeCurrency: {
-              name: 'BNB',
-              symbol: 'bnb',
+              name: 'ETH',
+              symbol: 'eth',
               decimals: 18,
             },
             rpcUrls: nodes,
-            blockExplorerUrls: ['https://testnet.bscscan.com'], // https://bscscan.com/ - mainnet
+            blockExplorerUrls: ['https://rinkeby.etherscan.io/'], // https://bscscan.com/ - mainnet
           },
         ],
       })

@@ -1,339 +1,393 @@
 [
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "donateId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "totalTickets",
-          "type": "uint256"
-        }
-      ],
-      "name": "DonateDistribution",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "PoolOpen",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "donateId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "numberOfTickets",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "requestId",
-          "type": "bytes32"
-        }
-      ],
-      "name": "SendDonate",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_numberOfTickets",
-          "type": "uint256"
-        }
-      ],
-      "name": "costToBuyTickets",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "totalCost",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_token",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_costPerTicket",
-          "type": "uint256"
-        }
-      ],
-      "name": "createNewPool",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "poolId",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_seed",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_numberOfTickets",
-          "type": "uint256"
-        }
-      ],
-      "name": "donate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_requestId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_randomness",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_donateId",
-          "type": "uint256"
-        }
-      ],
-      "name": "donateDistribution",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_donateId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getBasicDonateInfo",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "donateId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "donater",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "numberOfTickets",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "requestId",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct Donate.Donate",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_poolId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getBasicPoolInfo",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "poolId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "costPerTicket",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "donateIdCounter",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "totalTickets",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct Donate.Pool",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_IRandomNumberConsumer",
-          "type": "address"
-        }
-      ],
-      "name": "initialize",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_max",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_randomness",
-          "type": "uint256"
-        }
-      ],
-      "name": "numberInRange",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "number",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "donateId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "reciever",
+        "type": "address"
+      }
+    ],
+    "name": "DonateDistribution",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "costPerTicket",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolOpen",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "donateId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "numberOfTickets",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SendDonate",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numberOfTickets",
+        "type": "uint256"
+      }
+    ],
+    "name": "costToBuyTickets",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalCost",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_costPerTicket",
+        "type": "uint256"
+      }
+    ],
+    "name": "createNewPool",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_seed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numberOfTickets",
+        "type": "uint256"
+      }
+    ],
+    "name": "donate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_requestId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_randomness",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_donateId",
+        "type": "uint256"
+      }
+    ],
+    "name": "donateDistribution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_donateId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBasicDonateInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "donateId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "donater",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "numberOfTickets",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "requestId",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct Donate.Donate",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBasicPoolInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "poolId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "costPerTicket",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "donateIdCounter",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalTickets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Donate.Pool",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "totalDonated",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalRecieved",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Donate.UserInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_IRandomNumberConsumer",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_max",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_randomness",
+        "type": "uint256"
+      }
+    ],
+    "name": "numberInRange",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

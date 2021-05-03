@@ -1,5 +1,9 @@
 const convertNumber = (number: number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    try {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    } catch (e) {
+        return number
+    }
 }
 
 export default convertNumber;

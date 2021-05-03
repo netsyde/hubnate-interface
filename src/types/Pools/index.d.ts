@@ -14,14 +14,23 @@ export interface IPercent {
 }
 
 export interface IPool {
-    name: string,
-    description?: string,
-    logotype: any,
-    totalDonated: number,
-    chance: number,
-    yourDeposit: number,
-    donaters: number,
+    id: number,
+    token: IToken,
     active: boolean,
+    // fetch from blockchain
+    costPerTicket?: number,
+    totalDonated?: number,
+    chance?: number,
+    userDonated?: number,
+    userRecieved?: number,
+}
+
+export interface IToken {
+    logotype: any,
+    name: string,
+    address: any,
+    decimals: number,
+    description?: string
 }
 
 export interface IPoolContainer {

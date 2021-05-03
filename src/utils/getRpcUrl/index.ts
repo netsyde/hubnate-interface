@@ -8,7 +8,8 @@ import random from 'lodash/random'
 // ]
 
 export const nodes = [
-  "https://data-seed-prebsc-1-s1.binance.org:8545/"
+  // "https://data-seed-prebsc-1-s1.binance.org:8545/",
+  'https://rinkeby.infura.io/v3/27b09e39d6064ce9b3e00967faa4c6ad'
 ]
 
 const getNodeUrl = () => {

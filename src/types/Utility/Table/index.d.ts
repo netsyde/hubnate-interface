@@ -16,7 +16,7 @@ export interface ITableRowItem {
 
 export interface ITableRowMetaItem extends ITableRowItem {
     title: string,
-    value: string
+    value: string | JSX.Element
 }
 
 export interface ITableRowTokenItem extends ITableRowItem {
