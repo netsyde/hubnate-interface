@@ -84,7 +84,7 @@ const metaAccountNumber = (number: number, account: string) => {
 const Pools = inject("rootStore")(observer((props: IPools) => {
     let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
-    const [poolList, setPoolList] = useState<IPool[] || false>(false)
+    const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const [chevrons, setChevrons] = useState<boolean[]>(poolList ? poolList.map(() => false) : [false])
     const { account } = useWeb3React()
     const { login } = useAuth()
