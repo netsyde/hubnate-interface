@@ -8,6 +8,7 @@ import { IPool } from '@src/types/Pools';
 import donates from '@src/data/donates';
 import Head from 'next/head';
 import { minifyString, convertNumber, useWindowSize } from '@src/utils';
+import Skeleton from 'react-loading-skeleton';
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -76,6 +77,14 @@ const ExpandedRow = (props: IExpandedRow) => {
     )
 }
 
+const metaAccountNumber = (number: number, account: string) => {
+    try {
+        return typeof(number) == 'number' && (account ? `${convertNumber(number)}` : `locked`) || <Skeleton/>
+    } catch (e) {
+        return <Skeleton/>
+    }
+}
+
 const Recieved = (props: IRecieved) => {
     const address = props.data.address;
     const size = useWindowSize();
@@ -138,7 +147,7 @@ const Recieved = (props: IRecieved) => {
                                             />
                                             <TableRowMetaItem
                                                 title = {"Amount"}
-                                                value = {convertNumber(donate.amount)}
+                                                value = {metaAccountNumber(donate.amount, address)}
                                                 displayOnMobile = {true}
                                             />
                                             <TableRowMetaItem
@@ -148,12 +157,12 @@ const Recieved = (props: IRecieved) => {
                                             />
                                             <TableRowMetaItem
                                                 title = {"Fiat Equivalent"}
-                                                value = {`$${convertNumber(donate.fiatEquivalent)}`}
+                                                value = {`$${metaAccountNumber(donate.fiatEquivalent, address)}`}
                                                 displayOnMobile = {!isMobile(size.width)}
                                             />
                                             <TableRowMetaItem
                                                 title = {"Win Ticket"}
-                                                value = {convertNumber(donate.winTicket)}
+                                                value = {metaAccountNumber(donate.winTicket, address)}
                                                 displayOnMobile = {!isMobile(size.width)}
                                             />
                                             <TableRowItem
