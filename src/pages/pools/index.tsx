@@ -36,16 +36,20 @@ const ExpandedRow = (props: IExpandedRow) => {
         <tr className = "row_expanded">
             <td>
                 <div className = "row_expanded__line">
-                    <p className = "table_meta">Chance</p>
-                    <p className = "table_meta-number">{convertNumber(poolList[props.index].chance)}% || <Skeleton/></p>
+                    <p className = "table_meta">Total Donated</p>
+                    <p className = "table_meta-number">{metaNumber(poolList[props.index].totalDonated)}</p>
+                </div>
+                <div className = "row_expanded__line">
+                    <p className = "table_meta">Chance, %</p>
+                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].chance, account)}</p>
                 </div>
                 <div className = "row_expanded__line">
                     <p className = "table_meta">Donated (your)</p>
-                    <p className = "table_meta-number">{(account ? convertNumber(poolList[props.index].userDonated) : 'locked') || <Skeleton/>}</p>
+                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userDonated, account)}</p>
                 </div>
                 <div className = "row_expanded__line">
                     <p className = "table_meta">Recieved (your)</p>
-                    <p className = "table_meta-number">{(account ? convertNumber(poolList[props.index].userRecieved) : 'locked') || <Skeleton/>}</p>
+                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userRecieved, account)}</p>
                 </div>
                 <div className = "row_expanded__line row_expanded__line-center">
                     <Button 
@@ -166,10 +170,10 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
                                         <TableRowMetaItem
                                             title = {"Total Donated"}
                                             value = {metaNumber(pool.totalDonated)}
-                                            displayOnMobile = {true}
+                                            displayOnMobile = {!isMobile(size.width)}
                                         />  
                                         <TableRowMetaItem
-                                            title = {"Chance"}
+                                            title = {"Chance, %"}
                                             value = {metaAccountNumber(pool.chance, account)}
                                             displayOnMobile = {!isMobile(size.width)}
                                         />

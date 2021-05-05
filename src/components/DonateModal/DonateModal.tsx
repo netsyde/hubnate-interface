@@ -28,14 +28,12 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
 
         const onClickDonate = async () => {
             let poolId = props.pools ? props.pools[props.selectedPool].id : 1;
-            let pool = await donateContract.methods.getBasicPoolInfo(poolId).call()
+            let price = await donateContract.methods.costToBuyTickets(poolId, amount).call()
 
-            let userInPool = await donateContract.methods.getUserInfo(poolId, account).call()
-            let price = await donateContract.methods.costToBuyTickets(1, amount).call()
+            let approveTx = await approve(token, donateContract, account, price)
+            console.log(approveTx)
 
-            let tokenApprove = await approve(token, donateContract, account, price)
-
-            let donate = await donateContract.methods.donate(124, 1, amount).send({ from: account })
+            let donate = await donateContract.methods.donate(124, poolId, amount).send({ from: account })
             console.log(donate)
         }
 
@@ -43,7 +41,7 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
             e.stopPropagation();
         }
 
-        const onChanceAmount = (e: any) => {
+        const onChangeAmount = (e: any) => {
             setAmount(e.target.value.replace(/\D/g, ''))
         }
 
@@ -57,16 +55,17 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                 let pool = props.pools ? props.pools[props.selectedPool] : false
                 let fixAmount = amount ? amount : 0;
                 if (pool) {
-                    let costToBuyTickets = pool.costPerTicket * amount;
+                    let costToBuyTickets = pool.costPerTicket * Number(fixAmount);
                     setCost(costToBuyTickets)
                 }
             }
 
             const getChance = async () => {
                 let pool = props.pools ? props.pools[props.selectedPool] : false
-
+                let fixAmount = amount ? Number(amount) : 0
                 if (pool) {
-                    let chance = Number((amount / pool.totalDonated * 100).toFixed(2))
+                    console.log(fixAmount, pool.totalDonated, pool.totalDonated + fixAmount)
+                    let chance = Number(( ( (fixAmount + pool.userDonated) / (pool.totalDonated + fixAmount) ) * 100).toFixed(2))
 
                     if (chance > 100) {
                         setChance(100)
@@ -109,7 +108,7 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                         className = "donate-modal__input"
                         pattern = "^[0-9]*$"
                         value = {amount}
-                        onChange = {onChanceAmount}
+                        onChange = {onChangeAmount}
                     />
                 </div>
                 <Button 

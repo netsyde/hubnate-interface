@@ -64,11 +64,11 @@ class UserStore {
     
             if (pool) {
                 let decimals = 18
-                poolInfo.costPerTicket = this.fixNumber(pool.costPerTicket, decimals);
-                poolInfo.totalDonated =  this.fixNumber(pool.costPerTicket * pool.totalTickets, decimals);
+                poolInfo.costPerTicket = Number(this.fixNumber(pool.costPerTicket, decimals));
+                poolInfo.totalDonated =  Number(this.fixNumber(pool.costPerTicket * pool.totalTickets, decimals));
                 if (userInPool) {
-                    poolInfo.userDonated = this.fixNumber(userInPool.totalDonated, decimals);
-                    poolInfo.userRecieved = this.fixNumber(userInPool.totalRecieved, decimals);
+                    poolInfo.userDonated = Number(this.fixNumber(userInPool.totalDonated, decimals));
+                    poolInfo.userRecieved = Number(this.fixNumber(userInPool.totalRecieved, decimals));
                     console.log(poolInfo.userDonated, poolInfo.userRecieved )
                     poolInfo.chance = Number( (poolInfo.userDonated / poolInfo.totalDonated * 100).toFixed(2));
                 }
