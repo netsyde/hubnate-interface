@@ -23,6 +23,7 @@ export interface IPool {
     chance?: number,
     userDonated?: number,
     userRecieved?: number,
+    allowance?: boolean
 }
 
 export interface IToken {

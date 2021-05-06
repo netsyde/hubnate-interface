@@ -24,35 +24,35 @@ interface IMain {
     rootStore?: RootStore
 }
 
-const menuItems = [
-    {
-        name: "Pools",
-        link: '/pools',
-        isButton: false
-    },
-    {
-        name: "Account",
-        link: '/account/0xaC0dB4c98A3C2dDaa16Fe54B0487F86b227F7B1d',
-        isButton: false
-    },
-    {
-        name: "Community",
-        link: '#',
-        isButton: false
-    },
-    {
-        name: "About",
-        link: '#',
-        isButton: false
-    }
-]
-
 const Main = inject("rootStore")(observer((props: IMain) => {
+    const { account } = useWeb3React()
+    const menuItems = [
+        {
+            name: "Pools",
+            link: '/pools',
+            isButton: false
+        },
+        {
+            name: "Account",
+            link: `/account/${account}`,
+            isButton: false
+        },
+        {
+            name: "Community",
+            link: '#',
+            isButton: false
+        },
+        {
+            name: "About",
+            link: '#',
+            isButton: false
+        }
+    ]
+
     useEagerConnect()
     const size = useWindowSize();
     const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
     const { login, logout } = useAuth()
-    const { account } = useWeb3React()
     const user = props.rootStore.user;
     const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(login, logout, account)
 

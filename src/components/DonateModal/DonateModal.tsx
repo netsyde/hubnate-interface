@@ -5,6 +5,8 @@ import { useDonate, useERC20 } from '@src/hooks/useContract'
 import { useWeb3React } from '@web3-react/core';
 import { approve } from '@src/utils/callHelpers';
 import { fixNumber } from '@src/utils';
+import { ethers } from 'ethers'
+import BigNumber from 'bignumber.js'
 
 interface IDonateModal {
     fade?: Fade,
@@ -12,6 +14,7 @@ interface IDonateModal {
     selectedPool: number,
     setSelectedPool: any,
     style?: any,
+    onDismiss?: any
 }
 
 type Fade = 'fadeIn' | 'fadeOut' | ''
@@ -21,20 +24,24 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
     const [amount, setAmount] = useState<number>(0);
     const [cost, setCost] = useState<number>(0);
     const [chance, setChance] = useState<number>(0);
-
+    const [allowance, setAllowance] = useState<boolean>(false);
     const { account } = useWeb3React()
+    
     if (props.pools) {
         let token = useERC20(props.pools[props.selectedPool].token.address[4])
 
         const onClickDonate = async () => {
             let poolId = props.pools ? props.pools[props.selectedPool].id : 1;
-            let price = await donateContract.methods.costToBuyTickets(poolId, amount).call()
-
-            let approveTx = await approve(token, donateContract, account, price)
-            console.log(approveTx)
-
             let donate = await donateContract.methods.donate(124, poolId, amount).send({ from: account })
-            console.log(donate)
+            if (donate) {
+                props.onDismiss()
+                console.log(donate)
+            }
+        }
+
+        const onClickEnable = async () => {
+            let approveTx = await approve(token, donateContract, account, ethers.constants.MaxUint256)
+            console.log(approveTx)
         }
 
         const modalOnClick = (e: any) => {
@@ -81,6 +88,22 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
             getChance()
         }, [amount, props.selectedPool]);
 
+        useEffect(() => {
+            const getAllowance = async () => {
+                try {   
+                    let response = await token.methods.allowance(account, donateContract.options.address).call()
+                    const currentAllowance = new BigNumber(response)
+                    console.log(currentAllowance)
+                    setAllowance(currentAllowance.gt(0))
+                } catch (e) {
+                    console.log(e)
+                    return false
+                }
+            }
+
+            getAllowance()
+        }, [account, token, allowance])
+
         return (
             <div className = {`donate-modal ${props.fade}`} style={props.style} ref = {ref} onClick = {modalOnClick}>
                 <div className="donate-modal_group">
@@ -112,11 +135,11 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                     />
                 </div>
                 <Button 
-                    name = "Donate"
+                    name = {allowance ? `Donate` : 'Enable'}
                     link = {`#`}
                     type = {'default'}
                     padding = "10px 100px"
-                    onClick = {() => onClickDonate()}
+                    onClick = {allowance ? onClickDonate : onClickEnable}
                 />
                 <div className="donate-modal_meta">
                     <div className="donate-modal_meta__group">
@@ -126,11 +149,6 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                     <div className="donate-modal_meta__group">
                         <p className="donate-modal_meta__group_key">Chance recieve</p>
                         <p className="donate-modal_meta__group_value">{chance}%</p>
-                    </div>
-                    
-                    <div className="donate-modal_meta__group">
-                        <p className="donate-modal_meta__group_key">Fee</p>
-                        <p className="donate-modal_meta__group_value">0.003 BNB</p>
                     </div>
                 </div>
             </div>

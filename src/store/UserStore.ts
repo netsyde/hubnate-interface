@@ -66,6 +66,8 @@ class UserStore {
                 let decimals = 18
                 poolInfo.costPerTicket = Number(this.fixNumber(pool.costPerTicket, decimals));
                 poolInfo.totalDonated =  Number(this.fixNumber(pool.costPerTicket * pool.totalTickets, decimals));
+                // poolInfo.allowance = allowance;
+
                 if (userInPool) {
                     poolInfo.userDonated = Number(this.fixNumber(userInPool.totalDonated, decimals));
                     poolInfo.userRecieved = Number(this.fixNumber(userInPool.totalRecieved, decimals));
