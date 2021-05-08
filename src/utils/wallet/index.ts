@@ -31,26 +31,10 @@ export const setupNetwork = async () => {
       //         decimals: 18,
       //       },
       //       rpcUrls: nodes,
-      //       blockExplorerUrls: ['https://testnet.bscscan.com'], // https://bscscan.com/ - mainnet
+      //       blockExplorerUrls: ['https://testnet.bscscan.com'],
       //     },
       //   ],
       // })
-      await provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          {
-            chainId: `0x${chainId.toString(16)}`,
-            chainName: 'Rinkeby Test Network',
-            nativeCurrency: {
-              name: 'ETH',
-              symbol: 'eth',
-              decimals: 18,
-            },
-            rpcUrls: nodes,
-            blockExplorerUrls: ['https://rinkeby.etherscan.io/'], // https://bscscan.com/ - mainnet
-          },
-        ],
-      })
       return true
     } catch (error) {
       console.error(error)

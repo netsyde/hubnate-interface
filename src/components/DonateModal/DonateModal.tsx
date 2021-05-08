@@ -25,6 +25,7 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
     const [cost, setCost] = useState<number>(0);
     const [chance, setChance] = useState<number>(0);
     const [allowance, setAllowance] = useState<boolean>(false);
+    const [wait, setWait] = useState<boolean>(false)
     const { account } = useWeb3React()
     
     if (props.pools) {
@@ -32,15 +33,22 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
 
         const onClickDonate = async () => {
             let poolId = props.pools ? props.pools[props.selectedPool].id : 1;
+            setWait(true)
             let donate = await donateContract.methods.donate(124, poolId, amount).send({ from: account })
             if (donate) {
                 props.onDismiss()
                 console.log(donate)
+                setWait(false)
             }
         }
 
         const onClickEnable = async () => {
+            setWait(true)
             let approveTx = await approve(token, donateContract, account, ethers.constants.MaxUint256)
+            if (approveTx) {
+                setAllowance(true)
+                setWait(false)
+            }
             console.log(approveTx)
         }
 
@@ -100,8 +108,9 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                     return false
                 }
             }
-
+            
             getAllowance()
+            console.log(allowance)
         }, [account, token, allowance])
 
         return (
@@ -135,9 +144,9 @@ const DonateModal = React.forwardRef((props: IDonateModal, ref: any) => {
                     />
                 </div>
                 <Button 
-                    name = {allowance ? `Donate` : 'Enable'}
+                    name = {wait ? 'Confirming...' : (allowance ? `Donate` : 'Enable')}
                     link = {`#`}
-                    type = {'default'}
+                    type = {wait ? 'disabled' : 'default'}
                     padding = "10px 100px"
                     onClick = {allowance ? onClickDonate : onClickEnable}
                 />

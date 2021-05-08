@@ -26,6 +26,7 @@ const useAuth = () => {
     if (connector) {
       console.log('connector exist')
       activate(connector, async (error: Error) => {
+        console.log('error')
         if (error instanceof UnsupportedChainIdError) {
           console.log('UnsupportedChainIdError')
           const hasSetup = await setupNetwork()
@@ -34,6 +35,7 @@ const useAuth = () => {
             activate(connector)
           }
         } else {
+          console.log('test 1')
           window.localStorage.removeItem("connectorId")
           if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
               console.log('Provider Error', 'No provider was found')
@@ -42,6 +44,7 @@ const useAuth = () => {
             error instanceof UserRejectedRequestErrorWalletConnect
           ) {
             if (connector instanceof WalletConnectConnector) {
+              console.log('WalletConnectConnector')
               const walletConnector = connector as WalletConnectConnector
               walletConnector.walletConnectProvider = null
             }
