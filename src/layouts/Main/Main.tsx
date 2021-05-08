@@ -30,17 +30,17 @@ const Main = inject("rootStore")(observer((props: IMain) => {
         {
             name: "Pools",
             link: '/pools',
-            isButton: false
+            isButton: false,
         },
-        {
-            name: "Account",
-            link: `/account/${account}`,
-            isButton: false
-        },
+        // {
+        //     name: "Account",
+        //     link: `/account/${account}`,
+        //     isButton: false
+        // },
         {
             name: "Community",
-            link: '#',
-            isButton: false
+            link: 'https://t.me/hubnate',
+            isButton: false,
         },
         {
             name: "About",

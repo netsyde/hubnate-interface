@@ -22,17 +22,17 @@ const Main = () => {
                         items: [
                             {
                                 name: 'Use Hubnate',
-                                link: "#",
+                                link: "/pools",
                                 type: 'default'
                             },
                             {
                                 name: 'FAQ',
-                                link: "/faq",
+                                link: "https://t.me/hubnate",
                                 type: 'transparent'
                             },
                             {
                                 name: 'Documentation',
-                                link: "/documentation",
+                                link: "https://t.me/hubnate",
                                 type: 'transparent'
                             }
                         ]
