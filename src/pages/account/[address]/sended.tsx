@@ -14,6 +14,7 @@ import { RootStore } from '@src/store/RootStore';
 import poolsGap from '@src/data/constants/pools';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract';
 import { PoolSelector } from '@components/Account';
+import { useWeb3React } from '@web3-react/core';
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -29,7 +30,9 @@ interface IDonate {
     donateId: number,
     donater: string,
     numberOfTickets: number,
-    requestId: string
+    requestId: string,
+    isTicketsClaim: boolean;
+    isDistribution: boolean;
 }
 
 // const getTotalAmount = (donates: IDonate[]) => {
@@ -42,7 +45,7 @@ interface IDonate {
 //     return total;
 // }
 
-interface IRecieved {
+interface ISended {
     data: any,
     rootStore: RootStore
 }
@@ -50,6 +53,9 @@ interface IRecieved {
 interface IExpandedRow {
     index: number,
     donateList: IDonate[],
+    claimTickets: any,
+    openDonateModal?: any,
+    claiming: boolean
 }
 
 const ExpandedRow = (props: IExpandedRow) => {
@@ -65,6 +71,21 @@ const ExpandedRow = (props: IExpandedRow) => {
                     <p className = "table_meta">Request Id</p>
                     <p className = "table_meta-number">{minifyString(donate.requestId)}</p>
                 </div>
+                <div className = "row_expanded__line row_expanded__line-center">
+                   {(!donate.isTicketsClaim && donate.isDistribution ) ? <Button 
+                        name = {props.claiming ? 'Claiming...' : "Claim"}
+                        type = {props.claiming ? 'disabled' : 'default'}
+                        padding = "10px 100px"
+                        onClick = {() => props.claimTickets(donate.donateId)}
+                    /> : 
+                    <Button 
+                        name = {"Claimed"}
+                        type = {'disabled'}
+                        padding = "10px 89px"
+                        // onClick = {() => props.claimTickets(donate.donateId)}
+                    />
+                    }
+                </div>
             </td>
         </tr>
     )
@@ -78,24 +99,28 @@ const metaAccountNumber = (number: number, account: string) => {
     }
 }
 
-const Recieved = inject("rootStore")(observer((props: IRecieved) => {
+const Sended = inject("rootStore")(observer((props: ISended) => {
     const address = props.data.address;
     const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
-    const [recieved, setRecieved] = useState<IDonate[]>([])
-    const [chevrons, setChevrons] = useState<boolean[]>(recieved.map(() => false))
+    const [sended, setSended] = useState<IDonate[]>([])
+    const [chevrons, setChevrons] = useState<boolean[]>(sended.map(() => false))
     const donateContract = useHubnate()
+    const [claiming, setClaiming] = useState<boolean>(false)
     const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))
     const [selectedPool, setSelectedPool] = useState<number>(0);
+    let hubnate = useHubnate()
+    const { account } = useWeb3React()
 
     useEffect(() => {
-        const getRecieved = async () => {
-            let userRecieved = await props.rootStore.user.getUserRecieved(donateContract, poolList[selectedPool].id, address)
-            console.log('user recieved', userRecieved)
-            if (userRecieved) {
-                setRecieved(userRecieved)
+        const getSended = async () => {
+            let userSended = await props.rootStore.user.getUserSended(donateContract, poolList[selectedPool].id, address)
+            console.log('user sended', userSended)
+            if (userSended) {
+                setSended(userSended)
             }
         }
+
         const getPoolList = async () => {
             let fetchPoolList =  await props.rootStore.user.getPools(donateContract, CTcontracts, address) || poolsGap;
             console.log(fetchPoolList)
@@ -106,8 +131,8 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
         
         getPoolList()
         // getPoolList()
-        getRecieved()
-    }, [address, selectedPool]);
+        getSended()
+    }, [address, selectedPool, claiming]);
 
     const handleTableRowClick = (index: number) => {
         let newChevrons = chevrons.concat()
@@ -115,17 +140,32 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
         setChevrons(newChevrons)
     }
 
+    const claimTickets = async (donateId: number) => {
+        console.log('donate donateId', donateId)
+        setClaiming(true);
+        // console.log(token)
+        let claim = await hubnate.methods.claimTickets(
+            poolsGap[selectedPool].id,
+            donateId
+        ).send({ from: account })
+
+        if (claim) {
+            setClaiming(false)
+            console.log('successfully claim')
+        }
+    }
+
     if (address) {
         return (
             <>
                 <Head>
-                    <title>Hubnate | Account Recieved</title>
+                    <title>Hubnate | Account Sended</title>
                 </Head>
                 <Main>
                     <div className = "account">
                         <Container
                             className = {"account_container"}
-                            title = {"Account Recieved"}
+                            title = {"Account Sended"}
                             address = {isMobile(size.width) ? minifyString(address) : address}
                         >
                             <div className = "account_main account_recieved">
@@ -135,13 +175,13 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
                                         selectedPool = {selectedPool}
                                         setSelectedPool = {setSelectedPool}
                                     />
-                                    <p className = {"account_text"}>Donates recieved: {recieved.length}</p>
+                                    <p className = {"account_text"}>Donates sended: {sended.length}</p>
                                 </div>
                                 <div className = "account_main__buttons">
                                     <Button 
                                         name = "Sended"
                                         link = {`/account/${address}/sended`}
-                                        type = {'default'}
+                                        type = {'disabled'}
                                         padding = "10px 20px"
                                         className = {"mr10"}
                                         
@@ -155,13 +195,14 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
                                 </div>
                             </div>
                             <Table>
-                                {recieved && recieved.map((donate: IDonate, index: number) => 
+                                {sended && sended.map((donate: IDonate, index: number) => 
                                     <React.Fragment key = {index}>
                                         <TableRow
                                             key = {index}
                                             onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
                                             isMobile = {isMobile(size.width)}
                                             isOpen = {chevrons[index]}
+                                            // style = {(!donate.isTicketsClaim && donate.isDistribution ) ? {filter: "blur(5.2px)", userSelect: 'none'} : null}
                                         >
                                             <TableRowTokenItem 
                                                 ticker = {poolList[selectedPool].token.name}
@@ -170,7 +211,7 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
                                             />
                                             <TableRowMetaItem
                                                 title = {"Amount"}
-                                                value = {metaAccountNumber(Number(donate.numberOfTickets) * poolList[selectedPool].costPerTicket, address)}
+                                                value = {metaAccountNumber(Number(donate.numberOfTickets)  * poolList[selectedPool].costPerTicket, address)}
                                                 displayOnMobile = {true}
                                             />
                                             <TableRowMetaItem
@@ -183,21 +224,34 @@ const Recieved = inject("rootStore")(observer((props: IRecieved) => {
                                                 value = {`${minifyString(donate.requestId)}`}
                                                 displayOnMobile = {!isMobile(size.width)}
                                             />
-                                            {/* <TableRowItem
-                                                displayOnMobile = {!isMobile(size.width)}
-                                            >
-                                                <Button 
-                                                    name = "View"
-                                                    link = {`https://bscscan.com/tx/${donate.txHash}`}
-                                                    type = {'default'}
-                                                    padding = "10px 100px"
-                                                />
-                                            </TableRowItem> */}
+                                            {(!donate.isTicketsClaim && donate.isDistribution ) ? 
+                                                (<TableRowItem
+                                                    displayOnMobile = {!isMobile(size.width)}
+                                                >
+                                                    <Button 
+                                                        name = {claiming ? 'Claiming...' : "Claim"}
+                                                        type = {claiming ? 'disabled' : 'default'}
+                                                        padding = "10px 100px"
+                                                        onClick = {() => claimTickets(donate.donateId)}
+                                                    />
+                                                </TableRowItem>) : 
+                                                (<TableRowItem
+                                                    displayOnMobile = {!isMobile(size.width)}
+                                                >
+                                                    <Button 
+                                                        name = {"Claimed"}
+                                                        type = {'disabled'}
+                                                        padding = "10px 89px"
+                                                    />
+                                                </TableRowItem>)
+                                            }
                                         </TableRow>
                                         {chevrons[index] && isMobile(size.width) ?
                                             <ExpandedRow
                                                 index = {index}
-                                                donateList = {recieved}
+                                                donateList = {sended}
+                                                claiming = {claiming}
+                                                claimTickets = {claimTickets}
                                             /> : null
                                         }
                                     </React.Fragment>
@@ -221,4 +275,4 @@ export const getServerSideProps = async (contex: any) => {
     return { props: { data } }
 }
 
-export default Recieved;
+export default Sended;

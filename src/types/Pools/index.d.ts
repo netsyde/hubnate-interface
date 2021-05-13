@@ -23,7 +23,11 @@ export interface IPool {
     chance?: number,
     userDonated?: number,
     userRecieved?: number,
-    allowance?: boolean
+    allowance?: boolean,
+    CT: any,
+    userCThodlAmount?: number,
+    userDonatedIds?: number[],
+    userRecievedIds?: number[]
 }
 
 export interface IToken {
@@ -42,7 +46,7 @@ export interface IPoolContainer {
 }
 
 export interface IPoolSelector {
-    pools: IUserInPool[],
+    pools: IPool[],
     selectedPool: number,
     setSelectedPool: any
 }

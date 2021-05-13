@@ -13,11 +13,21 @@ const tokens = {
       name: 'NSD',
       address: {
         56: '',
-        97: '0x8587591f38A197737B43Cd9415d5819100D623f9',
+        97: '',
         4: '0xb8bc99ae9F8FEF7A3D7Dbf6DA4a69D6Dd4f55cC2'
       },
       decimals: 18,
       logotype: NSD
+    },
+    bux: {
+      name: 'BUX',
+      address: {
+        56: '',
+        97: '',
+        4: '0x5a3B809c17C31bF71670FbF19dD890d471E7642a'
+      },
+      decimals: 18,
+      logotype: BUX
     }
 }
 

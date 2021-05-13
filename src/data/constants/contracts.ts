@@ -1,7 +1,7 @@
 export default {
-    donate: {
-      97: '0xBa9EFa2a9Ba8742Da4A0dD8c066dbCF0f0096ec4',
+    hubnate: {
+      97: '',
       56: '',
-      4: '0x527598a9986AA9E738F24fB5d2B69A7ab41aBbb2'
+      4: '0x1bb217d1D2311730041DcC30F21954D12c058b33'
     }
 }

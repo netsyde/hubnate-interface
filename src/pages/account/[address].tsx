@@ -1,13 +1,19 @@
 import { Main } from '@src/layouts'
 import { Container } from '@components/Utility'
 import { Button, Chart } from '@components/Utility'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { IChartApi } from 'lightweight-charts'
-import poolList from '@src/data/userInPools'
+// import poolList from '@src/data/userInPools'
 import { PoolSelector } from '@components/Account';
 import Head from 'next/head'
 import { useWindowSize, convertNumber, minifyString } from '@src/utils';
+import { inject, observer } from "mobx-react";
+import { RootStore } from '@src/store/RootStore';
+import poolsGap from '@src/data/constants/pools';
+import { IPool } from '@src/types/Pools';
+import { useHubnate, useERC20, useCT } from '@src/hooks/useContract';
+let baran = require('@src/images/ui/baran.gif')
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -15,14 +21,30 @@ const isMobile = (width: number) => {
 }
 
 interface IAccount {
-    data: any
+    data: any,
+    rootStore: RootStore
 }
 
-const Account = (props: IAccount) => {
+const Account = inject("rootStore")(observer((props: IAccount) => {
     const address = props.data.address;
     const [selectedPool, setSelectedPool] = useState<number>(0);
     const [chart, setChart] = useState<IChartApi>(null);
     const size = useWindowSize();
+    const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
+    const donateContract = useHubnate()
+    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))
+
+    useEffect(() => {
+        const getPoolList = async () => {
+            let fetchPoolList =  await props.rootStore.user.getPools(donateContract, CTcontracts, address) || poolsGap;
+            console.log(fetchPoolList)
+            if (fetchPoolList) {
+                setPoolList(fetchPoolList)
+            }
+        }
+        
+        getPoolList()
+    }, [selectedPool, address]);
 
     if (address) {
         return (
@@ -44,14 +66,14 @@ const Account = (props: IAccount) => {
                                         selectedPool = {selectedPool}
                                         setSelectedPool = {setSelectedPool}
                                     />
-                                    <p className = {"account_text"}>Chance: 21.4% (1589 tickets)</p>
-                                    <p className = {"account_text"}>Total donated: 327</p>
+                                    <p className = {"account_text"}>Chance: {poolList[selectedPool].chance}% ({poolList[selectedPool].userCThodlAmount} tickets)</p>
+                                    <p className = {"account_text"}>Total donated: {poolList[selectedPool].totalDonated}</p>
                                 </div>
                                 <div className = "account_main__buttons">
                                     <Button 
                                         name = "Sended"
                                         link = {`/account/${address}/sended`}
-                                        type = {'disabled'}
+                                        type = {'default'}
                                         padding = "10px 20px"
                                         className = {"mr10"}
                                         
@@ -64,13 +86,13 @@ const Account = (props: IAccount) => {
                                     />
                                 </div>
                             </div>
-                            <Chart
+                            {/* <Chart
                                 chart = {chart}
                                 setChart = {setChart}
-                                data = {poolList[selectedPool]}
+                                data = {}
                                 selectedPool = {selectedPool}
                                 isMobile = {isMobile(size.width)}
-                            />
+                            /> */}
                         </Container>
                     </div>
                 </Main>
@@ -79,7 +101,7 @@ const Account = (props: IAccount) => {
     } else {
         return null
     }
-}
+}))
 
 export const getServerSideProps = async (contex: any) => {
     const data = {

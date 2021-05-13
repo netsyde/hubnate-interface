@@ -32,11 +32,12 @@ const Main = inject("rootStore")(observer((props: IMain) => {
             link: '/pools',
             isButton: false,
         },
-        // {
-        //     name: "Account",
-        //     link: `/account/${account}`,
-        //     isButton: false
-        // },
+        account ?
+        {
+            name: "Account",
+            link: `/account/${account}`,
+            isButton: false
+        } : null,
         {
             name: "Community",
             link: 'https://t.me/hubnate',
@@ -72,13 +73,14 @@ const Main = inject("rootStore")(observer((props: IMain) => {
                         className = {'header_menu'}
                         isMobile = {isMobile(size.width)}
                     >
-                        {menuItems.map((item, index) =>
+                        {menuItems.map((item, index) => item && (
                             <MenuItem 
                                 key = {index}
                                 name = {item.name}
                                 link = {item.link}
                                 isButton = {item.isButton}
-                            />   
+                            /> 
+                            )  
                         )}
                         <Button 
                             name = {account ? minifyString(account) : "Connect"}

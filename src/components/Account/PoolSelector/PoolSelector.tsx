@@ -1,4 +1,4 @@
-import { IUserInPool, IPoolSelector } from '@src/types/Pools';
+import { IPool, IPoolSelector } from '@src/types/Pools';
 
 const PoolSelector = (props: IPoolSelector) => {
     return (
@@ -10,12 +10,12 @@ const PoolSelector = (props: IPoolSelector) => {
                 onChange = {(e) => props.setSelectedPool(e.target.value)}
             >
                 
-                {props.pools.map((pool: IUserInPool, index: number) => 
+                {props.pools.map((pool: IPool, index: number) => 
                     <option className="account_poolSelector__input_option"
                         key = {index}
                         value = {index}
                     >
-                        {pool.poolName}
+                        {pool.token.name}
                     </option>
                 )}
             </select>

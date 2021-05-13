@@ -123,12 +123,61 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "TicketsClaim",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "donated",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "recieved",
         "type": "uint256"
       }
     ],
     "name": "UserInfoUpdate",
     "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_donateId",
+        "type": "uint256"
+      }
+    ],
+    "name": "claimTickets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -159,6 +208,11 @@
       {
         "internalType": "address",
         "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ticketToken",
         "type": "address"
       },
       {
@@ -265,9 +319,19 @@
             "internalType": "bytes32",
             "name": "requestId",
             "type": "bytes32"
+          },
+          {
+            "internalType": "bool",
+            "name": "isTicketsClaim",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isDistribution",
+            "type": "bool"
           }
         ],
-        "internalType": "struct Donate.Donate",
+        "internalType": "struct Hubnate.Donate",
         "name": "",
         "type": "tuple"
       }
@@ -298,6 +362,11 @@
             "type": "address"
           },
           {
+            "internalType": "address",
+            "name": "ticketToken",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "costPerTicket",
             "type": "uint256"
@@ -313,7 +382,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct Donate.Pool",
+        "internalType": "struct Hubnate.Pool",
         "name": "",
         "type": "tuple"
       }
@@ -347,9 +416,19 @@
             "internalType": "uint256",
             "name": "totalRecieved",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "donated",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "recieved",
+            "type": "uint256[]"
           }
         ],
-        "internalType": "struct Donate.UserInfo",
+        "internalType": "struct Hubnate.UserInfo",
         "name": "",
         "type": "tuple"
       }

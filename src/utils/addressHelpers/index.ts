@@ -16,6 +16,6 @@ export const getNSDAddress = () => {
   return getAddress(tokens.nsd.address)
 }
 
-export const getDonateAddress = () => {
-  return getAddress(addresses.donate)
+export const getHubnateAddress = () => {
+  return getAddress(addresses.hubnate)
 }

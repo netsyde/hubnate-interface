@@ -13,7 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 import useAuth from '@src/hooks/useAuth';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore';
-import { useDonate, useERC20 } from '@src/hooks/useContract'
+import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
 import Skeleton from 'react-loading-skeleton';
 import poolsGap from '@src/data/constants/pools'
 
@@ -42,6 +42,10 @@ const ExpandedRow = (props: IExpandedRow) => {
                 <div className = "row_expanded__line">
                     <p className = "table_meta">Chance, %</p>
                     <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].chance, account)}</p>
+                </div>
+                <div className = "row_expanded__line">
+                    <p className = "table_meta">HODL CT Value</p>
+                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userCThodlAmount, account)}</p>
                 </div>
                 <div className = "row_expanded__line">
                     <p className = "table_meta">Donated (your)</p>
@@ -86,17 +90,18 @@ const metaAccountNumber = (number: number, account: string) => {
 }
 
 const Pools = inject("rootStore")(observer((props: IPools) => {
-    let [selectedPool, setSelectedPool] = useState<number>(0);
+    // let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const [chevrons, setChevrons] = useState<boolean[]>(poolList ? poolList.map(() => false) : [false])
     const { account } = useWeb3React()
     const { login } = useAuth()
-    const donateContract = useDonate()
+    const donateContract = useHubnate()
+    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))
     
     useEffect(() => {
         const getPoolList = async () => {
-            let fetchPoolList =  await props.rootStore.user.getPools(donateContract, account) || poolsGap;
+            let fetchPoolList =  await props.rootStore.user.getPools(donateContract, CTcontracts, account) || poolsGap;
             console.log(fetchPoolList)
             if (fetchPoolList) {
                 setPoolList(fetchPoolList)
@@ -109,8 +114,6 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
     let [onPresentDonateModal] = useModal(
         <DonateModal 
             pools = {poolList ? poolList : false} // poolList.filter((pool) => pool.active)
-            selectedPool = {selectedPool}
-            setSelectedPool = {setSelectedPool}
         />
     )
 
@@ -121,7 +124,8 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
     )
 
     const onClickDonate = (index: number) => {
-        setSelectedPool(index)
+        // console.log('first donate', index, selectedPool)
+        props.rootStore.user.setSelectedPool(index)
         onPresentDonateModal() // TODO: fix updating selectedPool ^
     }
 
@@ -175,6 +179,11 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
                                         <TableRowMetaItem
                                             title = {"Chance, %"}
                                             value = {metaAccountNumber(pool.chance, account)}
+                                            displayOnMobile = {!isMobile(size.width)}
+                                        />
+                                        <TableRowMetaItem
+                                            title = {"HODL CT Value"}
+                                            value = {metaAccountNumber(pool.userCThodlAmount, account)}
                                             displayOnMobile = {!isMobile(size.width)}
                                         />
                                         <TableRowMetaItem
