@@ -13,7 +13,6 @@ import { RootStore } from '@src/store/RootStore';
 import poolsGap from '@src/data/constants/pools';
 import { IPool } from '@src/types/Pools';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract';
-let baran = require('@src/images/ui/baran.gif')
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
