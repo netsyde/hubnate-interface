@@ -1,11 +1,225 @@
 .pools {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 60px;
-    // height: 100%;
     flex: 1;
+    flex-direction: row;
+    color: #000;
+
+    &_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 60px;
+        flex: 1;
+        flex-direction: column;
+        color: #000;
+    }
+
+    &_info {
+        display: flex;
+        flex-direction: column;
+        flex: 6;
+        margin-right: 40px;
+
+        &__menu {
+            display: flex;
+            flex-direction: row;
+
+            p {
+                font-size: 16px;
+                font-family: "GT Haptik Regular";
+                margin: 0;
+                padding: 0;
+                margin-right: 40px;
+                padding-bottom: 4px;
+            }
+
+            &-enabled {
+                border-bottom: 2px solid #8e44ad;
+            }
+        }
+
+        &__description {
+            font-size: 14px;
+            font-family: "Inter-Regular";
+            margin-top: 40px;
+            margin-bottom: 40px;
+            color: #717781;
+        }
+
+        &__stats {
+            display: flex;
+            flex-direction: column;
+
+            &_row {
+                display: flex;
+                flex-direction: row;
+
+                &-left {
+                    display: flex;
+
+                }
+
+                &-right {
+                    display: flex;
+                    flex-direction: column;
+
+                }
+            }
+        }
+
+    }
+
+    &_panel {
+        display: flex;
+        flex: 4;
+        box-shadow: 0 5px 20px rgba(56, 27, 68, 0.25);
+        padding: 32px;
+        // margin: 32px;
+        border-radius: 20px;
+        min-height: 540px;
+        max-width: 400px;
+        border: 1px solid rgba(56,27,68,.25);
+        flex-direction: column;
+
+        &__menu {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            
+            &_route {
+                display: flex;
+                flex-direction: row;
+                flex: 1;
+
+                p {
+                    font-size: 16px;
+                    font-family: "GT Haptik Regular";
+                    margin: 0;
+                    padding: 0;
+                    margin-right: 40px;
+                    padding-bottom: 4px;
+                }
+    
+                &-enabled {
+                    border-bottom: 2px solid #8e44ad;
+                }
+            }
+
+            &_control {
+                display: flex;
+                flex-direction: row;
+                flex: 1;
+                justify-content: flex-end;
+
+                &__box {
+                    height: 40px;
+                    width: 40px;
+                    border-radius: 10px;
+                    margin-left: 10px;
+                    background: linear-gradient(128.17deg, #dbacee -14.78%, #8e44ad 110.05%);
+                }
+            }
+
+        }
+
+        &__content {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+
+            h2 {
+                font-size: 14px;
+                font-family: "GT Haptik Regular";
+            }
+
+            &_input {
+                border: 1px solid rgba(56,27,68,.2);
+                border-radius: 10px;
+                padding: 10px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                height: 40px;
+                font-size: 24px;
+                font-family: "Inter-SemiBold";
+                // margin-bottom: 20px;
+                outline: none;
+
+                &__title {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    p {
+                        font-size: 14px;
+                        font-family: "Inter-Regular";
+                        color: #717781;
+                    }
+                }
+
+                &__selector {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    img {
+                        height: 40px;
+                        width: auto;
+                    }
+
+                    p {
+                        margin-left: 10px;
+                    }
+                }
+
+                &__chevron {
+                    height: 20px;
+                    width: auto;
+                }
+
+                &__warning {
+                    font-size: 14px;
+                    font-family: "Inter-Regular";
+                    color: red;
+                }
+            }
+        }
+    }
+}
+
+
+.statsBubble {
+    display: flex;
     flex-direction: column;
+    border: 1px solid rgba(56,27,68,.2);
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 155px;
+    margin-right: 30px;
+    margin-bottom: 30px;
+
+    &-big {
+        min-width: 362px;
+    }
+
+    &_name {
+        font-size: 14px;
+        font-family: "Inter-Regular";
+        color: #717781;
+        margin-bottom: 5px;
+    }
+
+    &_number {
+        font-size: 24px;
+        font-family: "Inter-Regular";
+
+        &-big {
+            font-size: 90px;
+            font-family: "Inter-Regular"; 
+        }
+    }
 }
 
 /* Landscape phones and smaller */

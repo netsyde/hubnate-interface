@@ -4,8 +4,7 @@ import { Container } from '@components/Utility';
 import DonateModal from '@components/DonateModal';
 import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
-import { Button, Table } from '@components/Utility';
-import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
+import { Button } from '@components/Utility';
 import Head from 'next/head';
 import { useWindowSize, convertNumber } from '@src/utils';
 import { useModal } from '@src/widgets/Modal';
@@ -16,6 +15,7 @@ import { RootStore } from '@src/store/RootStore';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
 import Skeleton from 'react-loading-skeleton';
 import poolsGap from '@src/data/constants/pools'
+const chevron = require('@images/ui/chevron-right.svg')
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -28,46 +28,6 @@ interface IExpandedRow {
     onClick: any,
     openDonateModal?: any
 }
-
-const ExpandedRow = (props: IExpandedRow) => {
-    const { account } = useWeb3React()
-    const poolList = props.poolList;
-    return (
-        <tr className = "row_expanded">
-            <td>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">Total Donated</p>
-                    <p className = "table_meta-number">{metaNumber(poolList[props.index].totalDonated)}</p>
-                </div>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">Chance, %</p>
-                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].chance, account)}</p>
-                </div>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">HODL CT Value</p>
-                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userCThodlAmount, account)}</p>
-                </div>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">Donated (your)</p>
-                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userDonated, account)}</p>
-                </div>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">Recieved (your)</p>
-                    <p className = "table_meta-number">{metaAccountNumber(poolList[props.index].userRecieved, account)}</p>
-                </div>
-                <div className = "row_expanded__line row_expanded__line-center">
-                    <Button 
-                        name = {account ? `Donate` : `Unlock Wallet`}
-                        type = {poolList[props.index].active ? 'default' : 'disabled'}
-                        padding = "10px 100px"
-                        onClick = {props.onClick}
-                    />
-                </div>
-            </td>
-        </tr>
-    )
-}
-
 
 interface IPools {
     rootStore?: RootStore
@@ -89,6 +49,30 @@ const metaAccountNumber = (number: number, account: string) => {
     }
 }
 
+interface IStatsBubble {
+    name: string,
+    number: number,
+    width?: number
+}
+
+const StatsBubble = (props: IStatsBubble) => {
+    return (
+        <div className="statsBubble" style={{width: props.width}}>
+            <p className="statsBubble_name">{props.name}</p>
+            <p className="statsBubble_number">{props.number}</p>
+        </div>
+    )
+}
+
+const BigStatsBubble = (props: IStatsBubble) => {
+    return (
+        <div className="statsBubble statsBubble-big" style={{width: props.width}}>
+            <p className="statsBubble_name">{props.name}</p>
+            <p className="statsBubble_number-big">{props.number}%</p>
+        </div>
+    )
+}
+
 const Pools = inject("rootStore")(observer((props: IPools) => {
     // let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
@@ -108,7 +92,7 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
             }
         }
         
-        getPoolList()
+        // getPoolList()
     }, [account]);
 
     let [onPresentDonateModal] = useModal(
@@ -133,11 +117,6 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
         alert('not implemented')
     }
 
-    const handleTableRowClick = (index: number) => {
-        let newChevrons = chevrons.concat()
-        newChevrons[index] = !newChevrons[index]
-        setChevrons(newChevrons)
-    }
 
     return (
         <>
@@ -146,78 +125,87 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
             </Head>
             <Main
             >
-                <div className = "pools">
+                <div className = "pools_container">
                     <Container 
                         title = {"Pools"}
-                        onClickElement = {() => onClickSettings()}
+                        address = {''}
+                        // onClickElement = {() => onClickSettings()}
                     >
-                        
-                        <Table>
-                            {poolList.map((pool: IPool, index: number) => 
-                                <React.Fragment key={index}>
-                                    <TableRow
-                                        // style = {pool.active ? null : {filter: "blur(5.2px)", userSelect: 'none'}}
-                                        onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
-                                        isMobile = {isMobile(size.width)}
-                                        isOpen = {chevrons[index]}
-                                    >
-                                        <TableRowTokenItem 
-                                            ticker = {pool.token.name}
-                                            logo = {pool.token.logotype}
-                                            displayOnMobile = {true}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Cost per Ticket"}
-                                            value = {metaNumber(pool.costPerTicket)}
-                                            displayOnMobile = {true}
-                                        /> 
-                                        <TableRowMetaItem
-                                            title = {"Total Donated"}
-                                            value = {metaNumber(pool.totalDonated)}
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        />  
-                                        <TableRowMetaItem
-                                            title = {"Chance, %"}
-                                            value = {metaAccountNumber(pool.chance, account)}
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"HODL CT Value"}
-                                            value = {metaAccountNumber(pool.userCThodlAmount, account)}
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Donated (your)"}
-                                            value = {metaAccountNumber(pool.userDonated, account)}
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        />
-                                        <TableRowMetaItem
-                                            title = {"Recieved (your)"}
-                                            value = {metaAccountNumber(pool.userRecieved, account)}
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        />
-                                        <TableRowItem
-                                            displayOnMobile = {!isMobile(size.width)}
-                                        >
-                                            <Button 
-                                                name = {account ? "Donate" : "Unlock Wallet"}
-                                                link = {`#${pool.token.name}`}
-                                                type = {pool.active ? 'default' : 'disabled'}
-                                                padding = "10px 100px"
-                                                onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
-                                            />
-                                        </TableRowItem>
-                                    </TableRow>
-                                    {chevrons[index] && isMobile(size.width) ?
-                                        <ExpandedRow
-                                            index = {index}
-                                            poolList = {poolList}
-                                            onClick = {account ? (pool.active ? () => onClickDonate(index) : null) : onPresentConnectModal}
-                                        /> : null
-                                    }
-                                </React.Fragment>
-                            )}
-                        </Table>
+                        <div className="pools">
+                            <div className="pools_info">
+                                <div className="pools_info__menu">
+                                    <p className="pools_info__menu-enabled">Information</p>
+                                    <p>Claim</p>
+                                    <p>History</p>
+                                </div>
+                                <p className="pools_info__description">
+                                    The BUX Token (BUX) is a Binance Smart Chain powered BEP20 utility token that can be used
+                                    on the BUX Crypto platform to trade with 0% commission and access premium features. 
+                                    In the near future, BUX aims to enrich a range of community features so that the token offers
+                                    tangible advantages on the BUX Crypto platform. The goal is to create a strong use case
+                                    for BUX and power a micro-economy within the platform.
+                                </p>
+                                <div className="pools_info__stats">
+                                    <div className="pools_info__stats_row">
+                                        <StatsBubble name = {"Distributed"} number = {1000}/>
+                                        <StatsBubble name = {"Cost per Ticket"} number = {2580}/>
+                                        <StatsBubble name = {"HODL CT Value"} number = {10}/>
+                                    </div>
+                                    <div className="pools_info__stats_row">
+                                        <div className="pools_info__stats_row-left">
+                                            <BigStatsBubble name = {"Chance"} number = {22.58}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
+                                        </div>
+                                        <div className="pools_info__stats_row-right">
+                                            <StatsBubble name = {"Cost per Ticket"} number = {2580}/>
+                                            <StatsBubble name = {"HODL CT Value"} number = {10}/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            <div className="pools_panel">
+                                <div className="pools_panel__menu">
+                                    <div className="pools_panel__menu_route">
+                                        <p className="pools_panel__menu_route-enabled">Donate</p>
+                                        <p>Exchange</p>
+                                    </div>
+                                    <div className="pools_panel__menu_control">
+                                        <div className="pools_panel__menu_control__box">
+
+                                        </div>
+                                        <div className="pools_panel__menu_control__box">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="pools_panel__content">
+                                    <h2>Pool</h2>
+                                    <div className="pools_panel__content_input">
+                                        <div className="pools_panel__content_input__selector">
+                                            <img src={poolList[1].token.logotype} alt="" />
+                                            <p>BUX</p>
+                                        </div>
+                                        <img className="pools_panel__content_input__chevron" src={chevron} alt="chevron-right" />
+                                    </div>
+                                    <div className="pools_panel__content_input__warning">Warning message</div>
+                                    <div className="pools_panel__content_input__title">
+                                        <h2>Amount</h2>
+                                        <p>Balance: 1000</p>
+                                    </div>
+                                    <input className="pools_panel__content_input" />
+                                    <div className="pools_panel__content_input__warning">Warning message</div>
+
+                                    <Button 
+                                        name = {`Donate`}
+                                        link = {`#`}
+                                        type = {'default'}
+                                        padding = "10px 100px"
+                                        onClick = {onClickDonate}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </Container>
                 </div>
             </Main>
@@ -226,6 +214,3 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
 }))
 
 export default Pools;
-
-//
-// <h2 className="failed_text">Pools fetch data is failed</h2>
