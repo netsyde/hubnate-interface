@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Main } from '@src/layouts';
 import { Container } from '@components/Utility';
-import { Info, Panel } from '@components/Pools';
+import { Claim as PoolClaim, Panel } from '@components/Pools';
 import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
 import { Button } from '@components/Utility';
@@ -24,7 +24,7 @@ interface IPools {
     rootStore?: RootStore
 }
 
-const Pools = inject("rootStore")(observer((props: IPools) => {
+const Claim = inject("rootStore")(observer((props: IPools) => {
     let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
@@ -53,11 +53,11 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
             >
                 <div className = "pools_container">
                     <Container 
-                        title = {"Pools"}
+                        title = {"Claim"}
                         address = {''}
                     >
                         <div className="pools">
-                            <Info 
+                            <PoolClaim 
                                 poolList = {poolList}
                                 selectedPool = {selectedPool}
                             />
@@ -74,4 +74,4 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
     )
 }))
 
-export default Pools;
+export default Claim;
