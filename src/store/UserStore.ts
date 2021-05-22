@@ -110,6 +110,21 @@ class UserStore {
         }
     }
 
+    async getUserUnclaimDonates (hubnateContract: any, poolId: number, account: string) {
+        try {
+            let userSended = await this.getUserSended(hubnateContract, poolId, account)
+            
+            if (userSended) {
+                return userSended.filter(donate => !donate.isTicketsClaim && donate.isDistribution)
+            } else {
+                return false;
+            }
+        } catch (e) {
+            console.log(e)
+            return false;
+        }
+    }
+
     async getPoolData (donateContract: any, CTcontract: any, poolId: number, account: string) {
         try {
             let pool: IFetchPool = await this.fetchPool(donateContract, poolId);

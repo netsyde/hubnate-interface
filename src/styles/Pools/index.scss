@@ -24,6 +24,37 @@
             display: flex;
             flex-direction: row;
 
+            &_upg {
+                position: relative;
+                display: flex;
+                // flex-direction: row-reverse;
+            }
+            &_tag {
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                font-size: 14px;
+                font-family: "Inter-Regular";
+                height: 8px;
+                width: 8px;
+                border-radius: 8px;
+                background: #8e44ad;
+                left: 45px;
+                top: -5px;
+                animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
+            }
+
+            @keyframes blinker {  
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
             p {
                 font-size: 16px;
                 font-family: "GT Haptik Regular";
@@ -143,8 +174,20 @@
                 height: 40px;
                 font-size: 24px;
                 font-family: "Inter-SemiBold";
-                // margin-bottom: 20px;
+                background-color: #fff;
+                z-index: 2;
                 outline: none;
+                cursor: pointer;
+                user-select: none;
+
+                &-selector {
+                    z-index: 20;
+                    position: relative;
+                }
+
+                &_container {
+                    position: relative;
+                }
 
                 &__title {
                     display: flex;
@@ -184,6 +227,100 @@
                     font-family: "Inter-Regular";
                     color: red;
                 }
+
+                &__expanded {
+                    display: flex;
+                    position: absolute;
+                    // padding: 10px;
+                    width: 100%;
+                    border: 1px solid rgba(56,27,68,.2);
+                    box-shadow: 0 5px 20px rgb(47 138 245 / 5%);
+                    border-radius: 0 0 16px 16px;
+                    background: #fff;
+                    left: 0;
+                    top: 0;
+                    margin-top: 50px;
+                    padding-top: 10px;
+                    z-index: 10;
+                    box-sizing: border-box;
+                    flex-direction: column;
+                    max-height: 400px;
+
+                    &_item {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        // margin-top: 20px;
+                        align-items: center;
+                        cursor: pointer;
+                        padding: 10px;
+                        user-select: none;
+
+                        &__token {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            img {
+                                height: 40px;
+                                width: auto;
+                            }
+        
+                            p {
+                                margin-left: 10px;
+                                font-size: 24px;
+                                font-family: "Inter-SemiBold";
+                            }
+                        }
+
+                        &__balance {
+                            font-size: 14px;
+                            font-family: "Inter-Regular";
+                            color: #717781;
+                        }
+                    }
+                    &_item:hover {
+                        background-color: rgba(56,27,68,.2);
+                        border-radius: 10px;
+                    }
+                }
+            }
+
+            &_input:invalid:required {
+                box-shadow: 0 0 1px 1px red;
+            }
+
+            &_button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+                margin-bottom: 40px;
+            }
+
+            &_stats {
+                display: flex;
+                flex-direction: column;
+                font-size: 14px;
+                font-family: "Inter-Regular";
+
+                &__item {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+
+                    &_title {
+                        color: #717781;
+                    }
+
+                    &_value {
+                        color: #000;
+                        min-width: 70px;
+                        text-align: right;
+                    }
+                }
+
             }
         }
     }
@@ -216,11 +353,12 @@
         font-family: "Inter-Regular";
 
         &-big {
-            font-size: 90px;
+            font-size: 108px;
             font-family: "Inter-Regular"; 
         }
     }
 }
+
 
 /* Landscape phones and smaller */
 @media (max-width: 882px) {

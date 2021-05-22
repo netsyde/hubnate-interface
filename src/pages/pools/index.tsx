@@ -13,8 +13,12 @@ import useAuth from '@src/hooks/useAuth';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
+import { approve } from '@src/utils/callHelpers';
 import Skeleton from 'react-loading-skeleton';
 import poolsGap from '@src/data/constants/pools'
+import Link from 'next/link';
+import { ethers } from 'ethers'
+import { fixNumber } from '@src/utils';
 const chevron = require('@images/ui/chevron-right.svg')
 
 const isMobile = (width: number) => {
@@ -33,22 +37,6 @@ interface IPools {
     rootStore?: RootStore
 }
 
-const metaNumber = (number: number) => {
-    try {
-        return typeof(number) == 'number' && `${convertNumber(number)}` || <Skeleton/>
-    } catch (e) {
-        return <Skeleton/>
-    }
-}
-
-const metaAccountNumber = (number: number, account: string) => {
-    try {
-        return typeof(number) == 'number' && (account ? `${convertNumber(number)}` : `locked`) || <Skeleton/>
-    } catch (e) {
-        return <Skeleton/>
-    }
-}
-
 interface IStatsBubble {
     name: string,
     number: number,
@@ -58,8 +46,8 @@ interface IStatsBubble {
 const StatsBubble = (props: IStatsBubble) => {
     return (
         <div className="statsBubble" style={{width: props.width}}>
-            <p className="statsBubble_name">{props.name}</p>
-            <p className="statsBubble_number">{props.number}</p>
+            <p className="statsBubble_name">{props.name || <Skeleton />}</p>
+            <p className="statsBubble_number">{typeof(props.number) == 'number' ? props.number : <Skeleton />}</p>
         </div>
     )
 }
@@ -67,39 +55,216 @@ const StatsBubble = (props: IStatsBubble) => {
 const BigStatsBubble = (props: IStatsBubble) => {
     return (
         <div className="statsBubble statsBubble-big" style={{width: props.width}}>
-            <p className="statsBubble_name">{props.name}</p>
-            <p className="statsBubble_number-big">{props.number}%</p>
+            <p className="statsBubble_name">{props.name || <Skeleton />}</p>
+            <p className="statsBubble_number-big">{typeof(props.number) == 'number' ? props.number : <Skeleton />}</p>
         </div>
     )
 }
 
+interface IStatsItem {
+    title: string,
+    value: number
+}
+
+const StatsItem = (props: IStatsItem) => {
+    return (
+        <div className="pools_panel__content_stats__item">
+            <p className="pools_panel__content_stats__item_title">
+                {props.title || <Skeleton />} 
+            </p>
+            <p className="pools_panel__content_stats__item_value">
+                {props.value || <Skeleton />}
+            </p>
+        </div>
+    )
+}
+
+interface ISelector {
+    poolList: IPool[],
+    selected: number,
+    setSelected: any
+}
+
+const Selector = (props: ISelector) => {
+    const [expanded, setExpanded] = useState<boolean>(false)
+    const [balances, setBalances] = useState<number[]>([])
+    const { account } = useWeb3React()
+
+    const onClickInput = async () => {
+        setExpanded(!expanded)
+    }
+
+    const onClickItem = (index: number) => {
+        props.setSelected(index)
+        setExpanded(false)
+    }
+    let tokens = props.poolList.map((pool, index) => useERC20(props.poolList[index].token.address[4]))
+    
+
+    useEffect(() => {
+        const getUserTokenBalances = async () => {
+            if (!account) return;
+            let balances = []
+            for (let i = 0; i < props.poolList.length; i++) {
+                let token = tokens[i]
+                let response = await token.methods.balanceOf(account).call()
+
+                if (response) {
+                    balances.push(fixNumber(response, 18))
+                }
+                console.log('currentBalance', fixNumber(response, 18))
+            }
+            setBalances(balances)           
+        }
+
+        getUserTokenBalances()
+    }, [account])
+
+    return (
+        <div className="pools_panel__content_input_container">
+            <div className="pools_panel__content_input pools_panel__content_input-selector" onClick = {onClickInput}>
+                <div className="pools_panel__content_input__selector">
+                    <img src={props.poolList[props.selected].token.logotype} alt="" />
+                    <p>{props.poolList[props.selected].token.name}</p>
+                </div>
+                <img className="pools_panel__content_input__chevron" src={chevron} alt="chevron-right" />
+            </div>
+
+            {expanded &&
+                <div className="pools_panel__content_input__expanded">
+                    {props.poolList.map((pool, index) =>
+                        <div key = {index} className="pools_panel__content_input__expanded_item" onClick = {() => onClickItem(index)}>
+                            <div className="pools_panel__content_input__expanded_item__token">
+                                <img src={pool.token.logotype} alt={pool.token.name} />
+                                <p>{pool.token.name}</p>
+                            </div>
+                            
+                            <p className="pools_panel__content_input__expanded_item__balance">{balances[index]}</p>
+                        </div>
+                    )}
+                </div>
+            }
+        </div>
+    )
+}
+
+interface IButtonState {
+    type: 'default' | 'disabled';
+    text: 'Enable' | 'Donate' | 'Confirming...' | 'Insufficient balance' | 'Enter number' | 'Connect'
+}
+
 const Pools = inject("rootStore")(observer((props: IPools) => {
-    // let [selectedPool, setSelectedPool] = useState<number>(0);
+    let [selectedPool, setSelectedPool] = useState<number>(0);
     const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
-    const [chevrons, setChevrons] = useState<boolean[]>(poolList ? poolList.map(() => false) : [false])
     const { account } = useWeb3React()
     const { login } = useAuth()
-    const donateContract = useHubnate()
+    const hubnateContract = useHubnate()
     const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))
-    
+    const [amount, setAmount] = useState<number>(1);
+    const [cost, setCost] = useState<number>(0);
+    const [chance, setChance] = useState<number>(0);
+    const [buttonState, setButtonState] = useState<IButtonState>(
+        {
+            type: 'disabled',
+            text: 'Insufficient balance'
+        }
+    )
+    const [allowance, setAllowance] = useState<boolean>(true);
+    const [wait, setWait] = useState<boolean>(false)
+    const [userBalance, setUserBalance] = useState<number>(0)
+    const [blinkTag, setBlinkTag] = useState<boolean>(false);
+    let token = useERC20(poolList[selectedPool].token.address[4])
+
+    const onClickEnable = async () => {
+        setWait(true)
+        let approveTx = await approve(token, hubnateContract, account, ethers.constants.MaxUint256)
+        if (approveTx) {
+            setAllowance(true)
+            setWait(false)
+        }
+        console.log(approveTx)
+    }
+
+    const onClickDonate = async () => {
+        let poolId = poolList[selectedPool].id;
+        setWait(true)   
+        let donate = await hubnateContract.methods.donate(124, poolId, amount).send({ from: account })
+        
+        if (donate) {
+            console.log(donate)
+            setWait(false)
+        }
+    }
+
     useEffect(() => {
         const getPoolList = async () => {
-            let fetchPoolList =  await props.rootStore.user.getPools(donateContract, CTcontracts, account) || poolsGap;
+            let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
             console.log(fetchPoolList)
             if (fetchPoolList) {
                 setPoolList(fetchPoolList)
             }
         }
         
-        // getPoolList()
+        getPoolList()
     }, [account]);
 
-    let [onPresentDonateModal] = useModal(
-        <DonateModal 
-            pools = {poolList ? poolList : false} // poolList.filter((pool) => pool.active)
-        />
-    )
+    useEffect(() => {
+        const getSended = async () => {
+            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, poolList[selectedPool].id, account)
+            if (userSended && userSended.length > 0) {
+                setBlinkTag(true)
+            }
+        }
+        getSended()
+    }, [account, selectedPool])
+
+    useEffect(() => {
+        const getUserTokenBalance = async () => {
+            if (!account) return;
+
+            let response = await token.methods.balanceOf(account).call()
+            // const currentBalance = new BigNumber(response)
+            console.log('currentBalance', fixNumber(response, 18))
+
+            if (response) {
+                setUserBalance(fixNumber(response, 18))
+            }
+        }
+
+        getUserTokenBalance()
+    }, [account, token])
+
+    useEffect(() => {
+        const getTicketCost = async () => {
+            let pool = poolList[selectedPool].costPerTicket ? poolList[selectedPool] : false
+            let fixAmount = amount ? amount : 0;
+            if (pool) {
+                let costToBuyTickets = pool.costPerTicket * Number(fixAmount);
+                setCost(costToBuyTickets)
+            }
+        }
+
+        const getChance = async () => {
+            let pool =  poolList[selectedPool]
+            let fixAmount = amount ? Number(amount) : 0
+            if (pool) {
+                console.log(fixAmount, pool.userDonated, pool.totalDonated, pool.totalDonated + fixAmount)
+                let chance = Number(( ( (fixAmount + pool.userCThodlAmount) * pool.costPerTicket / (pool.totalDonated + (fixAmount * pool.costPerTicket)) ) * 100).toFixed(2))
+
+                if (chance > 100) {
+                    setChance(100)
+                } else {
+                    setChance(chance)
+                }
+                
+            }
+            
+        }
+
+        getTicketCost()
+        getChance()
+    }, [amount, selectedPool, account, poolList, token]);
 
     let [onPresentConnectModal] = useModal(
         <ConnectModal 
@@ -107,14 +272,75 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
         />
     )
 
-    const onClickDonate = (index: number) => {
-        // console.log('first donate', index, selectedPool)
-        props.rootStore.user.setSelectedPool(index)
-        onPresentDonateModal() // TODO: fix updating selectedPool ^
+    const onClickButton = (index: number) => {
+        switch (buttonState.text) {
+            case 'Connect':
+                onPresentConnectModal()
+                console.log('connect action')
+                break;
+            case 'Enable':
+                onClickEnable()
+                console.log('enabling action')
+                break;
+            case 'Donate':
+                onClickDonate()
+                console.log('donate action')
+                break;
+        }
     }
 
     const onClickSettings = () => {
         alert('not implemented')
+    }
+
+    useEffect(() => {
+        if (!account) {
+            setButtonState({
+                type: 'default',
+                text: 'Connect'
+            })
+            return;
+        }
+
+        if (Number(amount) == 0) {
+            setButtonState({
+                type: 'disabled',
+                text: 'Enter number'
+            })
+            return;
+        }
+
+        if (userBalance >= amount) {
+            console.log(Number(amount) == 0)
+        
+            if (allowance) {
+                if (!wait) {
+                    setButtonState({
+                        type: 'default',
+                        text: 'Donate'
+                    })
+                } else {
+                    setButtonState({
+                        type: 'disabled',
+                        text: 'Confirming...'
+                    })
+                }
+            } else {
+                setButtonState({
+                    type: 'default',
+                    text: 'Enable'
+                })
+            }
+        } else {
+            setButtonState({
+                type: 'disabled',
+                text: 'Insufficient balance'
+            })
+        }
+    }, [amount, account, selectedPool, token, wait, allowance])
+
+    const onChangeAmount = (e: any) => {
+        setAmount(e.target.value.replace(/^0|\D/g, ''))
     }
 
 
@@ -129,35 +355,45 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
                     <Container 
                         title = {"Pools"}
                         address = {''}
-                        // onClickElement = {() => onClickSettings()}
                     >
                         <div className="pools">
                             <div className="pools_info">
                                 <div className="pools_info__menu">
-                                    <p className="pools_info__menu-enabled">Information</p>
-                                    <p>Claim</p>
-                                    <p>History</p>
+                                    <Link href={"/pools"}>
+                                        <a>
+                                            <p className="pools_info__menu-enabled">Information</p>
+                                        </a>
+                                    </Link>
+                                    <Link href={"/pools/claim"}>
+                                        <div className="pools_info__menu_upg">
+                                            <a>
+                                                <p>Claim</p>
+                                            </a>
+                                            {blinkTag && <div className="pools_info__menu_tag" />}
+                                        </div>
+                                    </Link>
+                                    <Link href={"/pools/history"}>
+                                        <a>
+                                            <p>History</p>
+                                        </a>
+                                    </Link>
                                 </div>
-                                <p className="pools_info__description">
-                                    The BUX Token (BUX) is a Binance Smart Chain powered BEP20 utility token that can be used
-                                    on the BUX Crypto platform to trade with 0% commission and access premium features. 
-                                    In the near future, BUX aims to enrich a range of community features so that the token offers
-                                    tangible advantages on the BUX Crypto platform. The goal is to create a strong use case
-                                    for BUX and power a micro-economy within the platform.
-                                </p>
+                                {<p className="pools_info__description">
+                                    {poolList[selectedPool].token.description}
+                                </p>  || <Skeleton />}
                                 <div className="pools_info__stats">
                                     <div className="pools_info__stats_row">
-                                        <StatsBubble name = {"Distributed"} number = {1000}/>
-                                        <StatsBubble name = {"Cost per Ticket"} number = {2580}/>
-                                        <StatsBubble name = {"HODL CT Value"} number = {10}/>
+                                        <StatsBubble name = {"Distributed"} number = {poolList[selectedPool].totalDonated}/>
+                                        <StatsBubble name = {"Cost per Ticket"} number = {poolList[selectedPool].costPerTicket}/>
+                                        <StatsBubble name = {"HODL CT Value"} number = {poolList[selectedPool].userCThodlAmount}/>
                                     </div>
                                     <div className="pools_info__stats_row">
                                         <div className="pools_info__stats_row-left">
-                                            <BigStatsBubble name = {"Chance"} number = {22.58}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
+                                            <BigStatsBubble name = {"Chance, %"} number = {poolList[selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
                                         </div>
                                         <div className="pools_info__stats_row-right">
-                                            <StatsBubble name = {"Cost per Ticket"} number = {2580}/>
-                                            <StatsBubble name = {"HODL CT Value"} number = {10}/>
+                                            <StatsBubble name = {"Donated (your)"} number = {poolList[selectedPool].userDonated}/>
+                                            <StatsBubble name = {"Recieved (your)"} number = {poolList[selectedPool].userRecieved}/>
                                         </div>
                                     </div>
 
@@ -179,31 +415,42 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="pools_panel__content">
+                                <form className="pools_panel__content">
                                     <h2>Pool</h2>
-                                    <div className="pools_panel__content_input">
-                                        <div className="pools_panel__content_input__selector">
-                                            <img src={poolList[1].token.logotype} alt="" />
-                                            <p>BUX</p>
-                                        </div>
-                                        <img className="pools_panel__content_input__chevron" src={chevron} alt="chevron-right" />
-                                    </div>
-                                    <div className="pools_panel__content_input__warning">Warning message</div>
+                                    <Selector 
+                                        poolList = {poolList}
+                                        selected = {selectedPool}
+                                        setSelected = {setSelectedPool}
+                                    />
                                     <div className="pools_panel__content_input__title">
                                         <h2>Amount</h2>
-                                        <p>Balance: 1000</p>
+                                        <p>Balance: {userBalance}</p>
                                     </div>
-                                    <input className="pools_panel__content_input" />
-                                    <div className="pools_panel__content_input__warning">Warning message</div>
-
-                                    <Button 
-                                        name = {`Donate`}
-                                        link = {`#`}
-                                        type = {'default'}
-                                        padding = "10px 100px"
-                                        onClick = {onClickDonate}
+                                    <input 
+                                        required
+                                        min = {1}
+                                        max = {userBalance}
+                                        value = {amount}
+                                        onChange = {onChangeAmount}
+                                        pattern = "^[0-9]*$"
+                                        type="number"
+                                        placeholder = "1"
+                                        className="pools_panel__content_input"
                                     />
-                                </div>
+                                    <div className="pools_panel__content_button">
+                                        <Button 
+                                            name = {buttonState.text}
+                                            type = {buttonState.type}
+                                            padding = "10px 100px"
+                                            onClick = {onClickButton}
+                                        />
+                                    </div>
+                                    <div className="pools_panel__content_stats">
+                                        <StatsItem title={"New chance"} value={chance}/>
+                                        <StatsItem title={"Cost to buy tickets"} value={cost}/>
+                                        {/* <StatsItem title={"Estimated Fee"} value={0.001}/> */}
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </Container>
