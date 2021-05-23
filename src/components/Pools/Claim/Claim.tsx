@@ -128,12 +128,12 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
     return (
         <div className="pools_info">
             <div className="pools_info__menu">
-                <Link href={"/pools"}>
+                <Link href={"/app"}>
                     <a>
                         <p>Information</p>
                     </a>
                 </Link>
-                <Link href={"/pools/claim"}>
+                <Link href={"/app/claim"}>
                     <div className="pools_info__menu_upg">
                         <a>
                             <p className="pools_info__menu-enabled">Claim</p>
@@ -141,7 +141,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/pools/history"}>
+                <Link href={"/app/history"}>
                     <a>
                         <p>History</p>
                     </a>
