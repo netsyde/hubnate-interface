@@ -27,11 +27,11 @@ const Panel = (props: IPoolsPanel) => {
     const { account } = useWeb3React();
     const [cost, setCost] = useState<number>(0);
     const [chance, setChance] = useState<number>(0);
-    const [amount, setAmount] = useState<number>(1);
+    const [amount, setAmount] = useState<number>();
     const [buttonState, setButtonState] = useState<IButtonState>(
         {
-            type: 'disabled',
-            text: 'Insufficient balance'
+            type: 'default',
+            text: 'Connect'
         }
     )
     const [allowance, setAllowance] = useState<boolean>(true);
@@ -218,7 +218,7 @@ const Panel = (props: IPoolsPanel) => {
                     max = {userBalance}
                     value = {amount}
                     onChange = {onChangeAmount}
-                    pattern = "^[0-9]*$"
+                    pattern = "^[0-9]"
                     type="number"
                     placeholder = "1"
                     className="pools_panel__content_input"

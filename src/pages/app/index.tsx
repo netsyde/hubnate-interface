@@ -47,13 +47,13 @@ const Pools = inject("rootStore")(observer((props: IPools) => {
     return (
         <>
             <Head>
-                <title>Hubnate | Pools</title>
+                <title>Hubnate | App</title>
             </Head>
             <Main
             >
                 <div className = "pools_container">
                     <Container 
-                        title = {"Pools"}
+                        title = {"App"}
                         address = {''}
                     >
                         <div className="pools">

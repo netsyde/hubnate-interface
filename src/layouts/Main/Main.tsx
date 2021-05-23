@@ -28,24 +28,18 @@ const Main = inject("rootStore")(observer((props: IMain) => {
     const { account } = useWeb3React()
     const menuItems = [
         {
-            name: "Pools",
-            link: '/pools',
+            name: "App",
+            link: '/app',
             isButton: false,
         },
-        account ?
-        {
-            name: "Account",
-            link: `/account/${account}`,
-            isButton: false
-        } : null,
         {
             name: "Community",
             link: 'https://t.me/hubnate',
             isButton: false,
         },
         {
-            name: "About",
-            link: '#',
+            name: "Documentation",
+            link: 'https://docs.hubnate.com',
             isButton: false
         }
     ]

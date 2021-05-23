@@ -47,13 +47,13 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
     return (
         <>
             <Head>
-                <title>Hubnate | Pools</title>
+                <title>Hubnate | Claim</title>
             </Head>
             <Main
             >
                 <div className = "pools_container">
                     <Container 
-                        title = {"Claim"}
+                        title = {"App"}
                         address = {''}
                     >
                         <div className="pools">
