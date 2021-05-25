@@ -63,8 +63,8 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
                             />
                             <Panel 
                                 poolList = {poolList}
-                                selectedPool = {selectedPool}
-                                setSelectedPool = {setSelectedPool}
+                                // selectedPool = {selectedPool}
+                                // setSelectedPool = {setSelectedPool}
                             />
                         </div>
                     </Container>
