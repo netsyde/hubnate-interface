@@ -12,11 +12,10 @@ import { useModal } from '@src/widgets/Modal';
 import useAuth from '@src/hooks/useAuth';
 import { RootStore } from '@src/store/RootStore';
 import { inject, observer } from "mobx-react";
+import BigNumber from 'bignumber.js';
 
 interface IPoolsPanel {
      poolList: IPool[],
-    //  selectedPool: number,
-    //  setSelectedPool: any,
      rootStore?: RootStore
 }
 
@@ -69,8 +68,6 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (!account) return;
 
             let response = await token.methods.balanceOf(account).call()
-            // const currentBalance = new BigNumber(response)
-            // console.log('currentBalance', fixNumber(response, 18))
 
             if (response) {
                 setUserBalance(fixNumber(response, 18))
@@ -79,6 +76,22 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
 
         getUserTokenBalance()
     }, [account, token])
+
+    useEffect(() => {
+        const getAllowance = async () => {
+            try {
+                let response = await token.methods.allowance(account, hubnateContract.options.address).call()
+                const currentAllowance = new BigNumber(response)
+                setAllowance(currentAllowance.gt(0))
+            } catch (e) {
+                console.log(e)
+                return false
+            }
+        }
+        
+        getAllowance()
+        // console.log(allowance)
+    }, [account, token, allowance])
 
     useEffect(() => {
         const getTicketCost = async () => {
@@ -94,7 +107,6 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             let pool = props.poolList[props.rootStore.user.selectedPool]
             let fixAmount = amount ? Number(amount) : 0
             if (pool) {
-                // console.log(fixAmount, pool.userDonated, pool.totalDonated, pool.totalDonated + fixAmount)
                 let chance = Number(( ( (fixAmount + pool.userCThodlAmount) * pool.costPerTicket / (pool.totalDonated + (fixAmount * pool.costPerTicket)) ) * 100).toFixed(2))
 
                 if (chance > 100) {
@@ -121,15 +133,12 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
         switch (buttonState.text) {
             case 'Connect':
                 onPresentConnectModal()
-                // console.log('connect action')
                 break;
             case 'Enable':
                 onClickEnable()
-                // console.log('enabling action')
                 break;
             case 'Donate':
                 onClickDonate()
-                // console.log('donate action')
                 break;
         }
     }
@@ -163,20 +172,21 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             return;
         }
 
+        if (wait) {
+            setButtonState({
+                type: 'disabled',
+                text: 'Confirming...'
+            })
+            return;
+        }
+
         if (userBalance >= amount * props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
         
             if (allowance) {
-                if (!wait) {
-                    setButtonState({
-                        type: 'default',
-                        text: 'Donate'
-                    })
-                } else {
-                    setButtonState({
-                        type: 'disabled',
-                        text: 'Confirming...'
-                    })
-                }
+                setButtonState({
+                    type: 'default',
+                    text: 'Donate'
+                })
             } else {
                 setButtonState({
                     type: 'default',
