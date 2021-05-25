@@ -3,15 +3,18 @@ import { useWeb3React } from '@web3-react/core';
 import { IPool } from '@src/types/Pools';
 import { useERC20 } from '@src/hooks/useContract'
 import { fixNumber } from '@src/utils';
+import { RootStore } from '@src/store/RootStore';
+import { inject, observer } from "mobx-react";
 const chevron = require('@images/ui/chevron-right.svg')
 
 interface ISelector {
     poolList: IPool[],
-    selected: number,
-    setSelected: any
+    // selected: number,
+    // setSelected: any,
+    rootStore?: RootStore
 }
 
-const Selector = (props: ISelector) => {
+const Selector = inject("rootStore")(observer((props: ISelector) => {
     const [expanded, setExpanded] = useState<boolean>(false)
     const [balances, setBalances] = useState<number[]>([])
     const { account } = useWeb3React()
@@ -21,7 +24,7 @@ const Selector = (props: ISelector) => {
     }
 
     const onClickItem = (index: number) => {
-        props.setSelected(index)
+        props.rootStore.user.setSelectedPool(index)
         setExpanded(false)
     }
     let tokens = props.poolList.map((pool, index) => useERC20(props.poolList[index].token.address[4]))
@@ -38,7 +41,7 @@ const Selector = (props: ISelector) => {
                 if (response) {
                     balances.push(fixNumber(response, 18))
                 }
-                console.log('currentBalance', fixNumber(response, 18))
+                // console.log('currentBalance', fixNumber(response, 18))
             }
             setBalances(balances)           
         }
@@ -50,8 +53,8 @@ const Selector = (props: ISelector) => {
         <div className="pools_panel__content_input_container">
             <div className="pools_panel__content_input pools_panel__content_input-selector" onClick = {onClickInput}>
                 <div className="pools_panel__content_input__selector">
-                    <img src={props.poolList[props.selected].token.logotype} alt="" />
-                    <p>{props.poolList[props.selected].token.name}</p>
+                    <img src={props.poolList[props.rootStore.user.selectedPool].token.logotype} alt="" />
+                    <p>{props.poolList[props.rootStore.user.selectedPool].token.name}</p>
                 </div>
                 <img className="pools_panel__content_input__chevron" src={chevron} alt="chevron-right" />
             </div>
@@ -72,6 +75,6 @@ const Selector = (props: ISelector) => {
             }
         </div>
     )
-}
+}))
 
 export default Selector;

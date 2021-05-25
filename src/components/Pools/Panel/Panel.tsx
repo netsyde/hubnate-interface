@@ -10,11 +10,14 @@ import { fixNumber } from '@src/utils';
 import ConnectModal from '@components/ConnectModal';
 import { useModal } from '@src/widgets/Modal';
 import useAuth from '@src/hooks/useAuth';
+import { RootStore } from '@src/store/RootStore';
+import { inject, observer } from "mobx-react";
 
 interface IPoolsPanel {
      poolList: IPool[],
-     selectedPool: number,
-     setSelectedPool: any
+    //  selectedPool: number,
+    //  setSelectedPool: any,
+     rootStore?: RootStore
 }
 
 interface IButtonState {
@@ -22,12 +25,12 @@ interface IButtonState {
     text: 'Enable' | 'Donate' | 'Confirming...' | 'Insufficient balance' | 'Enter number' | 'Connect'
 }
 
-const Panel = (props: IPoolsPanel) => {
+const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     const hubnateContract = useHubnate();
     const { account } = useWeb3React();
     const [cost, setCost] = useState<number>(0);
     const [chance, setChance] = useState<number>(0);
-    const [amount, setAmount] = useState<number>();
+    const [amount, setAmount] = useState<number>(1);
     const [buttonState, setButtonState] = useState<IButtonState>(
         {
             type: 'default',
@@ -38,7 +41,7 @@ const Panel = (props: IPoolsPanel) => {
     const [wait, setWait] = useState<boolean>(false)
     const [userBalance, setUserBalance] = useState<number>(0)
     const { login } = useAuth()
-    let token = useERC20(props.poolList[props.selectedPool].token.address[4])
+    let token = useERC20(props.poolList[props.rootStore.user.selectedPool].token.address[4])
 
     const onClickEnable = async () => {
         setWait(true)
@@ -51,7 +54,7 @@ const Panel = (props: IPoolsPanel) => {
     }
 
     const onClickDonate = async () => {
-        let poolId = props.poolList[props.selectedPool].id;
+        let poolId = props.poolList[props.rootStore.user.selectedPool].id;
         setWait(true)   
         let donate = await hubnateContract.methods.donate(124, poolId, amount).send({ from: account })
         
@@ -67,7 +70,7 @@ const Panel = (props: IPoolsPanel) => {
 
             let response = await token.methods.balanceOf(account).call()
             // const currentBalance = new BigNumber(response)
-            console.log('currentBalance', fixNumber(response, 18))
+            // console.log('currentBalance', fixNumber(response, 18))
 
             if (response) {
                 setUserBalance(fixNumber(response, 18))
@@ -79,7 +82,7 @@ const Panel = (props: IPoolsPanel) => {
 
     useEffect(() => {
         const getTicketCost = async () => {
-            let pool = props.poolList[props.selectedPool].costPerTicket ? props.poolList[props.selectedPool] : false
+            let pool = props.poolList[props.rootStore.user.selectedPool].costPerTicket ? props.poolList[props.rootStore.user.selectedPool] : false
             let fixAmount = amount ? amount : 0;
             if (pool) {
                 let costToBuyTickets = pool.costPerTicket * Number(fixAmount);
@@ -88,10 +91,10 @@ const Panel = (props: IPoolsPanel) => {
         }
 
         const getChance = async () => {
-            let pool = props.poolList[props.selectedPool]
+            let pool = props.poolList[props.rootStore.user.selectedPool]
             let fixAmount = amount ? Number(amount) : 0
             if (pool) {
-                console.log(fixAmount, pool.userDonated, pool.totalDonated, pool.totalDonated + fixAmount)
+                // console.log(fixAmount, pool.userDonated, pool.totalDonated, pool.totalDonated + fixAmount)
                 let chance = Number(( ( (fixAmount + pool.userCThodlAmount) * pool.costPerTicket / (pool.totalDonated + (fixAmount * pool.costPerTicket)) ) * 100).toFixed(2))
 
                 if (chance > 100) {
@@ -106,7 +109,7 @@ const Panel = (props: IPoolsPanel) => {
 
         getTicketCost()
         getChance()
-    }, [amount, props.selectedPool, account, props.poolList, token]);
+    }, [amount, props.rootStore.user.selectedPool, account, props.poolList, token]);
 
     let [onPresentConnectModal] = useModal(
         <ConnectModal 
@@ -118,15 +121,15 @@ const Panel = (props: IPoolsPanel) => {
         switch (buttonState.text) {
             case 'Connect':
                 onPresentConnectModal()
-                console.log('connect action')
+                // console.log('connect action')
                 break;
             case 'Enable':
                 onClickEnable()
-                console.log('enabling action')
+                // console.log('enabling action')
                 break;
             case 'Donate':
                 onClickDonate()
-                console.log('donate action')
+                // console.log('donate action')
                 break;
         }
     }
@@ -152,8 +155,15 @@ const Panel = (props: IPoolsPanel) => {
             return;
         }
 
-        if (userBalance >= amount) {
-            console.log(Number(amount) == 0)
+        if (!props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
+            setButtonState({
+                type: 'default',
+                text: 'Connect'
+            })
+            return;
+        }
+
+        if (userBalance >= amount * props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
         
             if (allowance) {
                 if (!wait) {
@@ -179,7 +189,7 @@ const Panel = (props: IPoolsPanel) => {
                 text: 'Insufficient balance'
             })
         }
-    }, [amount, account, props.selectedPool, token, wait, allowance, userBalance])
+    }, [amount, account, props.rootStore.user.selectedPool, token, wait, allowance, userBalance])
 
     const onChangeAmount = (e: any) => {
         setAmount(e.target.value.replace(/^0|\D/g, ''))
@@ -205,8 +215,6 @@ const Panel = (props: IPoolsPanel) => {
                 <h2>Pool</h2>
                 <Selector 
                     poolList = {props.poolList}
-                    selected = {props.selectedPool}
-                    setSelected = {props.setSelectedPool}
                 />
                 <div className="pools_panel__content_input__title">
                     <h2>Amount</h2>
@@ -215,7 +223,7 @@ const Panel = (props: IPoolsPanel) => {
                 <input 
                     required
                     min = {1}
-                    max = {userBalance}
+                    max = {userBalance / (props.poolList[props.rootStore.user.selectedPool].costPerTicket ? props.poolList[props.rootStore.user.selectedPool].costPerTicket : 1)}
                     value = {amount}
                     onChange = {onChangeAmount}
                     pattern = "^[0-9]"
@@ -239,6 +247,6 @@ const Panel = (props: IPoolsPanel) => {
             </form>
         </div>
     )
-}
+}))
 
 export default Panel;

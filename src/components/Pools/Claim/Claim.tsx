@@ -26,7 +26,7 @@ interface IDonate {
 }
 
 const isMobile = (width: number) => {
-    if (width <= 882) return true
+    if (width <= 1200) return true
     return false;
 }
 
@@ -90,7 +90,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
     const size = useWindowSize();
     useEffect(() => {
         const getSended = async () => {
-            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.selectedPool].id, account)
+            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
             if (userSended && userSended.length > 0) {
                 setBlinkTag(true)
             } else {
@@ -102,7 +102,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             }
         }
         getSended()
-    }, [account, props.selectedPool, claiming])
+    }, [account, props.rootStore.user.selectedPool, claiming])
 
     const handleTableRowClick = (index: number) => {
         let newChevrons = chevrons.concat()
@@ -111,29 +111,29 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
     }
 
     const claimTickets = async (donateId: number) => {
-        console.log('donate donateId', donateId)
+        // console.log('donate donateId', donateId)
         setClaiming(true);
         // console.log(token)
         let claim = await hubnateContract.methods.claimTickets(
-            props.poolList[props.selectedPool].id,
+            props.poolList[props.rootStore.user.selectedPool].id,
             donateId
         ).send({ from: account })
 
         if (claim) {
             setClaiming(false)
-            console.log('successfully claim')
+            // console.log('successfully claim')
         }
     }
 
     return (
         <div className="pools_info">
             <div className="pools_info__menu">
-                <Link href={"/app"}>
+                <Link href={"/"}>
                     <a>
                         <p>Information</p>
                     </a>
                 </Link>
-                <Link href={"/app/claim"}>
+                <Link href={"/claim"}>
                     <div className="pools_info__menu_upg">
                         <a>
                             <p className="pools_info__menu-enabled">Claim</p>
@@ -141,9 +141,9 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/app/history"}>
+                <Link href={"/history"}>
                     <a>
-                        <p>History</p>
+                        <p className="pools_info__menu_last">History</p>
                     </a>
                 </Link>
             </div>
@@ -158,13 +158,13 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                             // style = {(!donate.isTicketsClaim && donate.isDistribution ) ? {filter: "blur(5.2px)", userSelect: 'none'} : null}
                         >
                             <TableRowTokenItem 
-                                ticker = {props.poolList[props.selectedPool].token.name + " CT"}
-                                logo = {props.poolList[props.selectedPool].token.logotype}
+                                ticker = {props.poolList[props.rootStore.user.selectedPool].token.name + " CT"}
+                                logo = {props.poolList[props.rootStore.user.selectedPool].token.logotype}
                                 displayOnMobile = {true}
                             />
                             <TableRowMetaItem
                                 title = {"Amount"}
-                                value = {metaAccountNumber(Number(donate.numberOfTickets)  * props.poolList[props.selectedPool].costPerTicket, account)}
+                                value = {metaAccountNumber(Number(donate.numberOfTickets)  * props.poolList[props.rootStore.user.selectedPool].costPerTicket, account)}
                                 displayOnMobile = {true}
                             />
                             <TableRowMetaItem

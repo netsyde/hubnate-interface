@@ -29,7 +29,7 @@ const Main = inject("rootStore")(observer((props: IMain) => {
     const menuItems = [
         {
             name: "App",
-            link: '/app',
+            link: '/',
             isButton: false,
         },
         {
@@ -85,7 +85,7 @@ const Main = inject("rootStore")(observer((props: IMain) => {
                     </Menu>
                 </Header>
                 {props.children}
-                {isMobile(size.width) ? <MobileMenu current = {current} setCurrent = {setCurrent} transparent = {props.mobileMenuType == 'transparent'}/> : null}
+                {/* {isMobile(size.width) ? <MobileMenu current = {current} setCurrent = {setCurrent} transparent = {props.mobileMenuType == 'transparent'}/> : null} */}
             </div>
         </div>
     )

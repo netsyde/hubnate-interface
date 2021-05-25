@@ -83,20 +83,16 @@
         }
 
         &__stats {
-            display: flex;
+            display: grid;
             flex-direction: column;
+            width: 40vw;
 
             &_row {
-                display: flex;
-                flex-direction: row;
-
-                &-left {
-                    display: flex;
-
-                }
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-gap: 20px;
 
                 &-right {
-                    display: flex;
                     flex-direction: column;
 
                 }
@@ -331,6 +327,10 @@
     }
 }
 
+#stats_row_second {
+    grid-template-columns: repeat(2, 1fr);
+}
+
 
 .statsBubble {
     display: flex;
@@ -338,13 +338,7 @@
     border: 1px solid rgba(56,27,68,.2);
     border-radius: 10px;
     padding: 10px;
-    min-width: 155px;
-    margin-right: 30px;
     margin-bottom: 30px;
-
-    &-big {
-        min-width: 362px;
-    }
 
     &_name {
         font-size: 14px;
@@ -364,10 +358,78 @@
     }
 }
 
+@media (max-width: 1200px) {
+    .statsBubble_number-big {
+        font-size: 70px;
+    }
+    .pools_info__stats_row-left {
+        display: inline-grid;
+    }
+}
 
-/* Landscape phones and smaller */
 @media (max-width: 882px) {
     .pools {
-        margin-top: 0px;
+        flex-direction: column-reverse;
+        align-items: center;
+        &_container {
+            margin-top: 0px;
+        }
+
+        &_info {
+            margin-top: 50px;
+            margin-right: 0px;
+            align-items: center;
+            width: 100%;
+
+            &__menu {
+                p {
+                    font-size: 20px;
+                }
+            }
+            &__stats {
+                width: 100%;
+                justify-content: center;
+                display: flex;
+                &_row {
+                    &-left {
+                        display: grid;
+                    }
+                }
+
+            }
+                
+        }
+
+        &_panel {
+            min-height: 0px;
+            width: 100%;
+        }
+    }
+
+    .statsBubble {
+        min-width: 0px;
+        margin-right: 0px;
+    }
+
+    #stats_row_second {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pools_info__menu_last {
+        margin-right: 0px !important;
+    }
+
+}
+
+@media (max-width: 545px) {
+    #stats_row_second {
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 0px;
+    }
+}
+
+@media (max-width: 436px) {
+    .pools_info__stats_row {
+        grid-template-columns: repeat(1, 1fr);
     }
 }

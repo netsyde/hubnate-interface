@@ -44,7 +44,7 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
 
     useEffect(() => {
         const getSended = async () => {
-            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.selectedPool].id, account)
+            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
             if (userSended && userSended.length > 0) {
                 setBlinkTag(true)
             } else {
@@ -52,17 +52,17 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
             }
         }
         getSended()
-    }, [account, props.selectedPool])
+    }, [account, props.rootStore.user.selectedPool])
 
     return (
         <div className="pools_info">
             <div className="pools_info__menu">
-                <Link href={"/app"}>
+                <Link href={"/"}>
                     <a>
                         <p className="pools_info__menu-enabled">Information</p>
                     </a>
                 </Link>
-                <Link href={"/app/claim"}>
+                <Link href={"/claim"}>
                     <div className="pools_info__menu_upg">
                         <a>
                             <p>Claim</p>
@@ -70,28 +70,28 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/app/history"}>
+                <Link href={"/history"}>
                     <a>
-                        <p>History</p>
+                        <p className="pools_info__menu_last">History</p>
                     </a>
                 </Link>
             </div>
             {<p className="pools_info__description">
-                {props.poolList[props.selectedPool].token.description}
+                {props.poolList[props.rootStore.user.selectedPool].token.description}
             </p>  || <Skeleton />}
             <div className="pools_info__stats">
                 <div className="pools_info__stats_row">
-                    <StatsBubble name = {"Distributed"} number = {props.poolList[props.selectedPool].totalDonated}/>
-                    <StatsBubble name = {"Cost per Ticket"} number = {props.poolList[props.selectedPool].costPerTicket}/>
-                    <StatsBubble name = {"HODL CT Value"} number = {props.poolList[props.selectedPool].userCThodlAmount}/>
+                    <StatsBubble name = {"Distributed"} number = {props.poolList[props.rootStore.user.selectedPool].totalDonated}/>
+                    <StatsBubble name = {"Cost per Ticket"} number = {props.poolList[props.rootStore.user.selectedPool].costPerTicket}/>
+                    <StatsBubble name = {"HODL CT Value"} number = {props.poolList[props.rootStore.user.selectedPool].userCThodlAmount}/>
                 </div>
-                <div className="pools_info__stats_row">
+                <div className="pools_info__stats_row" id="stats_row_second">
                     <div className="pools_info__stats_row-left">
-                        <BigStatsBubble name = {"Chance, %"} number = {props.poolList[props.selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
+                        <BigStatsBubble name = {"Chance, %"} number = {props.poolList[props.rootStore.user.selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
                     </div>
                     <div className="pools_info__stats_row-right">
-                        <StatsBubble name = {"Donated (your)"} number = {props.poolList[props.selectedPool].userDonated}/>
-                        <StatsBubble name = {"Recieved (your)"} number = {props.poolList[props.selectedPool].userRecieved}/>
+                        <StatsBubble name = {"Donated (your)"} number = {props.poolList[props.rootStore.user.selectedPool].userDonated}/>
+                        <StatsBubble name = {"Recieved (your)"} number = {props.poolList[props.rootStore.user.selectedPool].userRecieved}/>
                     </div>
                 </div>
 
