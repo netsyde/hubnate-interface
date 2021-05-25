@@ -28,6 +28,7 @@
     border-radius: 12px;
     text-decoration: none;
     cursor: pointer;
+    max-width: min-content; // new need test
 
     p {
         font-size: 17px !important;
@@ -108,8 +109,20 @@
     
 }
 
+@media (max-width: 882px) {
+
+}
+
 /* Landscape phones and smaller */
 @media (max-width: 480px) {
+    .disabled-button {
+        padding: 10px 60px !important;
+    }
+
+    .default-button {
+        padding: 10px 60px !important;
+    }
+    
     .description_buttons {
         .default-button {
             margin-bottom: 20px;

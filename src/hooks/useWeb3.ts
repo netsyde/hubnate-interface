@@ -9,18 +9,22 @@ import { getWeb3NoAccount } from '@src/utils/web3'
  * Recreate web3 instance only if the provider change
  */
 const useWeb3 = () => {
-  const { library } = useWeb3React()
-  const refEth = useRef(library)
-  const [web3, setweb3] = useState(library ? new Web3(library) : getWeb3NoAccount())
+  try {
+    const { library } = useWeb3React()
+    const refEth = useRef(library)
+    const [web3, setweb3] = useState(library ? new Web3(library) : getWeb3NoAccount())
 
-  useEffect(() => {
-    if (library !== refEth.current) {
-      setweb3(library ? new Web3(library) : getWeb3NoAccount())
-      refEth.current = library
-    }
-  }, [library])
+    useEffect(() => {
+      if (library !== refEth.current) {
+        setweb3(library ? new Web3(library) : getWeb3NoAccount())
+        refEth.current = library
+      }
+    }, [library])
 
-  return web3
+    return web3
+  } catch (e) {
+    console.log('useWeb3 error', e)
+  }
 }
 
 export default useWeb3

@@ -22,26 +22,30 @@ const _binanceChainListener = async () =>
   )
 
 const useEagerConnect = () => {
-  const { login } = useAuth()
+  try {
+    const { login } = useAuth()
 
-  useEffect(() => {
-    const connectorId = window.localStorage.getItem("connectorId") as ConnectorNames
+    useEffect(() => {
+      const connectorId = window.localStorage.getItem("connectorId") as ConnectorNames
 
-    if (connectorId) {
-      const isConnectorBinanceChain = connectorId === ConnectorNames.BSC
-      const isBinanceChainDefined = Reflect.has(window, 'BinanceChain')
+      if (connectorId) {
+        const isConnectorBinanceChain = connectorId === ConnectorNames.BSC
+        const isBinanceChainDefined = Reflect.has(window, 'BinanceChain')
 
-      // Currently BSC extension doesn't always inject in time.
-      // We must check to see if it exists, and if not, wait for it before proceeding.
-      if (isConnectorBinanceChain && !isBinanceChainDefined) {
-        _binanceChainListener().then(() => login(connectorId))
+        // Currently BSC extension doesn't always inject in time.
+        // We must check to see if it exists, and if not, wait for it before proceeding.
+        if (isConnectorBinanceChain && !isBinanceChainDefined) {
+          _binanceChainListener().then(() => login(connectorId))
 
-        return
+          return
+        }
+
+        login(connectorId)
       }
-
-      login(connectorId)
-    }
-  }, [login])
+    }, [login])
+  } catch (e) {
+    console.log('useEagerConnect error', e)
+  }
 }
 
 export default useEagerConnect

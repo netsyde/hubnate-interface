@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Main as MainLayout } from '@src/layouts';
+import { Main } from '@src/layouts';
 import { Container } from '@components/Utility';
-import { Info, Panel } from '@components/Pools';
+import { Claim as PoolClaim, Panel } from '@components/Pools';
 import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
 import { Button } from '@components/Utility';
@@ -24,7 +24,9 @@ interface IPools {
     rootStore?: RootStore
 }
 
-const Main = inject("rootStore")(observer((props: IPools) => {
+const Claim = inject("rootStore")(observer((props: IPools) => {
+    let [selectedPool, setSelectedPool] = useState<number>(0);
+    const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
@@ -33,21 +35,15 @@ const Main = inject("rootStore")(observer((props: IPools) => {
     useEffect(() => {
         try {
             const getPoolList = async () => {
-                try {
-                    let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
-                    console.log('fetchPoolList-', fetchPoolList)
-                    if (fetchPoolList && fetchPoolList.length > 0) {
-                        setPoolList(fetchPoolList)
-                    }
-                } catch (e) {
-                    console.log('гнилити кетч')
-                    console.log(e)
+                let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
+                console.log(fetchPoolList)
+                if (fetchPoolList) {
+                    setPoolList(fetchPoolList)
                 }
             }
             
             getPoolList()
         } catch (e) {
-
             console.log(e)
         }
     }, [account]);
@@ -55,9 +51,9 @@ const Main = inject("rootStore")(observer((props: IPools) => {
     return (
         <>
             <Head>
-                <title>Hubnate | App</title>
+                <title>Hubnate | Claim</title>
             </Head>
-            <MainLayout
+            <Main
             >
                 <div className = "pools_container">
                     <Container 
@@ -65,18 +61,21 @@ const Main = inject("rootStore")(observer((props: IPools) => {
                         address = {''}
                     >
                         <div className="pools">
-                            <Info 
+                            <PoolClaim 
                                 poolList = {poolList}
+                                // selectedPool = {selectedPool}
                             />
                             <Panel 
                                 poolList = {poolList}
+                                // selectedPool = {selectedPool}
+                                // setSelectedPool = {setSelectedPool}
                             />
                         </div>
                     </Container>
                 </div>
-            </MainLayout>
+            </Main>
         </>
     )
 }))
 
-export default Main;
+export default Claim;

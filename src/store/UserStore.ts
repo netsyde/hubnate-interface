@@ -49,7 +49,7 @@ class UserStore {
             let pool = await donateContract.methods.getBasicPoolInfo(poolId).call()
             return pool
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return false
         }
     }
@@ -57,10 +57,9 @@ class UserStore {
     async fetchUserInPool (donateContract: any, poolId: number, account: string) {
         try {   
             let userInPool = await donateContract.methods.getUserInfo(poolId, account).call()
-            console.log("u i p", userInPool)
             return userInPool
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return false
         }
     }
@@ -68,10 +67,9 @@ class UserStore {
     async getUserCTAmount (CTcontract: any, account: string) {
         try {
             let userCTInfo = await CTcontract.methods.getUserTokensInfo(account).call()
-            console.log("u CT info", userCTInfo)
             return userCTInfo.length
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return false;
         }
     }
@@ -88,7 +86,7 @@ class UserStore {
             return recieved
 
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return false;
         }
     }
@@ -105,7 +103,22 @@ class UserStore {
             return donated
 
         } catch (e) {
-            console.log(e)
+            // console.log(e)
+            return false;
+        }
+    }
+
+    async getUserUnclaimDonates (hubnateContract: any, poolId: number, account: string) {
+        try {
+            let userSended = await this.getUserSended(hubnateContract, poolId, account)
+            
+            if (userSended) {
+                return userSended.filter(donate => !donate.isTicketsClaim && donate.isDistribution)
+            } else {
+                return false;
+            }
+        } catch (e) {
+            // console.log(e)
             return false;
         }
     }
@@ -128,7 +141,7 @@ class UserStore {
                     // console.log(poolInfo.userDonated, poolInfo.userRecieved )
                     poolInfo.userDonatedIds = userInPool.donated;
                     poolInfo.userRecievedIds = userInPool.recieved;
-                    console.log(poolInfo.userDonatedIds, poolInfo.userRecievedIds )
+                    // console.log(poolInfo.userDonatedIds, poolInfo.userRecievedIds )
                 }
 
                 if (typeof(ctUserAmount) == 'number') {
@@ -142,7 +155,7 @@ class UserStore {
             }
 
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return false;
         }
     }
@@ -164,8 +177,8 @@ class UserStore {
             }
             return pools;
         } catch (e) {
-            console.log(e)
-            // return false
+            // console.log(e)
+            return false
         }
 
     }

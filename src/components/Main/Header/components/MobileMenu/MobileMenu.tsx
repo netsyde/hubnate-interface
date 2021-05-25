@@ -29,8 +29,6 @@ const MobileMenuItem = (props: IMobileMenuItem) => {
 
 const MobileMenu = (props: IMobileMenu) => {
 
-    console.log('update menu')
-
     const updateMenu = (index: number) => {
         props.setCurrent(props.current.map(() => false))
         let newCurrent = props.current.concat();

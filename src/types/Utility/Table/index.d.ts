@@ -29,5 +29,6 @@ export interface ITableDetailsRowItem extends ITableRowItem {
 }
 
 export interface ITable {
+    className?: string,
     children: React.ReactNode
 }
