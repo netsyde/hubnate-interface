@@ -12,7 +12,7 @@ import { minifyString, convertNumber, useWindowSize } from '@src/utils';
 
 interface IPoolsInfo {
     poolList: IPool[],
-    selectedPool: number,
+    // selectedPool: number,
     rootStore?: RootStore
 }
 
@@ -89,39 +89,51 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
 
     const size = useWindowSize();
     useEffect(() => {
-        const getSended = async () => {
-            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
-            if (userSended && userSended.length > 0) {
-                setBlinkTag(true)
-            } else {
-                setBlinkTag(false)
-            }
+        try {
+            const getSended = async () => {
+                let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
+                if (userSended && userSended.length > 0) {
+                    setBlinkTag(true)
+                } else {
+                    setBlinkTag(false)
+                }
 
-            if (userSended) {
-                setSended(userSended)
+                if (userSended) {
+                    setSended(userSended)
+                }
             }
+            getSended()
+        } catch (e) {
+            console.log(e)
         }
-        getSended()
     }, [account, props.rootStore.user.selectedPool, claiming])
 
     const handleTableRowClick = (index: number) => {
-        let newChevrons = chevrons.concat()
-        newChevrons[index] = !newChevrons[index]
-        setChevrons(newChevrons)
+        try {
+            let newChevrons = chevrons.concat()
+            newChevrons[index] = !newChevrons[index]
+            setChevrons(newChevrons)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     const claimTickets = async (donateId: number) => {
         // console.log('donate donateId', donateId)
-        setClaiming(true);
-        // console.log(token)
-        let claim = await hubnateContract.methods.claimTickets(
-            props.poolList[props.rootStore.user.selectedPool].id,
-            donateId
-        ).send({ from: account })
+        try {
+            setClaiming(true);
+            // console.log(token)
+            let claim = await hubnateContract.methods.claimTickets(
+                props.poolList[props.rootStore.user.selectedPool].id,
+                donateId
+            ).send({ from: account })
 
-        if (claim) {
-            setClaiming(false)
-            // console.log('successfully claim')
+            if (claim) {
+                setClaiming(false)
+                // console.log('successfully claim')
+            }
+        } catch (e) {
+            console.log(e)
         }
     }
 

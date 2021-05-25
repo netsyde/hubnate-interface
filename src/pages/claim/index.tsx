@@ -33,15 +33,19 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
     const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))    
 
     useEffect(() => {
-        const getPoolList = async () => {
-            let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
-            console.log(fetchPoolList)
-            if (fetchPoolList) {
-                setPoolList(fetchPoolList)
+        try {
+            const getPoolList = async () => {
+                let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
+                console.log(fetchPoolList)
+                if (fetchPoolList) {
+                    setPoolList(fetchPoolList)
+                }
             }
+            
+            getPoolList()
+        } catch (e) {
+            console.log(e)
         }
-        
-        getPoolList()
     }, [account]);
 
     return (
@@ -59,7 +63,7 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
                         <div className="pools">
                             <PoolClaim 
                                 poolList = {poolList}
-                                selectedPool = {selectedPool}
+                                // selectedPool = {selectedPool}
                             />
                             <Panel 
                                 poolList = {poolList}

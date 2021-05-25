@@ -24,29 +24,37 @@ const Selector = inject("rootStore")(observer((props: ISelector) => {
     }
 
     const onClickItem = (index: number) => {
-        props.rootStore.user.setSelectedPool(index)
-        setExpanded(false)
+        try {
+            props.rootStore.user.setSelectedPool(index)
+            setExpanded(false)
+        } catch (e) {
+            console.log(e)
+        }
     }
     let tokens = props.poolList.map((pool, index) => useERC20(props.poolList[index].token.address[4]))
     
 
     useEffect(() => {
-        const getUserTokenBalances = async () => {
-            if (!account) return;
-            let balances = []
-            for (let i = 0; i < props.poolList.length; i++) {
-                let token = tokens[i]
-                let response = await token.methods.balanceOf(account).call()
+        try {
+            const getUserTokenBalances = async () => {
+                if (!account) return;
+                let balances = []
+                for (let i = 0; i < props.poolList.length; i++) {
+                    let token = tokens[i]
+                    let response = await token.methods.balanceOf(account).call()
 
-                if (response) {
-                    balances.push(fixNumber(response, 18))
+                    if (response) {
+                        balances.push(fixNumber(response, 18))
+                    }
+                    // console.log('currentBalance', fixNumber(response, 18))
                 }
-                // console.log('currentBalance', fixNumber(response, 18))
+                setBalances(balances)           
             }
-            setBalances(balances)           
-        }
 
-        getUserTokenBalances()
+            getUserTokenBalances()
+        } catch (e) {
+            console.log(e)
+        }
     }, [account])
 
     return (

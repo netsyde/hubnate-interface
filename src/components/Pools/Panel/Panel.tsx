@@ -43,84 +43,106 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     let token = useERC20(props.poolList[props.rootStore.user.selectedPool].token.address[4])
 
     const onClickEnable = async () => {
-        setWait(true)
-        let approveTx = await approve(token, hubnateContract, account, ethers.constants.MaxUint256)
-        if (approveTx) {
-            setAllowance(true)
-            setWait(false)
+        try {
+            setWait(true)
+            let approveTx = await approve(token, hubnateContract, account, ethers.constants.MaxUint256)
+            if (approveTx) {
+                setAllowance(true)
+                setWait(false)
+            }
+            console.log(approveTx)
+        } catch (e) {
+            console.log(e);
+            return false;
         }
-        console.log(approveTx)
     }
 
     const onClickDonate = async () => {
-        let poolId = props.poolList[props.rootStore.user.selectedPool].id;
-        setWait(true)   
-        let donate = await hubnateContract.methods.donate(124, poolId, amount).send({ from: account })
-        
-        if (donate) {
-            console.log(donate)
-            setWait(false)
+        try {
+            let poolId = props.poolList[props.rootStore.user.selectedPool].id;
+            setWait(true)   
+            let donate = await hubnateContract.methods.donate(124, poolId, amount).send({ from: account })
+            
+            if (donate) {
+                console.log(donate)
+                setWait(false)
+            }
+        } catch (e) {
+            console.log(e);
+            return false;
         }
     }
 
     useEffect(() => {
-        const getUserTokenBalance = async () => {
-            if (!account) return;
+        try {
+            const getUserTokenBalance = async () => {
+                if (!account) return;
 
-            let response = await token.methods.balanceOf(account).call()
+                let response = await token.methods.balanceOf(account).call()
 
-            if (response) {
-                setUserBalance(fixNumber(response, 18))
+                if (response) {
+                    setUserBalance(fixNumber(response, 18))
+                }
             }
-        }
 
-        getUserTokenBalance()
-    }, [account, token])
+            getUserTokenBalance()
+        } catch (e) {
+            console.log(e);
+        }
+    }, [account, token, wait])
 
     useEffect(() => {
-        const getAllowance = async () => {
-            try {
-                let response = await token.methods.allowance(account, hubnateContract.options.address).call()
-                const currentAllowance = new BigNumber(response)
-                setAllowance(currentAllowance.gt(0))
-            } catch (e) {
-                console.log(e)
-                return false
+        try {
+            const getAllowance = async () => {
+                try {
+                    let response = await token.methods.allowance(account, hubnateContract.options.address).call()
+                    const currentAllowance = new BigNumber(response)
+                    setAllowance(currentAllowance.gt(0))
+                } catch (e) {
+                    console.log(e)
+                    return false
+                }
             }
+            
+            getAllowance()
+            // console.log(allowance)
+        } catch (e) {
+            console.log(e)
         }
-        
-        getAllowance()
-        // console.log(allowance)
     }, [account, token, allowance])
 
     useEffect(() => {
-        const getTicketCost = async () => {
-            let pool = props.poolList[props.rootStore.user.selectedPool].costPerTicket ? props.poolList[props.rootStore.user.selectedPool] : false
-            let fixAmount = amount ? amount : 0;
-            if (pool) {
-                let costToBuyTickets = pool.costPerTicket * Number(fixAmount);
-                setCost(costToBuyTickets)
+        try {
+            const getTicketCost = async () => {
+                let pool = props.poolList[props.rootStore.user.selectedPool].costPerTicket ? props.poolList[props.rootStore.user.selectedPool] : false
+                let fixAmount = amount ? amount : 0;
+                if (pool) {
+                    let costToBuyTickets = pool.costPerTicket * Number(fixAmount);
+                    setCost(costToBuyTickets)
+                }
             }
-        }
 
-        const getChance = async () => {
-            let pool = props.poolList[props.rootStore.user.selectedPool]
-            let fixAmount = amount ? Number(amount) : 0
-            if (pool) {
-                let chance = Number(( ( (fixAmount + pool.userCThodlAmount) * pool.costPerTicket / (pool.totalDonated + (fixAmount * pool.costPerTicket)) ) * 100).toFixed(2))
+            const getChance = async () => {
+                let pool = props.poolList[props.rootStore.user.selectedPool]
+                let fixAmount = amount ? Number(amount) : 0
+                if (pool) {
+                    let chance = Number(( ( (fixAmount + pool.userCThodlAmount) * pool.costPerTicket / (pool.totalDonated + (fixAmount * pool.costPerTicket)) ) * 100).toFixed(2))
 
-                if (chance > 100) {
-                    setChance(100)
-                } else {
-                    setChance(chance)
+                    if (chance > 100) {
+                        setChance(100)
+                    } else {
+                        setChance(chance)
+                    }
+                    
                 }
                 
             }
-            
-        }
 
-        getTicketCost()
-        getChance()
+            getTicketCost()
+            getChance()
+        } catch (e) {
+            console.log(e)
+        }
     }, [amount, props.rootStore.user.selectedPool, account, props.poolList, token]);
 
     let [onPresentConnectModal] = useModal(
@@ -130,16 +152,20 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     )
 
     const onClickButton = (index: number) => {
-        switch (buttonState.text) {
-            case 'Connect':
-                onPresentConnectModal()
-                break;
-            case 'Enable':
-                onClickEnable()
-                break;
-            case 'Donate':
-                onClickDonate()
-                break;
+        try {
+            switch (buttonState.text) {
+                case 'Connect':
+                    onPresentConnectModal()
+                    break;
+                case 'Enable':
+                    onClickEnable()
+                    break;
+                case 'Donate':
+                    onClickDonate()
+                    break;
+            }
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -148,61 +174,69 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     }
 
     useEffect(() => {
-        if (!account) {
-            setButtonState({
-                type: 'default',
-                text: 'Connect'
-            })
-            return;
-        }
-
-        if (Number(amount) == 0) {
-            setButtonState({
-                type: 'disabled',
-                text: 'Enter number'
-            })
-            return;
-        }
-
-        if (!props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
-            setButtonState({
-                type: 'default',
-                text: 'Connect'
-            })
-            return;
-        }
-
-        if (wait) {
-            setButtonState({
-                type: 'disabled',
-                text: 'Confirming...'
-            })
-            return;
-        }
-
-        if (userBalance >= amount * props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
-        
-            if (allowance) {
+        try {
+            if (!account) {
                 setButtonState({
                     type: 'default',
-                    text: 'Donate'
+                    text: 'Connect'
                 })
+                return;
+            }
+
+            if (Number(amount) == 0) {
+                setButtonState({
+                    type: 'disabled',
+                    text: 'Enter number'
+                })
+                return;
+            }
+
+            if (!props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
+                setButtonState({
+                    type: 'default',
+                    text: 'Connect'
+                })
+                return;
+            }
+
+            if (wait) {
+                setButtonState({
+                    type: 'disabled',
+                    text: 'Confirming...'
+                })
+                return;
+            }
+
+            if (userBalance >= amount * props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
+            
+                if (allowance) {
+                    setButtonState({
+                        type: 'default',
+                        text: 'Donate'
+                    })
+                } else {
+                    setButtonState({
+                        type: 'default',
+                        text: 'Enable'
+                    })
+                }
             } else {
                 setButtonState({
-                    type: 'default',
-                    text: 'Enable'
+                    type: 'disabled',
+                    text: 'Insufficient balance'
                 })
             }
-        } else {
-            setButtonState({
-                type: 'disabled',
-                text: 'Insufficient balance'
-            })
+        } catch (e) {
+            console.log(e)
         }
     }, [amount, account, props.rootStore.user.selectedPool, token, wait, allowance, userBalance])
 
     const onChangeAmount = (e: any) => {
-        setAmount(e.target.value.replace(/^0|\D/g, ''))
+        try {
+            setAmount(e.target.value.replace(/^0|\D/g, ''))
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (

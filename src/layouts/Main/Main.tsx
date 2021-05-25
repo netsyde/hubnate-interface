@@ -46,9 +46,7 @@ const Main = inject("rootStore")(observer((props: IMain) => {
 
     useEagerConnect()
     const size = useWindowSize();
-    const [current, setCurrent] = useState<boolean[]>(menuItems.map(() => false))
     const { login, logout } = useAuth()
-    const user = props.rootStore.user;
     const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(login, logout, account)
 
     return (

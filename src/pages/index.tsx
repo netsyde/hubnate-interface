@@ -25,23 +25,31 @@ interface IPools {
 }
 
 const Main = inject("rootStore")(observer((props: IPools) => {
-    let [selectedPool, setSelectedPool] = useState<number>(0);
-    const size = useWindowSize();
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
     const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))    
 
     useEffect(() => {
-        const getPoolList = async () => {
-            let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
-            // console.log(fetchPoolList)
-            if (fetchPoolList) {
-                setPoolList(fetchPoolList)
+        try {
+            const getPoolList = async () => {
+                try {
+                    let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
+                    console.log('fetchPoolList-', fetchPoolList)
+                    if (fetchPoolList && fetchPoolList.length > 0) {
+                        setPoolList(fetchPoolList)
+                    }
+                } catch (e) {
+                    console.log('гнилити кетч')
+                    console.log(e)
+                }
             }
+            
+            getPoolList()
+        } catch (e) {
+
+            console.log(e)
         }
-        
-        getPoolList()
     }, [account]);
 
     return (
@@ -59,12 +67,9 @@ const Main = inject("rootStore")(observer((props: IPools) => {
                         <div className="pools">
                             <Info 
                                 poolList = {poolList}
-                                selectedPool = {selectedPool}
                             />
                             <Panel 
                                 poolList = {poolList}
-                                // selectedPool = {selectedPool}
-                                // setSelectedPool = {setSelectedPool}
                             />
                         </div>
                     </Container>

@@ -33,7 +33,7 @@ const BigStatsBubble = (props: IStatsBubble) => {
 
 interface IPoolsInfo {
     poolList: IPool[],
-    selectedPool: number,
+    // selectedPool: number,
     rootStore?: RootStore
 }
 
@@ -43,15 +43,19 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
     const hubnateContract = useHubnate()
 
     useEffect(() => {
-        const getSended = async () => {
-            let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
-            if (userSended && userSended.length > 0) {
-                setBlinkTag(true)
-            } else {
-                setBlinkTag(false)
+        try {
+            const getSended = async () => {
+                let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
+                if (userSended && userSended.length > 0) {
+                    setBlinkTag(true)
+                } else {
+                    setBlinkTag(false)
+                }
             }
-        }
-        getSended()
+            getSended()
+        } catch (e) {
+            console.log(e)
+    }
     }, [account, props.rootStore.user.selectedPool])
 
     return (

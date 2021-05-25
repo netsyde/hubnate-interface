@@ -178,7 +178,7 @@ class UserStore {
             return pools;
         } catch (e) {
             // console.log(e)
-            // return false
+            return false
         }
 
     }

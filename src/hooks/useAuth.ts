@@ -19,50 +19,54 @@ enum ConnectorNames {
 }
 
 const useAuth = () => {
-  const { activate, deactivate } = useWeb3React()
-  const login = useCallback((connectorID: ConnectorNames) => {
-    const connector = connectorsByName[connectorID]
-    console.log(connector)
-    if (connector) {
-      console.log('connector exist')
-      activate(connector, async (error: Error) => {
-        console.log('error')
-        if (error instanceof UnsupportedChainIdError) {
-          console.log('UnsupportedChainIdError')
-          const hasSetup = await setupNetwork()
-          if (hasSetup) {
-            console.log('hasSetup')
-            activate(connector)
-          }
-        } else {
-          console.log('test 1')
-          window.localStorage.removeItem("connectorId")
-          if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
-              console.log('Provider Error', 'No provider was found')
-          } else if (
-            error instanceof UserRejectedRequestErrorInjected ||
-            error instanceof UserRejectedRequestErrorWalletConnect
-          ) {
-            if (connector instanceof WalletConnectConnector) {
-              console.log('WalletConnectConnector')
-              const walletConnector = connector as WalletConnectConnector
-              walletConnector.walletConnectProvider = null
+  try {
+    const { activate, deactivate } = useWeb3React()
+    const login = useCallback((connectorID: ConnectorNames) => {
+      const connector = connectorsByName[connectorID]
+      console.log(connector)
+      if (connector) {
+        console.log('connector exist')
+        activate(connector, async (error: Error) => {
+          console.log('error')
+          if (error instanceof UnsupportedChainIdError) {
+            console.log('UnsupportedChainIdError')
+            const hasSetup = await setupNetwork()
+            if (hasSetup) {
+              console.log('hasSetup')
+              activate(connector)
             }
-
-            console.log('Authorization Error ', 'Please authorize to access your account')
           } else {
-            console.log(error.name, error.message)
-            // toastError(error.name, error.message)
-          }
-        }
-      })
-    } else {
-        console.log("Can't find connector", 'The connector config is wrong')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+            console.log('test 1')
+            window.localStorage.removeItem("connectorId")
+            if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
+                console.log('Provider Error', 'No provider was found')
+            } else if (
+              error instanceof UserRejectedRequestErrorInjected ||
+              error instanceof UserRejectedRequestErrorWalletConnect
+            ) {
+              if (connector instanceof WalletConnectConnector) {
+                console.log('WalletConnectConnector')
+                const walletConnector = connector as WalletConnectConnector
+                walletConnector.walletConnectProvider = null
+              }
 
-  return { login, logout: deactivate }
+              console.log('Authorization Error ', 'Please authorize to access your account')
+            } else {
+              console.log(error.name, error.message)
+              // toastError(error.name, error.message)
+            }
+          }
+        })
+      } else {
+          console.log("Can't find connector", 'The connector config is wrong')
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { login, logout: deactivate }
+  } catch (e) {
+    console.log('useAuth error', e)
+  }
 }
 
 export default useAuth
