@@ -14,6 +14,7 @@ import { RootStore } from '@src/store/RootStore';
 import { inject, observer } from "mobx-react";
 import BigNumber from 'bignumber.js';
 import { useTranslation } from 'next-i18next'
+const sync = require('@images/ui/sync-solid.svg')
 
 interface IPoolsPanel {
      poolList: IPool[],
@@ -174,6 +175,21 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
         }
     }
 
+    const onClickSync = () => {
+        try {
+            const currentAutoUpdate = window.localStorage.getItem("autoUpdate")
+            if (currentAutoUpdate) {
+                let newAutoUpdate = !JSON.parse(currentAutoUpdate)
+                window.localStorage.setItem("autoUpdate", newAutoUpdate.toString());
+                props.rootStore.user.setAutoUpdate(newAutoUpdate)
+            }
+        } catch (e) {
+            window.localStorage.setItem("autoUpdate", 'false');
+            props.rootStore.user.setAutoUpdate(false)
+            console.log(e)
+        }
+    }
+
     const onClickSettings = () => {
         alert('not implemented')
     }
@@ -259,12 +275,20 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                     <p>{t("panel.labels.exchange")}</p>
                 </div>
                 <div className="pools_panel__menu_control">
-                    {/* <div className="pools_panel__menu_control__box">
+                    {/* {/* <div className="pools_panel__menu_control__box">
 
-                    </div>
-                    <div className="pools_panel__menu_control__box">
-                        
                     </div> */}
+                    <div 
+                        className={
+                            props.rootStore.user.autoUpdate ? 
+                                "pools_panel__menu_control__box"
+                                :
+                                "pools_panel__menu_control__box pools_panel__menu_control__box-disabled"
+                            }
+                        onClick = {onClickSync}
+                    >
+                        <img src={sync} alt="sync" />
+                    </div>
                 </div>
             </div>
             <form className="pools_panel__content">

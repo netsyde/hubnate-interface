@@ -38,7 +38,7 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
         } catch (e) {
             console.log(e)
         }
-    }, [account]);
+    }, [account, props.rootStore.user.autoUpdateObserver]);
 
     return (
         <>

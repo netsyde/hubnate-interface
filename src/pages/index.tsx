@@ -43,7 +43,7 @@ const Main = inject("rootStore")(observer((props: IPools) => {
 
             console.log(e)
         }
-    }, [account]);
+    }, [account, props.rootStore.user.autoUpdateObserver]);
 
     return (
         <>

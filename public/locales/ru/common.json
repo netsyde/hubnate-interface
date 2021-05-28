@@ -14,7 +14,7 @@
 		"labels": {
 			"information": "Информация",
 			"claim": "Награды",
-			"history": "История"
+			"history": "История (скоро)"
 		},
 		"stats": {
 			"distributed": "Распределено",
@@ -36,7 +36,7 @@
 		},
 		"labels": {
 			"donate": "Задонатить",
-			"exchange": "Обменять"
+			"exchange": "Обменять (скоро)"
 		},
 		"input": {
 			"pool": "Пул",

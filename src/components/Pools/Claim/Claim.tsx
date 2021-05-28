@@ -103,7 +103,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
         } catch (e) {
             console.log(e)
         }
-    }, [account, props.rootStore.user.selectedPool, claiming])
+    }, [account, props.rootStore.user.selectedPool, claiming, props.rootStore.user.autoUpdateObserver])
 
     const handleTableRowClick = (index: number) => {
         try {

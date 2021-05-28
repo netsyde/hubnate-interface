@@ -1,8 +1,7 @@
-import { makeObservable, observable, action, computed,  } from "mobx";
+import { makeObservable, observable, action, computed, autorun, runInAction } from "mobx";
 import { RootStore } from './RootStore';
 import poolList from '@src/data/constants/pools';
 import { IPool } from '@src/types/Pools'
-import { forEach } from "lodash";
 
 interface IFetchPool {
     poolId: number,
@@ -23,12 +22,16 @@ interface IFetchUserInPool {
 class UserStore {
     isConnected: boolean = false;
     selectedPool: number = 0;
+    autoUpdateObserver: boolean = false;
+    autoUpdate: boolean = false;
 	constructor(public root: RootStore) {
         makeObservable(this, {
             isConnected: observable,
             connectAccount: action,
             fetchPool: action,
-            selectedPool: observable
+            selectedPool: observable,
+            autoUpdateObserver: observable,
+            autoUpdate: observable
         })
 	}
  
@@ -42,6 +45,18 @@ class UserStore {
 
     fixNumber(number: number, decimals: number) {
         return Number((number / Math.pow(10, decimals)).toFixed(0))
+    }
+
+    setAutoUpdateObserver() {
+        runInAction(() => {
+            this.autoUpdateObserver = !this.autoUpdateObserver
+        })
+    }
+
+    setAutoUpdate(bool: boolean) {
+        runInAction(() => {
+            this.autoUpdate = bool
+        })
     }
     
     async fetchPool (donateContract: any, poolId: number) {
@@ -182,8 +197,6 @@ class UserStore {
         }
 
     }
-}
- 
- 
+} 
  
 export { UserStore };

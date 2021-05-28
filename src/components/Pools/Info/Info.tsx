@@ -58,7 +58,7 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
         } catch (e) {
             console.log(e)
     }
-    }, [account, props.rootStore.user.selectedPool])
+    }, [account, props.rootStore.user.selectedPool, props.rootStore.user.autoUpdateObserver])
 
     return (
         <div className="pools_info">
