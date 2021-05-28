@@ -99,6 +99,26 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
 
     useEffect(() => {
         try {
+            const getAutoUpdate = async () => {
+                let autoUpdate = window.localStorage.getItem("autoUpdate")
+
+                if (autoUpdate) {
+                    console.log('auto upd', JSON.parse(autoUpdate))
+                    props.rootStore.user.setAutoUpdate(JSON.parse(autoUpdate))
+                    if (JSON.parse(autoUpdate)) {
+                        props.rootStore.user.setAutoUpdateObserver()
+                    }
+                }
+            }
+
+            getAutoUpdate()
+        } catch (e) {
+            console.log(e);
+        }
+    }, [props.rootStore.user.autoUpdate])
+
+    useEffect(() => {
+        try {
             const getAllowance = async () => {
                 try {
                     let response = await token.methods.allowance(account, hubnateContract.options.address).call()
@@ -178,11 +198,9 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     const onClickSync = () => {
         try {
             const currentAutoUpdate = window.localStorage.getItem("autoUpdate")
-            if (currentAutoUpdate) {
-                let newAutoUpdate = !JSON.parse(currentAutoUpdate)
-                window.localStorage.setItem("autoUpdate", newAutoUpdate.toString());
-                props.rootStore.user.setAutoUpdate(newAutoUpdate)
-            }
+            let newAutoUpdate = !JSON.parse(currentAutoUpdate)
+            window.localStorage.setItem("autoUpdate", newAutoUpdate.toString());
+            props.rootStore.user.setAutoUpdate(newAutoUpdate)
         } catch (e) {
             window.localStorage.setItem("autoUpdate", 'false');
             props.rootStore.user.setAutoUpdate(false)

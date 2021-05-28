@@ -23,12 +23,12 @@ const autoSync = async () => {
   }
 }
 
-autorun(
-  async () => {
-    autoSync()
-  },
-  { delay: 3000 } // TODO: move to client (useEffect)
-)
+// autorun(
+//   async () => {
+//     autoSync()
+//   },
+//   { delay: 3000 } // TODO: move to client (useEffect)
+// )
 
 autorun(
   async () => {
