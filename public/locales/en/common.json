@@ -14,7 +14,7 @@
 		"labels": {
 			"information": "Information",
 			"claim": "Claim",
-			"history": "History (soon)"
+			"history": "History"
 		},
 		"stats": {
 			"distributed": "Distributed",
@@ -36,7 +36,7 @@
 		},
 		"labels": {
 			"donate": "Donate",
-			"exchange": "Exchange (soon)"
+			"exchange": "Exchange"
 		},
 		"input": {
 			"pool": "Pool",

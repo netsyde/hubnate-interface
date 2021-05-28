@@ -100,14 +100,18 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     useEffect(() => {
         try {
             const getAutoUpdate = async () => {
-                let autoUpdate = window.localStorage.getItem("autoUpdate")
+                try {
+                    let autoUpdate = window.localStorage.getItem("autoUpdate")
 
-                if (autoUpdate) {
-                    console.log('auto upd', JSON.parse(autoUpdate))
-                    props.rootStore.user.setAutoUpdate(JSON.parse(autoUpdate))
-                    if (JSON.parse(autoUpdate)) {
-                        props.rootStore.user.setAutoUpdateObserver()
+                    if (autoUpdate) {
+                        console.log('auto upd', JSON.parse(autoUpdate))
+                        props.rootStore.user.setAutoUpdate(JSON.parse(autoUpdate))
+                        if (JSON.parse(autoUpdate)) {
+                            props.rootStore.user.setAutoUpdateObserver()
+                        }
                     }
+                } catch (e) {
+                    console.log(e)
                 }
             }
 

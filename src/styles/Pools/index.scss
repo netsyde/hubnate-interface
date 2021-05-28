@@ -139,6 +139,10 @@
                 }
             }
 
+            &_route p:last-child {
+                margin-right: 0px;
+            }
+
             &_control {
                 display: flex;
                 flex-direction: row;
