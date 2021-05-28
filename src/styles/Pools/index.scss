@@ -32,7 +32,7 @@
                 position: relative;
                 display: flex;
                 cursor: pointer;
-                // flex-direction: row-reverse;
+                justify-content: flex-end;
             }
             &_tag {
                 position: absolute;
@@ -46,7 +46,7 @@
                 width: 8px;
                 border-radius: 8px;
                 background: #8e44ad;
-                left: 45px;
+                right: 30px;
                 top: -5px;
                 animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
             }
@@ -62,7 +62,7 @@
             }
             p {
                 font-size: 16px;
-                font-family: "GT Haptik Regular";
+                font-family: "GothamPro";
                 margin: 0;
                 padding: 0;
                 margin-right: 40px;
@@ -125,7 +125,7 @@
 
                 p {
                     font-size: 16px;
-                    font-family: "GT Haptik Regular";
+                    font-family: "GothamPro";
                     margin: 0;
                     padding: 0;
                     margin-right: 40px;
@@ -161,7 +161,7 @@
 
             h2 {
                 font-size: 14px;
-                font-family: "GT Haptik Regular";
+                font-family: "GothamPro";
             }
 
             &_input {
@@ -383,7 +383,7 @@
 
             &__menu {
                 p {
-                    font-size: 20px;
+                    font-size: 16px;
                 }
             }
             &__stats {

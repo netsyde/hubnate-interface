@@ -1,0 +1,61 @@
+{
+	"main": {
+		"connectWallet": "Подключите кошелек",
+		"yourAccount": "Ваш Аккаунт",
+		"logout": "Выйти",
+		"connect": "Подключиться"
+	},
+	"titles": {
+		"app": "Приложение",
+		"community": "Сообщество",
+		"documentation": "Документация"
+	},
+	"info": {
+		"labels": {
+			"information": "Информация",
+			"claim": "Награды",
+			"history": "История"
+		},
+		"stats": {
+			"distributed": "Распределено",
+			"costPerTicket": "Стоимость билета",
+			"hodlCtValue": "CT в кошельке",
+			"chance": "Шанс, %",
+			"donated": "Задоначено",
+			"recieved": "Получено"
+		}
+	},
+	"panel": {
+		"buttons": {
+			"connect": "Подключиться",
+			"enterNumber": "Введите число",
+			"confirming": "Подтверждение...",
+			"donate": "Задонатить",
+			"enable": "Включить пул",
+			"insufficientBalance": "Недостаточный Баланс"
+		},
+		"labels": {
+			"donate": "Задонатить",
+			"exchange": "Обменять"
+		},
+		"input": {
+			"pool": "Пул",
+			"amount": "Сумма",
+			"balance": "Баланс"
+		},
+		"stats": {
+			"newChance": "Новый шанс",
+			"costToBuyTickets": "Стоимость покупки билетов"
+		}
+	},
+	"claim": {
+		"buttons": {
+			"claiming": "Подтверждение...",
+			"claim": "Забрать"
+		},
+		"table": {
+			"amount": "Сумма",
+			"requestID": "ID Запроса"
+		}
+	}
+}

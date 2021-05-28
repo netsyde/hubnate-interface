@@ -1,5 +1,6 @@
 import { Fade, IWallet } from '@src/types';
 import { Button } from '@components/Utility'
+import { useTranslation } from 'next-i18next'
 
 interface IConnectModal {
     fade?: Fade,
@@ -10,7 +11,7 @@ interface IConnectModal {
 }
 
 const ConnectModal = (props: IConnectModal) => {
-
+    const { t } = useTranslation()
     const modalOnClick = (e: any) => {
         e.stopPropagation();
     }
@@ -24,12 +25,12 @@ const ConnectModal = (props: IConnectModal) => {
     return (
         <div className={`wallet ${props.fade}`} onClick = {modalOnClick}>
             <div className="wallet_title">
-                <h2 className="wallet_title__text">Your account</h2>
+                <h2 className="wallet_title__text">{t("main.yourAccount")}</h2>
             </div>
             <div className="wallet_body">
                 <p>{props.account}</p>
                 <Button 
-                    name = {"Logout"}
+                    name = {t("main.logout")}
                     type = {'default'}
                     padding = "10px 20px"
                     onClick = {onClickLogout}

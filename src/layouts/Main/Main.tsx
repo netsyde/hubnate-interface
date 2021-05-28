@@ -3,12 +3,12 @@ import { Menu, MenuItem, Logo, MobileMenu } from '@components/Main/Header/compon
 import { Button } from '@components/Utility'
 import { useWindowSize, minifyString } from '@src/utils';
 import useAuth from '@src/hooks/useAuth'
-import { useState } from 'react';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore'
 import { useWalletModal } from '@src/widgets/WalletModal'
 import { useWeb3React } from '@web3-react/core';
 import useEagerConnect from '@src/hooks/useEagerConnect'
+import { useTranslation } from 'next-i18next'
 
 const isMobile = (width: number) => {
     if (width <= 882) return true
@@ -25,20 +25,21 @@ interface IMain {
 }
 
 const Main = inject("rootStore")(observer((props: IMain) => {
+    const { t } = useTranslation()
     const { account } = useWeb3React()
     const menuItems = [
         {
-            name: "App",
+            name: t("titles.app"),
             link: '/',
             isButton: false,
         },
         {
-            name: "Community",
+            name: t("titles.community"),
             link: 'https://t.me/hubnate',
             isButton: false,
         },
         {
-            name: "Documentation",
+            name: t("titles.documentation"),
             link: 'https://docs.hubnate.com',
             isButton: false
         }
@@ -75,7 +76,7 @@ const Main = inject("rootStore")(observer((props: IMain) => {
                             )  
                         )}
                         <Button 
-                            name = {account ? minifyString(account) : "Connect"}
+                            name = {account ? minifyString(account) : t("main.connect")}
                             type = {'default'}
                             padding = "10px 20px"
                             onClick = {account ? onPresentAccountModal : onPresentConnectModal}
@@ -83,7 +84,6 @@ const Main = inject("rootStore")(observer((props: IMain) => {
                     </Menu>
                 </Header>
                 {props.children}
-                {/* {isMobile(size.width) ? <MobileMenu current = {current} setCurrent = {setCurrent} transparent = {props.mobileMenuType == 'transparent'}/> : null} */}
             </div>
         </div>
     )

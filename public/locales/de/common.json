@@ -1,0 +1,61 @@
+{
+	"main": {
+		"connectWallet": "Connect to a wallet",
+		"yourAccount": "Ihr Konto",
+		"logout": "Ausloggen",
+		"connect": "Verbinden"
+	},
+	"titles": {
+		"app": "App",
+		"community": "Gemeinschaft",
+		"documentation": "Dokumentation"
+	},
+	"info": {
+		"labels": {
+			"information": "Information",
+			"claim": "Anspruch",
+			"history": "Geschichte"
+		},
+		"stats": {
+			"distributed": "Verteilte",
+			"costPerTicket": "Kosten pro Ticket",
+			"hodlCtValue": "HODL CT Value",
+			"chance": "Chance, %",
+			"donated": "Gespendet (Ihre)",
+			"recieved": "Erhalten (Ihre)"
+		}
+	},
+	"panel": {
+		"buttons": {
+			"connect": "Verbinden",
+			"enterNumber": "Nummer eingeben",
+			"confirming": "Confirming...",
+			"donate": "Spenden",
+			"enable": "Aktivieren",
+			"insufficientBalance": "Insufficient Balance"
+		},
+		"labels": {
+			"donate": "Spenden",
+			"exchange": "Austausch"
+		},
+		"input": {
+			"pool": "Pool",
+			"amount": "Menge",
+			"balance": "Balance"
+		},
+		"stats": {
+			"newChance": "Neue chance",
+			"costToBuyTickets": "Cost to buy tickets"
+		}
+	},
+	"claim": {
+		"buttons": {
+			"claiming": "Claiming...",
+			"claim": "Claim"
+		},
+		"table": {
+			"amount": "Menge",
+			"requestID": "Request ID"
+		}
+	}
+}

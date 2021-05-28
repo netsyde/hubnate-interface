@@ -13,18 +13,22 @@ import useAuth from '@src/hooks/useAuth';
 import { RootStore } from '@src/store/RootStore';
 import { inject, observer } from "mobx-react";
 import BigNumber from 'bignumber.js';
+import { useTranslation } from 'next-i18next'
 
 interface IPoolsPanel {
      poolList: IPool[],
      rootStore?: RootStore
 }
 
+
 interface IButtonState {
     type: 'default' | 'disabled';
-    text: 'Enable' | 'Donate' | 'Confirming...' | 'Insufficient balance' | 'Enter number' | 'Connect'
+    id: 'enable' | 'donate' | 'confirming' | 'insufficientBalance' | 'enterNumber' | 'connect'
+    text: string
 }
 
 const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
+    const { t } = useTranslation()
     const hubnateContract = useHubnate();
     const { account } = useWeb3React();
     const [cost, setCost] = useState<number>(0);
@@ -33,7 +37,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     const [buttonState, setButtonState] = useState<IButtonState>(
         {
             type: 'default',
-            text: 'Connect'
+            text: t("panel.buttons.connect"),
+            id: 'connect'
         }
     )
     const [allowance, setAllowance] = useState<boolean>(true);
@@ -153,14 +158,14 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
 
     const onClickButton = (index: number) => {
         try {
-            switch (buttonState.text) {
-                case 'Connect':
+            switch (buttonState.id) {
+                case 'connect':
                     onPresentConnectModal()
                     break;
-                case 'Enable':
+                case 'enable':
                     onClickEnable()
                     break;
-                case 'Donate':
+                case 'donate':
                     onClickDonate()
                     break;
             }
@@ -178,7 +183,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (!account) {
                 setButtonState({
                     type: 'default',
-                    text: 'Connect'
+                    text: t("panel.buttons.connect"),
+                    id: 'connect'
                 })
                 return;
             }
@@ -186,7 +192,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (Number(amount) == 0) {
                 setButtonState({
                     type: 'disabled',
-                    text: 'Enter number'
+                    text: t("panel.buttons.enterNumber"),
+                    id: 'enterNumber'
                 })
                 return;
             }
@@ -194,7 +201,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (!props.poolList[props.rootStore.user.selectedPool].costPerTicket) {
                 setButtonState({
                     type: 'default',
-                    text: 'Connect'
+                    text: t("panel.buttons.connect"),
+                    id: 'connect'
                 })
                 return;
             }
@@ -202,7 +210,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (wait) {
                 setButtonState({
                     type: 'disabled',
-                    text: 'Confirming...'
+                    text: t("panel.buttons.confirming"),
+                    id: 'confirming'
                 })
                 return;
             }
@@ -212,18 +221,21 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                 if (allowance) {
                     setButtonState({
                         type: 'default',
-                        text: 'Donate'
+                        text: t("panel.buttons.donate"),
+                        id: 'donate'
                     })
                 } else {
                     setButtonState({
                         type: 'default',
-                        text: 'Enable'
+                        text: t("panel.buttons.enable"),
+                        id: 'enable'
                     })
                 }
             } else {
                 setButtonState({
                     type: 'disabled',
-                    text: 'Insufficient balance'
+                    text: t("panel.buttons.insufficientBalance"),
+                    id: 'insufficientBalance'
                 })
             }
         } catch (e) {
@@ -243,8 +255,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
         <div className="pools_panel">
             <div className="pools_panel__menu">
                 <div className="pools_panel__menu_route">
-                    <p className="pools_panel__menu_route-enabled">Donate</p>
-                    <p>Exchange</p>
+                    <p className="pools_panel__menu_route-enabled">{t("panel.labels.donate")}</p>
+                    <p>{t("panel.labels.exchange")}</p>
                 </div>
                 <div className="pools_panel__menu_control">
                     {/* <div className="pools_panel__menu_control__box">
@@ -256,13 +268,13 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                 </div>
             </div>
             <form className="pools_panel__content">
-                <h2>Pool</h2>
+                <h2>{t("panel.input.pool")}</h2>
                 <Selector 
                     poolList = {props.poolList}
                 />
                 <div className="pools_panel__content_input__title">
-                    <h2>Amount</h2>
-                    <p>Balance: {userBalance}</p>
+                    <h2>{t("panel.input.amount")}</h2>
+                    <p>{t("panel.input.balance")}: {userBalance}</p>
                 </div>
                 <input 
                     required
@@ -284,8 +296,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                     />
                 </div>
                 <div className="pools_panel__content_stats">
-                    <StatsItem title={"New chance"} value={chance}/>
-                    <StatsItem title={"Cost to buy tickets"} value={cost}/>
+                    <StatsItem title={t("panel.stats.newChance")} value={chance}/>
+                    <StatsItem title={t("panel.stats.costToBuyTickets")} value={cost}/>
                     {/* <StatsItem title={"Estimated Fee"} value={0.001}/> */}
                 </div>
             </form>

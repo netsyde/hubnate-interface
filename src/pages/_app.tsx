@@ -7,7 +7,8 @@ import { getLibrary } from '@src/utils/web3react';
 import { Provider } from 'mobx-react';
 import rootStore from '@src/store/RootStore';
 import { ModalProvider } from '@src/widgets/Modal'
-
+// import './i18n';
+import { appWithTranslation } from 'next-i18next'
 const druid = require('@images/druid.jpg')
 const APP_NAME = 'Hubnate';
 const APP_DESCRIPTION = 'Donate to random people and increase the chance to get a reward from someone else';
@@ -36,15 +37,15 @@ const App = ({ Component, pageProps }: AppProps) => {
         <link rel='manifest' href='/manifest.json' />
         {/* <link rel='shortcut icon' href='/favicon.ico' /> */}
       </Head>
-      <Provider { ...stores }>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <ModalProvider>
-            <Component {...pageProps} />
-          </ModalProvider>
-        </Web3ReactProvider>
-      </Provider>
+        <Provider { ...stores }>
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <ModalProvider>
+              <Component {...pageProps} />
+            </ModalProvider>
+          </Web3ReactProvider>
+        </Provider>
     </>
   )
 }
 
-export default App;
+export default appWithTranslation(App)
