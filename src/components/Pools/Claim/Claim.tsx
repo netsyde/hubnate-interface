@@ -9,10 +9,12 @@ import { useWeb3React } from '@web3-react/core';
 import { Button, Table } from '@components/Utility'
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
 import { minifyString, convertNumber, useWindowSize } from '@src/utils';
+import { useTranslation } from 'next-i18next'
+import { useSnackbar } from '@src/widgets/Snackbar'
+let noSuchCt = require('@src/images/ui/no-such-ct.svg')
 
 interface IPoolsInfo {
     poolList: IPool[],
-    // selectedPool: number,
     rootStore?: RootStore
 }
 
@@ -48,20 +50,17 @@ interface IExpandedRow {
 
 const ExpandedRow = (props: IExpandedRow) => {
     let donate = props.donateList[props.index];
+    const { t } = useTranslation()
     return (
         <tr className = "row_expanded">
             <td>
                 <div className = "row_expanded__line">
-                    <p className = "table_meta">Donater</p>
-                    <p className = "table_meta-number">{minifyString(donate.donater)}</p>
-                </div>
-                <div className = "row_expanded__line">
-                    <p className = "table_meta">Request Id</p>
+                    <p className = "table_meta">{t("claim.table.requestID")}</p>
                     <p className = "table_meta-number">{minifyString(donate.requestId)}</p>
                 </div>
                 <div className = "row_expanded__line row_expanded__line-center">
                    {(!donate.isTicketsClaim && donate.isDistribution ) ? <Button 
-                        name = {props.claiming ? 'Claiming...' : "Claim"}
+                         name = {props.claiming ? t("claim.buttons.claiming") : t("claim.buttons.claim")}
                         type = {props.claiming ? 'disabled' : 'default'}
                         padding = "10px 100px"
                         onClick = {() => props.claimTickets(donate.donateId)}
@@ -70,7 +69,6 @@ const ExpandedRow = (props: IExpandedRow) => {
                         name = {"Claimed"}
                         type = {'disabled'}
                         padding = "10px 89px"
-                        // onClick = {() => props.claimTickets(donate.donateId)}
                     />
                     }
                 </div>
@@ -86,7 +84,8 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
     const hubnateContract = useHubnate()
     const [chevrons, setChevrons] = useState<boolean[]>(sended.map(() => false))
     const [claiming, setClaiming] = useState<boolean>(false)
-
+    const { t } = useTranslation()
+    const { addAlert } = useSnackbar() 
     const size = useWindowSize();
     useEffect(() => {
         try {
@@ -105,8 +104,9 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             getSended()
         } catch (e) {
             console.log(e)
+            addAlert(t('errors.getSended'))
         }
-    }, [account, props.rootStore.user.selectedPool, claiming])
+    }, [account, props.rootStore.user.selectedPool, claiming, props.rootStore.user.autoUpdateObserver])
 
     const handleTableRowClick = (index: number) => {
         try {
@@ -115,14 +115,13 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             setChevrons(newChevrons)
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }
 
     const claimTickets = async (donateId: number) => {
-        // console.log('donate donateId', donateId)
         try {
             setClaiming(true);
-            // console.log(token)
             let claim = await hubnateContract.methods.claimTickets(
                 props.poolList[props.rootStore.user.selectedPool].id,
                 donateId
@@ -130,10 +129,12 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
 
             if (claim) {
                 setClaiming(false)
-                // console.log('successfully claim')
+                addAlert(t('txs.claim'))
             }
         } catch (e) {
             console.log(e)
+            setClaiming(false)
+            addAlert(e.message)
         }
     }
 
@@ -142,24 +143,27 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             <div className="pools_info__menu">
                 <Link href={"/"}>
                     <a>
-                        <p>Information</p>
+                        <p>{t("info.labels.information")}</p>
                     </a>
                 </Link>
                 <Link href={"/claim"}>
                     <div className="pools_info__menu_upg">
                         <a>
-                            <p className="pools_info__menu-enabled">Claim</p>
+                            <p className="pools_info__menu-enabled">
+                                {t("info.labels.claim")}
+                            </p>
                         </a>
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/history"}>
-                    <a>
-                        <p className="pools_info__menu_last">History</p>
-                    </a>
-                </Link>
+                {/* <Link href={"/history"}>
+                    <a> */}
+                        <p className="pools_info__menu_last">{t("info.labels.history")}</p>
+                    {/* </a>
+                </Link> */}
             </div>
-            <Table className="pools_table">
+
+            {sended.length > 0 ? <Table className="pools_table">
                 {sended && sended.map((donate: IDonate, index: number) => 
                     <React.Fragment key = {index}>
                         <TableRow
@@ -167,7 +171,6 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                             onClick = {isMobile(size.width) ? () => handleTableRowClick(index) : null}
                             isMobile = {isMobile(size.width)}
                             isOpen = {chevrons[index]}
-                            // style = {(!donate.isTicketsClaim && donate.isDistribution ) ? {filter: "blur(5.2px)", userSelect: 'none'} : null}
                         >
                             <TableRowTokenItem 
                                 ticker = {props.poolList[props.rootStore.user.selectedPool].token.name + " CT"}
@@ -175,12 +178,12 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                                 displayOnMobile = {true}
                             />
                             <TableRowMetaItem
-                                title = {"Amount"}
+                                title = {t("claim.table.amount")}
                                 value = {metaAccountNumber(Number(donate.numberOfTickets)  * props.poolList[props.rootStore.user.selectedPool].costPerTicket, account)}
                                 displayOnMobile = {true}
                             />
                             <TableRowMetaItem
-                                title = {"Request Id"}
+                                title = {t("claim.table.requestID")}
                                 value = {`${minifyString(donate.requestId)}`}
                                 displayOnMobile = {!isMobile(size.width)}
                             />
@@ -188,7 +191,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                                 displayOnMobile = {!isMobile(size.width)}
                             >
                                 <Button 
-                                    name = {claiming ? 'Claiming...' : "Claim"}
+                                    name = {claiming ? t("claim.buttons.claiming") : t("claim.buttons.claim")}
                                     type = {claiming ? 'disabled' : 'default'}
                                     padding = "10px 100px"
                                     onClick = {() => claimTickets(donate.donateId)}
@@ -205,7 +208,11 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                         }
                     </React.Fragment>
                 )}
-            </Table>
+            </Table> :
+                <div className="pools_table_empty">
+                    <img src={noSuchCt} alt="no-such-ct" />
+                </div>
+            }
             
         </div>
     )

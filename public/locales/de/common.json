@@ -1,0 +1,80 @@
+{
+	"main": {
+		"connectWallet": "Connect to a wallet",
+		"yourAccount": "Ihr Konto",
+		"logout": "Ausloggen",
+		"connect": "Verbinden"
+	},
+	"titles": {
+		"app": "App",
+		"community": "Gemeinschaft",
+		"documentation": "Dokumentation"
+	},
+	"info": {
+		"labels": {
+			"information": "Information",
+			"claim": "Anspruch",
+			"history": "Geschichte"
+		},
+		"stats": {
+			"distributed": "Verteilte",
+			"costPerTicket": "Kosten pro Ticket",
+			"hodlCtValue": "HODL CT Value",
+			"chance": "Chance, %",
+			"donated": "Gespendet (Ihre)",
+			"recieved": "Erhalten (Ihre)"
+		}
+	},
+	"panel": {
+		"buttons": {
+			"connect": "Verbinden",
+			"enterNumber": "Nummer eingeben",
+			"confirming": "Confirming...",
+			"donate": "Spenden",
+			"enable": "Aktivieren",
+			"insufficientBalance": "Insufficient Balance"
+		},
+		"labels": {
+			"donate": "Spenden",
+			"exchange": "Austausch"
+		},
+		"input": {
+			"pool": "Pool",
+			"amount": "Menge",
+			"balance": "Balance"
+		},
+		"stats": {
+			"newChance": "Neue chance",
+			"costToBuyTickets": "Cost to buy tickets"
+		}
+	},
+	"claim": {
+		"buttons": {
+			"claiming": "Claiming...",
+			"claim": "Claim"
+		},
+		"table": {
+			"amount": "Menge",
+			"requestID": "Request ID"
+		}
+	},
+	"txs": {
+		"approved": "Transaction successfully confirmed",
+		"donate": "You have successfully made a donation",
+		"claim": "You have successfully collected your chance tokens"
+	},
+	"errors": {
+		"clickEnable": "An error occurred (click enable)",
+		"clickDonate": "An error occurred (click donate)",
+		"getUserTokenBalance": "An error occurred while getting the user's balance",
+		"getAllowance": "An error occurred (getAllowance)",
+		"getAutoUpdate": "An error occurred (getAutoUpdate)",
+		"getSended": "An error occurred while receiving donations",
+		"claimTickets": "An error occurred when claiming tickets",
+		"getUserTokenBalances": "An error occurred while getting the user's balance",
+		"unsupportedChainId": "This network is not supported yet. Use Rinkeby",
+		"noProvider": "Provider not found. Install the metamask",
+		"authError": "Authorization error. Please authorize to access your account",
+		"notFoundConnector": "Can't find connector. The connector config is wrong"
+	}
+}

@@ -6,11 +6,11 @@ import { fixNumber } from '@src/utils';
 import { RootStore } from '@src/store/RootStore';
 import { inject, observer } from "mobx-react";
 const chevron = require('@images/ui/chevron-right.svg')
+import { useSnackbar } from '@src/widgets/Snackbar'
+import { useTranslation } from 'next-i18next'
 
 interface ISelector {
     poolList: IPool[],
-    // selected: number,
-    // setSelected: any,
     rootStore?: RootStore
 }
 
@@ -18,6 +18,8 @@ const Selector = inject("rootStore")(observer((props: ISelector) => {
     const [expanded, setExpanded] = useState<boolean>(false)
     const [balances, setBalances] = useState<number[]>([])
     const { account } = useWeb3React()
+    const { addAlert } = useSnackbar() 
+    const { t } = useTranslation()
 
     const onClickInput = async () => {
         setExpanded(!expanded)
@@ -29,6 +31,7 @@ const Selector = inject("rootStore")(observer((props: ISelector) => {
             setExpanded(false)
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }
     let tokens = props.poolList.map((pool, index) => useERC20(props.poolList[index].token.address[4]))
@@ -54,6 +57,7 @@ const Selector = inject("rootStore")(observer((props: ISelector) => {
             getUserTokenBalances()
         } catch (e) {
             console.log(e)
+            addAlert(t('errors.getUserTokenBalances'))
         }
     }, [account])
 

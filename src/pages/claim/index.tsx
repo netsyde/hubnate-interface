@@ -2,41 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Main } from '@src/layouts';
 import { Container } from '@components/Utility';
 import { Claim as PoolClaim, Panel } from '@components/Pools';
-import ConnectModal from '@components/ConnectModal';
 import { IPool } from '@src/types/Pools';
-import { Button } from '@components/Utility';
 import Head from 'next/head';
-import { useWindowSize, convertNumber } from '@src/utils';
-import { useModal } from '@src/widgets/Modal';
 import { useWeb3React } from '@web3-react/core';
-import useAuth from '@src/hooks/useAuth';
 import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
 import poolsGap from '@src/data/constants/pools'
-
-const isMobile = (width: number) => {
-    if (width <= 882) return true
-    return false;
-}
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18NextConfig from '@src/next-i18next.config.js'
+import { useTranslation } from 'next-i18next'
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 interface IPools {
     rootStore?: RootStore
 }
 
 const Claim = inject("rootStore")(observer((props: IPools) => {
-    let [selectedPool, setSelectedPool] = useState<number>(0);
-    const size = useWindowSize();
+    const { t } = useTranslation()
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
-    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))    
+    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))   
+    const { addAlert } = useSnackbar() 
 
     useEffect(() => {
         try {
             const getPoolList = async () => {
                 let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
-                console.log(fetchPoolList)
+                // console.log(fetchPoolList)
                 if (fetchPoolList) {
                     setPoolList(fetchPoolList)
                 }
@@ -44,9 +38,10 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
             
             getPoolList()
         } catch (e) {
+            addAlert(e.message)
             console.log(e)
         }
-    }, [account]);
+    }, [account, props.rootStore.user.autoUpdateObserver]);
 
     return (
         <>
@@ -57,18 +52,15 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
             >
                 <div className = "pools_container">
                     <Container 
-                        title = {"App"}
+                        title = {t("titles.app")}
                         address = {''}
                     >
                         <div className="pools">
                             <PoolClaim 
                                 poolList = {poolList}
-                                // selectedPool = {selectedPool}
                             />
                             <Panel 
                                 poolList = {poolList}
-                                // selectedPool = {selectedPool}
-                                // setSelectedPool = {setSelectedPool}
                             />
                         </div>
                     </Container>
@@ -77,5 +69,15 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
         </>
     )
 }))
+
+interface IStaticProps {
+    locale: any
+}
+
+export const getStaticProps = async (data: IStaticProps) => ({
+    props: {
+      ...await serverSideTranslations(data.locale, ['common'], nextI18NextConfig),
+    },
+})
 
 export default Claim;

@@ -6,6 +6,9 @@ import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
 import { useWeb3React } from '@web3-react/core';
+import { useSnackbar } from '@src/widgets/Snackbar'
+import { useTranslation } from 'next-i18next'
+
 
 interface IStatsBubble {
     name: string,
@@ -33,7 +36,6 @@ const BigStatsBubble = (props: IStatsBubble) => {
 
 interface IPoolsInfo {
     poolList: IPool[],
-    // selectedPool: number,
     rootStore?: RootStore
 }
 
@@ -41,61 +43,72 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
     const [blinkTag, setBlinkTag] = useState<boolean>(false);
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
+    const { t } = useTranslation()
+    const { addAlert } = useSnackbar() 
 
     useEffect(() => {
         try {
             const getSended = async () => {
-                let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
-                if (userSended && userSended.length > 0) {
-                    setBlinkTag(true)
-                } else {
-                    setBlinkTag(false)
+                if (account) {
+                    let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
+                    if (userSended && userSended.length > 0) {
+                        setBlinkTag(true)
+                    } else {
+                        setBlinkTag(false)
+                    }
                 }
             }
             getSended()
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
     }
-    }, [account, props.rootStore.user.selectedPool])
+    }, [account, props.rootStore.user.selectedPool, props.rootStore.user.autoUpdateObserver])
 
     return (
         <div className="pools_info">
             <div className="pools_info__menu">
                 <Link href={"/"}>
                     <a>
-                        <p className="pools_info__menu-enabled">Information</p>
+                        <p className="pools_info__menu-enabled">
+                            {t("info.labels.information")}
+                        </p>
                     </a>
                 </Link>
                 <Link href={"/claim"}>
                     <div className="pools_info__menu_upg">
                         <a>
-                            <p>Claim</p>
+                            <p>
+                                {t("info.labels.claim")}
+                            </p>
                         </a>
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/history"}>
-                    <a>
-                        <p className="pools_info__menu_last">History</p>
-                    </a>
-                </Link>
+                {/* <Link href={"/history"}>
+                    <a> */}
+                        <p className="pools_info__menu_last">
+                            {t("info.labels.history")}
+                        </p>
+                    {/* </a>
+                </Link> */}
             </div>
             {<p className="pools_info__description">
                 {props.poolList[props.rootStore.user.selectedPool].token.description}
             </p>  || <Skeleton />}
             <div className="pools_info__stats">
                 <div className="pools_info__stats_row">
-                    <StatsBubble name = {"Distributed"} number = {props.poolList[props.rootStore.user.selectedPool].totalDonated}/>
-                    <StatsBubble name = {"Cost per Ticket"} number = {props.poolList[props.rootStore.user.selectedPool].costPerTicket}/>
-                    <StatsBubble name = {"HODL CT Value"} number = {props.poolList[props.rootStore.user.selectedPool].userCThodlAmount}/>
+                    <StatsBubble name = {t("info.stats.distributed")} number = {props.poolList[props.rootStore.user.selectedPool].totalDonated}/>
+                    <StatsBubble name = {t("info.stats.costPerTicket")} number = {props.poolList[props.rootStore.user.selectedPool].costPerTicket}/>
+                    <StatsBubble name = {t("info.stats.hodlCtValue")} number = {props.poolList[props.rootStore.user.selectedPool].userCThodlAmount}/>
                 </div>
                 <div className="pools_info__stats_row" id="stats_row_second">
                     <div className="pools_info__stats_row-left">
-                        <BigStatsBubble name = {"Chance, %"} number = {props.poolList[props.rootStore.user.selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
+                        <BigStatsBubble name = {t("info.stats.chance")} number = {props.poolList[props.rootStore.user.selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
                     </div>
                     <div className="pools_info__stats_row-right">
-                        <StatsBubble name = {"Donated (your)"} number = {props.poolList[props.rootStore.user.selectedPool].userDonated}/>
-                        <StatsBubble name = {"Recieved (your)"} number = {props.poolList[props.rootStore.user.selectedPool].userRecieved}/>
+                        <StatsBubble name = {t("info.stats.donated")} number = {props.poolList[props.rootStore.user.selectedPool].userDonated}/>
+                        <StatsBubble name = {t("info.stats.recieved")} number = {props.poolList[props.rootStore.user.selectedPool].userRecieved}/>
                     </div>
                 </div>
 

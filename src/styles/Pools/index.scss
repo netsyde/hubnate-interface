@@ -16,6 +16,13 @@
 
     &_table {
         margin-top: 40px;
+
+        &_empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
     }
 
     &_info {
@@ -32,7 +39,7 @@
                 position: relative;
                 display: flex;
                 cursor: pointer;
-                // flex-direction: row-reverse;
+                justify-content: flex-end;
             }
             &_tag {
                 position: absolute;
@@ -46,7 +53,7 @@
                 width: 8px;
                 border-radius: 8px;
                 background: #8e44ad;
-                left: 45px;
+                right: 30px;
                 top: -5px;
                 animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate; 
             }
@@ -62,7 +69,7 @@
             }
             p {
                 font-size: 16px;
-                font-family: "GT Haptik Regular";
+                font-family: "GothamPro";
                 margin: 0;
                 padding: 0;
                 margin-right: 40px;
@@ -117,19 +124,21 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content: space-between;
             
             &_route {
                 display: flex;
                 flex-direction: row;
-                flex: 1;
+                // flex: 3;
 
                 p {
                     font-size: 16px;
-                    font-family: "GT Haptik Regular";
+                    font-family: "GothamPro";
                     margin: 0;
                     padding: 0;
                     margin-right: 40px;
                     padding-bottom: 4px;
+                    cursor: pointer;
                 }
     
                 &-enabled {
@@ -137,19 +146,42 @@
                 }
             }
 
+            &_route p:last-child {
+                margin-right: 0px;
+            }
+
             &_control {
                 display: flex;
                 flex-direction: row;
-                flex: 1;
+                // flex: 1;
                 justify-content: flex-end;
 
                 &__box {
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                     height: 40px;
                     width: 40px;
                     border-radius: 10px;
                     margin-left: 10px;
                     background: linear-gradient(128.17deg, #dbacee -14.78%, #8e44ad 110.05%);
+                    
+                    img {
+                        height: 50%;
+                        width: auto;
+                    }
+
+                    &-disabled {
+                        background: linear-gradient(128.17deg, #95a5a6 -14.78%, #7f8c8d 110.05%);
+                    }
                 }
+                &__box:hover {
+                    opacity: 0.7;
+                    transform: translate3d(2px, 2px, 10px);
+                }
+
+                
             }
 
         }
@@ -161,7 +193,7 @@
 
             h2 {
                 font-size: 14px;
-                font-family: "GT Haptik Regular";
+                font-family: "GothamPro";
             }
 
             &_input {
@@ -375,6 +407,15 @@
             margin-top: 0px;
         }
 
+        &_table {
+            &_empty {
+                img {
+                    width: 200px;
+                    margin-top: 30px;
+                }
+            }
+        }
+
         &_info {
             margin-top: 50px;
             margin-right: 0px;
@@ -383,7 +424,7 @@
 
             &__menu {
                 p {
-                    font-size: 20px;
+                    font-size: 16px;
                 }
             }
             &__stats {
