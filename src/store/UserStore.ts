@@ -141,9 +141,12 @@ class UserStore {
     async getPoolData (donateContract: any, CTcontract: any, poolId: number, account: string) {
         try {
             let pool: IFetchPool = await this.fetchPool(donateContract, poolId);
-            let userInPool: IFetchUserInPool = await this.fetchUserInPool(donateContract, poolId, account)
             let poolInfo: IPool = poolList.find((pool) => pool.id == poolId)
-            let ctUserAmount: number = await this.getUserCTAmount(CTcontract, account)
+            let userInPool: IFetchUserInPool, ctUserAmount: number
+            if (account) {
+                userInPool = await this.fetchUserInPool(donateContract, poolId, account)
+                ctUserAmount = await this.getUserCTAmount(CTcontract, account)
+            }
             if (pool) {
                 let decimals = 18
                 poolInfo.costPerTicket = Number(this.fixNumber(pool.costPerTicket, decimals));

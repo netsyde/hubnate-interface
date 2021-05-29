@@ -34,11 +34,9 @@ const Main = inject("rootStore")(observer((props: IPools) => {
         try {
             const getPoolList = async () => {
                 try {
-                    if (account) {
-                        let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
-                        if (fetchPoolList && fetchPoolList.length > 0) {
-                            setPoolList(fetchPoolList)
-                        }
+                    let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
+                    if (fetchPoolList && fetchPoolList.length > 0) {
+                        setPoolList(fetchPoolList)
                     }
                 } catch (e) {
                     addAlert(e.message)

@@ -30,7 +30,7 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
         try {
             const getPoolList = async () => {
                 let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
-                console.log(fetchPoolList)
+                // console.log(fetchPoolList)
                 if (fetchPoolList) {
                     setPoolList(fetchPoolList)
                 }

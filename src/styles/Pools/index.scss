@@ -16,6 +16,13 @@
 
     &_table {
         margin-top: 40px;
+
+        &_empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
     }
 
     &_info {
@@ -398,6 +405,15 @@
         align-items: center;
         &_container {
             margin-top: 0px;
+        }
+
+        &_table {
+            &_empty {
+                img {
+                    width: 200px;
+                    margin-top: 30px;
+                }
+            }
         }
 
         &_info {

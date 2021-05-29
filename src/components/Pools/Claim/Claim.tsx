@@ -11,6 +11,7 @@ import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@co
 import { minifyString, convertNumber, useWindowSize } from '@src/utils';
 import { useTranslation } from 'next-i18next'
 import { useSnackbar } from '@src/widgets/Snackbar'
+let noSuchCt = require('@src/images/ui/no-such-ct.svg')
 
 interface IPoolsInfo {
     poolList: IPool[],
@@ -160,7 +161,8 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                     </a>
                 </Link>
             </div>
-            <Table className="pools_table">
+
+            {sended.length > 0 ? <Table className="pools_table">
                 {sended && sended.map((donate: IDonate, index: number) => 
                     <React.Fragment key = {index}>
                         <TableRow
@@ -205,7 +207,11 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                         }
                     </React.Fragment>
                 )}
-            </Table>
+            </Table> :
+                <div className="pools_table_empty">
+                    <img src={noSuchCt} alt="no-such-ct" />
+                </div>
+            }
             
         </div>
     )
