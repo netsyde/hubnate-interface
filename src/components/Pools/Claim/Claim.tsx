@@ -133,7 +133,8 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             }
         } catch (e) {
             console.log(e)
-            addAlert(t('errors.claimTickets'))
+            setClaiming(false)
+            addAlert(e.message)
         }
     }
 

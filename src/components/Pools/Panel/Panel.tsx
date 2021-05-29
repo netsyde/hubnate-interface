@@ -61,7 +61,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             }
             console.log(approveTx)
         } catch (e) {
-            addAlert(t('errors.clickEnable'))
+            addAlert(e.message)
+            setWait(false)
             console.log(e);
             return false;
         }
@@ -79,7 +80,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                 addAlert(t('txs.donate'))
             }
         } catch (e) {
-            addAlert(t('errors.clickDonate'))
+            addAlert(e.message)
+            setWait(false)
             console.log(e);
             return false;
         }
