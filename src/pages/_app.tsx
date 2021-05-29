@@ -33,9 +33,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <meta name='format-detection' content='telephone=no' />
         <meta name='mobile-web-app-capable' content='yes' />
         <meta name='theme-color' content='#FFFFFF' />
-          {/* <link rel='apple-touch-icon' sizes='180x180' href='/icons/apple-touch-icon.png' /> */}
+        <link rel='apple-touch-icon' sizes='256x256' href='/favicon.png' />
         <link rel='manifest' href='/manifest.json' />
-        <link rel='shortcut icon' href='/favicon.ico' />
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>
         <Provider { ...stores }>
           <Web3ReactProvider getLibrary={getLibrary}>
