@@ -155,11 +155,11 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
                         {blinkTag && <div className="pools_info__menu_tag" />}
                     </div>
                 </Link>
-                <Link href={"/history"}>
-                    <a>
+                {/* <Link href={"/history"}>
+                    <a> */}
                         <p className="pools_info__menu_last">{t("info.labels.history")}</p>
-                    </a>
-                </Link>
+                    {/* </a>
+                </Link> */}
             </div>
 
             {sended.length > 0 ? <Table className="pools_table">
