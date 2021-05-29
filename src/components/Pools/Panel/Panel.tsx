@@ -15,6 +15,7 @@ import { inject, observer } from "mobx-react";
 import BigNumber from 'bignumber.js';
 import { useTranslation } from 'next-i18next'
 const sync = require('@images/ui/sync-solid.svg')
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 interface IPoolsPanel {
      poolList: IPool[],
@@ -47,6 +48,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
     const [userBalance, setUserBalance] = useState<number>(0)
     const { login } = useAuth()
     let token = useERC20(props.poolList[props.rootStore.user.selectedPool].token.address[4])
+    const { addAlert } = useSnackbar() 
 
     const onClickEnable = async () => {
         try {
@@ -55,9 +57,11 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (approveTx) {
                 setAllowance(true)
                 setWait(false)
+                addAlert(t('txs.approved'))
             }
             console.log(approveTx)
         } catch (e) {
+            addAlert(t('errors.clickEnable'))
             console.log(e);
             return false;
         }
@@ -72,8 +76,10 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             if (donate) {
                 console.log(donate)
                 setWait(false)
+                addAlert(t('txs.donate'))
             }
         } catch (e) {
+            addAlert(t('errors.clickDonate'))
             console.log(e);
             return false;
         }
@@ -94,6 +100,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             getUserTokenBalance()
         } catch (e) {
             console.log(e);
+            addAlert(t('errors.getUserTokenBalance'))
+            addAlert(e.message)
         }
     }, [account, token, wait])
 
@@ -112,12 +120,14 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                     }
                 } catch (e) {
                     console.log(e)
+                    addAlert(e.message)
                 }
             }
 
             getAutoUpdate()
         } catch (e) {
             console.log(e);
+            addAlert(t('errors.getAutoUpdate'))
         }
     }, [props.rootStore.user.autoUpdate])
 
@@ -125,11 +135,14 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
         try {
             const getAllowance = async () => {
                 try {
-                    let response = await token.methods.allowance(account, hubnateContract.options.address).call()
-                    const currentAllowance = new BigNumber(response)
-                    setAllowance(currentAllowance.gt(0))
+                    if (account) {
+                        let response = await token.methods.allowance(account, hubnateContract.options.address).call()
+                        const currentAllowance = new BigNumber(response)
+                        setAllowance(currentAllowance.gt(0))
+                    }
                 } catch (e) {
                     console.log(e)
+                    addAlert(e.message)
                     return false
                 }
             }
@@ -138,6 +151,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             // console.log(allowance)
         } catch (e) {
             console.log(e)
+            addAlert(t('errors.getAllowance'))
         }
     }, [account, token, allowance])
 
@@ -172,6 +186,8 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             getChance()
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
+            
         }
     }, [amount, props.rootStore.user.selectedPool, account, props.poolList, token]);
 
@@ -196,6 +212,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             }
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }
 
@@ -209,6 +226,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             window.localStorage.setItem("autoUpdate", 'false');
             props.rootStore.user.setAutoUpdate(false)
             console.log(e)
+            addAlert(e.message)
         }
     }
 
@@ -278,6 +296,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             }
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }, [amount, account, props.rootStore.user.selectedPool, token, wait, allowance, userBalance])
 
@@ -286,6 +305,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             setAmount(e.target.value.replace(/^0|\D/g, ''))
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }
 

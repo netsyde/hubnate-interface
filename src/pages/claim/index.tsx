@@ -12,6 +12,7 @@ import poolsGap from '@src/data/constants/pools'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18NextConfig from '@src/next-i18next.config.js'
 import { useTranslation } from 'next-i18next'
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 interface IPools {
     rootStore?: RootStore
@@ -22,7 +23,8 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
     const [poolList, setPoolList] = useState<IPool[]>(poolsGap)
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
-    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))    
+    const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))   
+    const { addAlert } = useSnackbar() 
 
     useEffect(() => {
         try {
@@ -36,6 +38,7 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
             
             getPoolList()
         } catch (e) {
+            addAlert(e.message)
             console.log(e)
         }
     }, [account, props.rootStore.user.autoUpdateObserver]);

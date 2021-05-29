@@ -7,7 +7,7 @@ import { getLibrary } from '@src/utils/web3react';
 import { Provider } from 'mobx-react';
 import rootStore from '@src/store/RootStore';
 import { ModalProvider } from '@src/widgets/Modal'
-// import './i18n';
+import { SnackbarProvider } from '@src/widgets/Snackbar'
 import { appWithTranslation } from 'next-i18next'
 const druid = require('@images/druid.jpg')
 const APP_NAME = 'Hubnate';
@@ -39,9 +39,11 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Head>
         <Provider { ...stores }>
           <Web3ReactProvider getLibrary={getLibrary}>
-            <ModalProvider>
-              <Component {...pageProps} />
-            </ModalProvider>
+            <SnackbarProvider>
+              <ModalProvider>
+                <Component {...pageProps} />
+              </ModalProvider>
+            </SnackbarProvider>
           </Web3ReactProvider>
         </Provider>
     </>

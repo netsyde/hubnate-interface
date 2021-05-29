@@ -10,6 +10,7 @@ import { Button, Table } from '@components/Utility'
 import { TableRow, TableRowTokenItem, TableRowItem, TableRowMetaItem } from '@components/Utility/Table/components';
 import { minifyString, convertNumber, useWindowSize } from '@src/utils';
 import { useTranslation } from 'next-i18next'
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 interface IPoolsInfo {
     poolList: IPool[],
@@ -83,7 +84,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
     const [chevrons, setChevrons] = useState<boolean[]>(sended.map(() => false))
     const [claiming, setClaiming] = useState<boolean>(false)
     const { t } = useTranslation()
-
+    const { addAlert } = useSnackbar() 
     const size = useWindowSize();
     useEffect(() => {
         try {
@@ -102,6 +103,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             getSended()
         } catch (e) {
             console.log(e)
+            addAlert(t('errors.getSended'))
         }
     }, [account, props.rootStore.user.selectedPool, claiming, props.rootStore.user.autoUpdateObserver])
 
@@ -112,6 +114,7 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
             setChevrons(newChevrons)
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
         }
     }
 
@@ -125,9 +128,11 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
 
             if (claim) {
                 setClaiming(false)
+                addAlert(t('txs.claim'))
             }
         } catch (e) {
             console.log(e)
+            addAlert(t('errors.claimTickets'))
         }
     }
 

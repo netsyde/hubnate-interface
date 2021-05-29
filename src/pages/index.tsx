@@ -12,6 +12,7 @@ import poolsGap from '@src/data/constants/pools'
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18NextConfig from '@src/next-i18next.config.js'
 import { useTranslation } from 'next-i18next'
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 interface IPools {
     rootStore?: RootStore
@@ -23,17 +24,24 @@ const Main = inject("rootStore")(observer((props: IPools) => {
     const hubnateContract = useHubnate()
     const { t } = useTranslation()
     const CTcontracts = poolList.map((pool) => useCT(pool.CT[4]))    
+    const { addAlert } = useSnackbar()
+
+    const onClickSettings = () => {
+        // addAlert('on click settings')
+    }
 
     useEffect(() => {
         try {
             const getPoolList = async () => {
                 try {
-                    let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
-                    console.log('fetchPoolList-', fetchPoolList)
-                    if (fetchPoolList && fetchPoolList.length > 0) {
-                        setPoolList(fetchPoolList)
+                    if (account) {
+                        let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account);
+                        if (fetchPoolList && fetchPoolList.length > 0) {
+                            setPoolList(fetchPoolList)
+                        }
                     }
                 } catch (e) {
+                    addAlert(e.message)
                     console.log(e)
                 }
             }
@@ -55,7 +63,7 @@ const Main = inject("rootStore")(observer((props: IPools) => {
                 <div className = "pools_container">
                     <Container 
                         title = {t("titles.app")}
-                        address = {''}
+                        onClickElement = {onClickSettings}
                     >
                         <div className="pools">
                             <Info 

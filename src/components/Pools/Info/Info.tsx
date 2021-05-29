@@ -6,6 +6,7 @@ import { inject, observer } from "mobx-react";
 import { RootStore } from '@src/store/RootStore';
 import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
 import { useWeb3React } from '@web3-react/core';
+import { useSnackbar } from '@src/widgets/Snackbar'
 import { useTranslation } from 'next-i18next'
 
 
@@ -43,20 +44,24 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
     const { account } = useWeb3React()
     const hubnateContract = useHubnate()
     const { t } = useTranslation()
+    const { addAlert } = useSnackbar() 
 
     useEffect(() => {
         try {
             const getSended = async () => {
-                let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
-                if (userSended && userSended.length > 0) {
-                    setBlinkTag(true)
-                } else {
-                    setBlinkTag(false)
+                if (account) {
+                    let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
+                    if (userSended && userSended.length > 0) {
+                        setBlinkTag(true)
+                    } else {
+                        setBlinkTag(false)
+                    }
                 }
             }
             getSended()
         } catch (e) {
             console.log(e)
+            addAlert(e.message)
     }
     }, [account, props.rootStore.user.selectedPool, props.rootStore.user.autoUpdateObserver])
 
