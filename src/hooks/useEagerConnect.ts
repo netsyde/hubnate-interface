@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import useAuth from '@src/hooks/useAuth';
+import { useSnackbar } from '@src/widgets/Snackbar'
 
 enum ConnectorNames {
     Injected = "injected",
@@ -24,23 +25,29 @@ const _binanceChainListener = async () =>
 const useEagerConnect = () => {
   try {
     const { login } = useAuth()
+    const { addAlert } = useSnackbar() 
 
     useEffect(() => {
-      const connectorId = window.localStorage.getItem("connectorId") as ConnectorNames
+      try {
+        const connectorId = window.localStorage.getItem("connectorId") as ConnectorNames
 
-      if (connectorId) {
-        const isConnectorBinanceChain = connectorId === ConnectorNames.BSC
-        const isBinanceChainDefined = Reflect.has(window, 'BinanceChain')
+        if (connectorId) {
+          const isConnectorBinanceChain = connectorId === ConnectorNames.BSC
+          const isBinanceChainDefined = Reflect.has(window, 'BinanceChain')
 
-        // Currently BSC extension doesn't always inject in time.
-        // We must check to see if it exists, and if not, wait for it before proceeding.
-        if (isConnectorBinanceChain && !isBinanceChainDefined) {
-          _binanceChainListener().then(() => login(connectorId))
+          // Currently BSC extension doesn't always inject in time.
+          // We must check to see if it exists, and if not, wait for it before proceeding.
+          if (isConnectorBinanceChain && !isBinanceChainDefined) {
+            _binanceChainListener().then(() => login(connectorId))
 
-          return
+            return
+          }
+
+          login(connectorId)
         }
-
-        login(connectorId)
+      } catch (e) {
+        addAlert(e.message)
+        console.log(e)
       }
     }, [login])
   } catch (e) {
