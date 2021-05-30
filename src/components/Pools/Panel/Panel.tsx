@@ -114,7 +114,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                     let autoUpdate = window.localStorage.getItem("autoUpdate")
 
                     if (autoUpdate) {
-                        console.log('auto upd', JSON.parse(autoUpdate))
+                        // console.log('auto upd', JSON.parse(autoUpdate))
                         props.rootStore.user.setAutoUpdate(JSON.parse(autoUpdate))
                         if (JSON.parse(autoUpdate)) {
                             props.rootStore.user.setAutoUpdateObserver()
