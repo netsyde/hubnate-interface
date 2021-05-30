@@ -32,7 +32,9 @@ const Claim = inject("rootStore")(observer((props: IPools) => {
                 let fetchPoolList = await props.rootStore.user.getPools(hubnateContract, CTcontracts, account) || poolsGap;
                 // console.log(fetchPoolList)
                 if (fetchPoolList) {
-                    setPoolList(fetchPoolList)
+                    if (fetchPoolList.length > 0) {
+                        setPoolList(fetchPoolList)
+                    }
                 }
             }
             
