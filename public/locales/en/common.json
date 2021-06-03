@@ -36,7 +36,8 @@
 		},
 		"labels": {
 			"donate": "Donate",
-			"exchange": "Exchange"
+			"exchange": "Exchange",
+			"claim": "Claim"
 		},
 		"input": {
 			"pool": "Pool",

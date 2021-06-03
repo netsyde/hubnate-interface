@@ -11,9 +11,16 @@ module.exports = withPlugins([
   [optimizedImages, {
     /* config for next-optimized-images */
   }],
+  [withPWA,
+    {
+      pwa: {
+        disable: process.env.NODE_ENV === 'development'
+      }
+    }
+  ],
   {
     i18n
-  }
+  },
   // your other plugins here
 
 ]);

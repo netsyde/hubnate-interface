@@ -36,7 +36,8 @@
 		},
 		"labels": {
 			"donate": "Задонатить",
-			"exchange": "Обменять"
+			"exchange": "Обменять",
+			"claim": "Награды"
 		},
 		"input": {
 			"pool": "Пул",
