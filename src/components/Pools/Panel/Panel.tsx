@@ -114,7 +114,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                     let autoUpdate = window.localStorage.getItem("autoUpdate")
 
                     if (autoUpdate) {
-                        console.log('auto upd', JSON.parse(autoUpdate))
+                        // console.log('auto upd', JSON.parse(autoUpdate))
                         props.rootStore.user.setAutoUpdate(JSON.parse(autoUpdate))
                         if (JSON.parse(autoUpdate)) {
                             props.rootStore.user.setAutoUpdateObserver()
@@ -300,7 +300,7 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
             console.log(e)
             addAlert(e.message)
         }
-    }, [amount, account, props.rootStore.user.selectedPool, token, wait, allowance, userBalance])
+    }, [amount, account, props.rootStore.user.selectedPool, token, wait, allowance, userBalance, props.poolList])
 
     const onChangeAmount = (e: any) => {
         try {

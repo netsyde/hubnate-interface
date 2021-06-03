@@ -91,8 +91,10 @@ const Claim = inject("rootStore")(observer((props: IPoolsInfo) => {
         try {
             const getSended = async () => {
                 let userSended = await props.rootStore.user.getUserUnclaimDonates(hubnateContract, props.poolList[props.rootStore.user.selectedPool].id, account)
-                if (userSended && userSended.length > 0) {
-                    setBlinkTag(true)
+                if (userSended) {
+                    if (userSended.length > 0) {
+                        setBlinkTag(true)
+                    }
                 } else {
                     setBlinkTag(false)
                 }

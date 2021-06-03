@@ -34,9 +34,13 @@ export default function SnackBarProvider(props: ISnackBarProvider) {
   
   const activeAlertIds = alerts.join(',')
   useEffect(() => {
-    if (activeAlertIds.length > 0) {
-      const timer = setTimeout(() => setAlerts((alerts) => alerts.slice(0, alerts.length - 1)), AUTO_DISMISS)
-      return () => clearTimeout(timer)
+    try {
+      if (activeAlertIds.length > 0) {
+        const timer = setTimeout(() => setAlerts((alerts) => alerts.slice(0, alerts.length - 1)), AUTO_DISMISS)
+        return () => clearTimeout(timer)
+      }
+    } catch (e) {
+      console.log(e)
     }
   }, [activeAlertIds])
 
