@@ -77,23 +77,13 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
                         </p>
                     </a>
                 </Link>
-                <Link href={"/claim"}>
-                    <div className="pools_info__menu_upg">
-                        <a>
-                            <p>
-                                {t("info.labels.claim")}
-                            </p>
-                        </a>
-                        {blinkTag && <div className="pools_info__menu_tag" />}
-                    </div>
-                </Link>
-                {/* <Link href={"/history"}>
-                    <a> */}
+                <Link href={"/history"}>
+                    <a>
                         <p className="pools_info__menu_last">
                             {t("info.labels.history")}
                         </p>
-                    {/* </a>
-                </Link> */}
+                    </a>
+                </Link>
             </div>
             {<p className="pools_info__description">
                 {props.poolList[props.rootStore.user.selectedPool].token.description}
@@ -106,7 +96,7 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
                 </div>
                 <div className="pools_info__stats_row" id="stats_row_second">
                     <div className="pools_info__stats_row-left">
-                        <BigStatsBubble name = {t("info.stats.chance")} number = {props.poolList[props.rootStore.user.selectedPool].chance}/> {/* 362 = (single block + padding + margin-right + border) * 2 */}
+                        <BigStatsBubble name = {t("info.stats.chance")} number = {props.poolList[props.rootStore.user.selectedPool].chance}/>
                     </div>
                     <div className="pools_info__stats_row-right">
                         <StatsBubble name = {t("info.stats.donated")} number = {props.poolList[props.rootStore.user.selectedPool].userDonated}/>
