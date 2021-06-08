@@ -56,7 +56,7 @@ const Main = inject("rootStore")(observer((props: IPools) => {
     return (
         <>
             <Head>
-                <title>Hubnate | App</title>
+                <title>Hubnate dApp</title>
             </Head>
             <MainLayout
             >
