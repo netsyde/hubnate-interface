@@ -27,7 +27,8 @@ export interface IPool {
     CT: any,
     userCThodlAmount?: number,
     userDonatedIds?: number[],
-    userRecievedIds?: number[]
+    userRecievedIds?: number[],
+    userUnclaimed?: number
 }
 
 export interface IToken {

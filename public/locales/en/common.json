@@ -47,6 +47,9 @@
 		"stats": {
 			"newChance": "New chance",
 			"costToBuyTickets": "Cost to buy tickets"
+		},
+		"claim": {
+			"available": "Available CT"
 		}
 	},
 	"claim": {

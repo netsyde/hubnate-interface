@@ -15,10 +15,17 @@ import { useModal } from '@src/widgets/Modal';
 import useAuth from '@src/hooks/useAuth';
 import ConnectModal from '@components/ConnectModal';
 import { Button } from '@components/Utility';
+import Skeleton from 'react-loading-skeleton';
 
 interface IButtonState {
     type: 'default' | 'disabled';
     id: 'enable' | 'donate' | 'confirming' | 'insufficientBalance' | 'enterNumber' | 'connect'
+    text: string
+}
+
+interface IClaimState {
+    type: 'default' | 'disabled';
+    id: 'claim' | 'connect' | 'insufficientBalance'
     text: string
 }
 
@@ -41,12 +48,20 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
             id: 'connect'
         }
     )
+    const [claimState, setClaimState] = useState<IClaimState>(
+        {
+            type: 'default',
+            text: t("panel.buttons.connect"),
+            id: 'connect'
+        }
+    )
     const [allowance, setAllowance] = useState<boolean>(true);
     const [wait, setWait] = useState<boolean>(false)
     const [userBalance, setUserBalance] = useState<number>(0)
     const { login } = useAuth()
     let token = useERC20(props.poolList[props.rootStore.user.selectedPool].token.address[4])
     const { addAlert } = useSnackbar() 
+    const [claiming, setClaiming] = useState<boolean>(false)
 
     let [onPresentConnectModal] = useModal(
         <ConnectModal 
@@ -246,7 +261,7 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
         }
     }, [amount, props.rootStore.user.selectedPool, account, props.poolList, token]);
 
-    const onClickButton = (index: number) => {
+    const onClickButton = () => {
         try {
             switch (buttonState.id) {
                 case 'connect':
@@ -264,6 +279,83 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
             addAlert(e.message)
         }
     }
+    const onClickClaim = async () => {
+        try {
+            console.log(claimState.id)
+            switch (claimState.id) {
+                case 'connect':
+                    onPresentConnectModal()
+                    break;
+                case 'claim':
+                    claimTickets()
+                    break;
+            }
+        } catch(e) {
+            console.log(e)
+        }
+    }
+    const claimTickets = async () => {
+        try {
+            let claimNumber = props.poolList[props.rootStore.user.selectedPool].userUnclaimed < 200 ? props.poolList[props.rootStore.user.selectedPool].userUnclaimed : 200
+            setClaiming(true);
+            let claim = await hubnateContract.methods.claimTickets(
+                props.poolList[props.rootStore.user.selectedPool].id,
+                claimNumber
+            ).send({ from: account })
+
+            if (claim) {
+                setClaiming(false)
+                addAlert(t('txs.claim'))
+            }
+        } catch (e) {
+            console.log(e)
+            setClaiming(false)
+            addAlert(e.message)
+        }
+    }
+    useEffect(() => {
+        try {
+            if (!account) {
+                setClaimState({
+                    type: 'default',
+                    text: t("panel.buttons.connect"),
+                    id: 'connect'
+                })
+                return;
+            }
+
+            if (Number(props.poolList[props.rootStore.user.selectedPool].userUnclaimed) == 0) {
+                setClaimState({
+                    type: 'disabled',
+                    text: t("claim.buttons.claim"),
+                    id: 'claim'
+                })
+                return;
+            }
+
+            if (claiming) {
+                setButtonState({
+                    type: 'disabled',
+                    text: t("panel.buttons.confirming"),
+                    id: 'confirming'
+                })
+                return;
+            }
+
+            if (Number(props.poolList[props.rootStore.user.selectedPool].userUnclaimed) > 0) {
+                setClaimState({
+                    type: 'default',
+                    text: t("claim.buttons.claim"),
+                    id: 'claim'
+                })
+                return;
+            }
+
+
+        } catch (e) {
+            console.log(e)
+        }
+    }, [account, props.rootStore.user.selectedPool, claiming])
     
     return (
         <form className="pools_panel__content">
@@ -298,6 +390,33 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
                 <StatsItem title={t("panel.stats.newChance")} value={chance}/>
                 <StatsItem title={t("panel.stats.costToBuyTickets")} value={cost}/>
                 {/* <StatsItem title={"Estimated Fee"} value={0.001}/> */}
+            </div>
+            <div className="pools_panel_claim">
+                <div className="pools_panel_claim__radial">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80" className="token-circle">
+                        <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(136, 163, 200, 0.2)" strokeWidth="14" strokeDasharray="3, 5" transform="rotate(180 80 80)"></circle>
+                        <mask id="myMask">
+                            <circle cx="80" cy="80" r="72" fill="none" stroke="#fff" strokeWidth="14" strokeDasharray="3, 5" transform="rotate(182 80 80)"></circle>
+                        </mask>
+                        <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" strokeDashoffset="0" opacity="0.3" transform="rotate(180 80 80)" mask="url(#myMask)" strokeDasharray={`${(226 / 200 * props.poolList[props.rootStore.user.selectedPool].userUnclaimed).toFixed(0) || 0}, 226`} stroke="#8e44ad"></circle>
+                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" strokeDashoffset="0" transform="rotate(180 80 80)" mask="url(#myMask)" strokeDasharray={`${(226 / 200 * props.poolList[props.rootStore.user.selectedPool].userUnclaimed).toFixed(0) || 0}, 226`} stroke="#8e44ad"></circle>
+                        <circle cx="80" cy="80" r="60" fill="none" strokeWidth="1" strokeDashoffset="0" stroke="rgba(136, 163, 200, 0.2)" strokeDasharray="377" transform="rotate(180 80 80)"></circle> 
+                    </svg>
+                    <div className="pools_panel_claim__radial_info">
+                    <p className="pools_panel_claim__radial_info__value">
+                            {props.poolList[props.rootStore.user.selectedPool].userUnclaimed || <Skeleton />}
+                        </p>
+                        <p className="pools_panel_claim__radial_info__title">
+                            {t('panel.claim.available')}
+                        </p>
+                    </div>
+                </div>
+                <Button 
+                    name = {claimState.text}
+                    type = {claimState.type}
+                    padding = "10px 100px"
+                    onClick = {onClickClaim}
+                />
             </div>
         </form>
     )

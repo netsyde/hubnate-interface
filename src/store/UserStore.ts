@@ -2,6 +2,7 @@ import { makeObservable, observable, action, computed, autorun, runInAction } fr
 import { RootStore } from './RootStore';
 import poolList from '@src/data/constants/pools';
 import { IPool } from '@src/types/Pools'
+import poolsGap from '@src/data/constants/pools'
 
 interface IFetchPool {
     poolId: number,
@@ -16,7 +17,8 @@ interface IFetchUserInPool {
     totalDonated: number,
     totalRecieved: number,
     donated: number[],
-    recieved: number[]
+    recieved: number[],
+    unclaimed: number
 }
 
 class UserStore {
@@ -24,6 +26,9 @@ class UserStore {
     selectedPool: number = 0;
     autoUpdateObserver: boolean = false;
     autoUpdate: boolean = false;
+
+    // poolList
+    poolList: IPool[] = poolsGap;
 	constructor(public root: RootStore) {
         makeObservable(this, {
             isConnected: observable,
@@ -31,9 +36,24 @@ class UserStore {
             fetchPool: action,
             selectedPool: observable,
             autoUpdateObserver: observable,
-            autoUpdate: observable
+            autoUpdate: observable,
+            setPoolList: action,
+            getPoolList: observable
         })
 	}
+
+    // poolList
+    setPoolList(poolList: IPool[]) {
+        runInAction(() => {
+            this.poolList = poolList
+        })
+    }
+
+    getPoolList() {
+        return this.poolList
+    }
+
+
  
     connectAccount() {
         this.isConnected = true
@@ -83,6 +103,16 @@ class UserStore {
         try {
             let userCTInfo = await CTcontract.methods.getUserTokensInfo(account).call()
             return userCTInfo.length
+        } catch (e) {
+            // console.log(e)
+            return false;
+        }
+    }
+
+    async getCTSupply (CTcontract: any) {
+        try {
+            let totalSupply = await CTcontract.methods.totalSupply().call()
+            return totalSupply
         } catch (e) {
             // console.log(e)
             return false;
@@ -143,6 +173,7 @@ class UserStore {
             let pool: IFetchPool = await this.fetchPool(donateContract, poolId);
             let poolInfo: IPool = poolList.find((pool) => pool.id == poolId)
             let userInPool: IFetchUserInPool, ctUserAmount: number
+            let totalSupply = await this.getCTSupply(CTcontract)
             if (account) {
                 userInPool = await this.fetchUserInPool(donateContract, poolId, account)
                 ctUserAmount = await this.getUserCTAmount(CTcontract, account)
@@ -150,20 +181,19 @@ class UserStore {
             if (pool) {
                 let decimals = 18
                 poolInfo.costPerTicket = Number(this.fixNumber(pool.costPerTicket, decimals));
-                poolInfo.totalDonated =  Number(this.fixNumber(pool.costPerTicket * pool.totalTickets, decimals));
+                poolInfo.totalDonated =  Number(this.fixNumber(pool.costPerTicket * totalSupply, decimals));
                 // poolInfo.allowance = allowance;
                 
                 if (userInPool) {
                     poolInfo.userDonated = Number(this.fixNumber(userInPool.totalDonated, decimals));
                     poolInfo.userRecieved = Number(this.fixNumber(userInPool.totalRecieved, decimals));
-                    // console.log(poolInfo.userDonated, poolInfo.userRecieved )
                     poolInfo.userDonatedIds = userInPool.donated;
                     poolInfo.userRecievedIds = userInPool.recieved;
-                    // console.log(poolInfo.userDonatedIds, poolInfo.userRecievedIds )
+                    poolInfo.userUnclaimed = userInPool.unclaimed
                 }
 
                 if (typeof(ctUserAmount) == 'number') {
-                    poolInfo.chance = Number( (ctUserAmount * poolInfo.costPerTicket / poolInfo.totalDonated * 100).toFixed(2));
+                    poolInfo.chance = Number( (ctUserAmount / totalSupply * 100).toFixed(2));
                     poolInfo.userCThodlAmount = Number(ctUserAmount);
                 }
 

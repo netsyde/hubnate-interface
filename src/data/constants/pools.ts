@@ -9,7 +9,7 @@ const poolList: IPool[] = [
         CT: {
             56: '',
             97: '',
-            4: '0x833F526CC197EA52F28b304F83CF488029a8099d'
+            4: '0x039b619878c9FF2883153626dA67C090E49F18a1'
         }
     },
     {
@@ -19,7 +19,7 @@ const poolList: IPool[] = [
         CT: {
             56: '',
             97: '',
-            4: '0xF78fe05Cd7Cba0648D2FD926d64E94316E43cbec'
+            4: '0x4E225c8a056C19079Ea3Ee6a24Ae47C2F249Fd32'
         }
     }
 ]

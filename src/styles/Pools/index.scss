@@ -184,10 +184,11 @@
                 
             }
 
+
         }
 
         &__content {
-            margin-top: 30px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
 
@@ -354,6 +355,42 @@
                     }
                 }
 
+            }
+        }
+
+        &_claim {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.2);
+            &__radial {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: flex-end;
+
+                &_info {
+                    justify-content: center;
+                    position: absolute;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+
+                    &__title {
+                        font-size: 12px;
+                        font-family: "Inter-Regular";
+                        color: #717781;
+                    }
+
+                    &__value {
+                        font-size: 24px;
+                        font-family: "Inter-Regular";
+                        min-width: 40px;
+                        text-align: center;
+                    }
+                }
             }
         }
     }

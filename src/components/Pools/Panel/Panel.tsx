@@ -1,14 +1,8 @@
 import { Selector, StatsItem, Donate, Claim } from './components';
-import { Button } from '@components/Utility';
 import React, { useState, useEffect } from "react";
 import { IPool } from '@src/types/Pools';
-import { useHubnate, useERC20, useCT } from '@src/hooks/useContract'
-import ConnectModal from '@components/ConnectModal';
-import { useModal } from '@src/widgets/Modal';
-import useAuth from '@src/hooks/useAuth';
 import { RootStore } from '@src/store/RootStore';
 import { inject, observer } from "mobx-react";
-import BigNumber from 'bignumber.js';
 import { useTranslation } from 'next-i18next'
 const sync = require('@images/ui/sync-solid.svg')
 import { useSnackbar } from '@src/widgets/Snackbar'
@@ -104,10 +98,10 @@ const Panel = inject("rootStore")(observer((props: IPoolsPanel) => {
                         name={t("panel.labels.donate")}
                     />
                     <PanelRouteItem 
-                        isRoute={route == 'claim'}
+                        isRoute={route == 'exchange'}
                         onClickRoute={onClickRoute}
-                        id={'claim'}
-                        name={t("panel.labels.claim")}
+                        id={'exchange'}
+                        name={t("panel.labels.exchange")}
                     />
                 </div>
                 <div className="pools_panel__menu_control">

@@ -117,17 +117,30 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "donated",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
     "name": "TicketsClaim",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "poolId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "donateId",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokensReturn",
     "type": "event"
   },
   {
@@ -170,7 +183,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_donateId",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -322,13 +335,13 @@
           },
           {
             "internalType": "bool",
-            "name": "isTicketsClaim",
+            "name": "isDistributed",
             "type": "bool"
           },
           {
-            "internalType": "bool",
-            "name": "isDistribution",
-            "type": "bool"
+            "internalType": "address",
+            "name": "reciever",
+            "type": "address"
           }
         ],
         "internalType": "struct Hubnate.Donate",
@@ -374,11 +387,6 @@
           {
             "internalType": "uint256",
             "name": "donateIdCounter",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalTickets",
             "type": "uint256"
           }
         ],
@@ -426,6 +434,11 @@
             "internalType": "uint256[]",
             "name": "recieved",
             "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "unclaimed",
+            "type": "uint256"
           }
         ],
         "internalType": "struct Hubnate.UserInfo",
@@ -496,12 +509,71 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_donateId",
+        "type": "uint256"
+      }
+    ],
+    "name": "returnTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_poolId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ticketToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_costPerTicket",
+        "type": "uint256"
+      }
+    ],
+    "name": "updatePool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_IRandomNumberConsumer",
+        "type": "address"
+      }
+    ],
+    "name": "updateRandomAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
