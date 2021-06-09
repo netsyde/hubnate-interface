@@ -50,9 +50,9 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
     )
     const [claimState, setClaimState] = useState<IClaimState>(
         {
-            type: 'default',
-            text: t("panel.buttons.connect"),
-            id: 'connect'
+            type: 'disabled',
+            text: t("claim.buttons.claim"),
+            id: 'claim'
         }
     )
     const [allowance, setAllowance] = useState<boolean>(true);
@@ -315,15 +315,6 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
     }
     useEffect(() => {
         try {
-            if (!account) {
-                setClaimState({
-                    type: 'default',
-                    text: t("panel.buttons.connect"),
-                    id: 'connect'
-                })
-                return;
-            }
-
             if (Number(props.poolList[props.rootStore.user.selectedPool].userUnclaimed) == 0) {
                 setClaimState({
                     type: 'disabled',
@@ -355,7 +346,7 @@ const Donate = inject("rootStore")(observer((props: IPoolsPanel) => {
         } catch (e) {
             console.log(e)
         }
-    }, [account, props.rootStore.user.selectedPool, claiming])
+    }, [account, props.rootStore.user.selectedPool, claiming, props.poolList[props.rootStore.user.selectedPool].userUnclaimed])
     
     return (
         <form className="pools_panel__content">
