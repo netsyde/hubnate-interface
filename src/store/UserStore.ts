@@ -26,6 +26,7 @@ class UserStore {
     selectedPool: number = 0;
     autoUpdateObserver: boolean = false;
     autoUpdate: boolean = false;
+    lastDonatesAmount: number = 15;
 
     // poolList
     poolList: IPool[] = poolsGap;
@@ -182,6 +183,7 @@ class UserStore {
                 let decimals = 18
                 poolInfo.costPerTicket = Number(this.fixNumber(pool.costPerTicket, decimals));
                 poolInfo.totalDonated =  Number(this.fixNumber(pool.costPerTicket * totalSupply, decimals));
+                poolInfo.donateAmount = Number(pool.donateIdCounter)
                 // poolInfo.allowance = allowance;
                 
                 if (userInPool) {
@@ -229,6 +231,37 @@ class UserStore {
             return false
         }
 
+    }
+
+    async getLastDonates(donateContract: any, donateIdArray: number[], poolId: number) {
+        try {
+            let lastDonates = []
+            for (let i = 0; i < donateIdArray.length; i++) {
+                let donate = donateIdArray[i]
+                let donateInfo = await donateContract.methods.getBasicDonateInfo(poolId, donate).call()
+                lastDonates.push(donateInfo);
+            }
+            return lastDonates;
+        } catch (e) {
+            console.log(e)
+            return false;
+        }
+    }
+    // get all donates id by donate amount
+    getDonateIds (number: number) {
+        let donateIds = []
+        for (let i = 1; i <= number; i++) {
+            donateIds.push(i)
+        }
+        return donateIds
+    }
+    // get last donates id by donate amount and numberFormEnd
+    getLastDonateIds (amount: number, numberFromEnd: number) {
+        let donateIds = []
+        for (let i = amount; i >= amount - numberFromEnd; i--) {
+            donateIds.push(i)
+        }
+        return donateIds
     }
 } 
  
