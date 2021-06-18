@@ -69,7 +69,7 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
 
     return (
         <div className="pools_info">
-            <div className="pools_info__menu">
+            {/* <div className="pools_info__menu">
                 <Link href={"/"}>
                     <a>
                         <p className="pools_info__menu-enabled">
@@ -84,7 +84,7 @@ const Info = inject("rootStore")(observer((props: IPoolsInfo) => {
                         </p>
                     </a>
                 </Link>
-            </div>
+            </div> */}
             {<p className="pools_info__description">
                 {props.poolList[props.rootStore.user.selectedPool].token.description}
             </p>  || <Skeleton />}

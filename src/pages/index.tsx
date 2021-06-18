@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Main as MainLayout } from '@src/layouts';
 import { Container } from '@components/Utility';
-import { Info, Panel } from '@components/Pools';
+import { Info, Panel } from '@components/Main';
 import { IPool } from '@src/types/Pools';
 import Head from 'next/head';
 import { useWeb3React } from '@web3-react/core';

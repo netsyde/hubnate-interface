@@ -84,9 +84,10 @@
         &__description {
             font-size: 14px;
             font-family: "Inter-Regular";
-            margin-top: 40px;
+            // margin-top: 40px;
             margin-bottom: 40px;
             color: #717781;
+            max-width: 80%;
         }
 
         &__stats {

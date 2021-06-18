@@ -1,3 +1,5 @@
 export {default as Header} from './Header';
-export {default as Description} from './Description';
-export {default as Statistic} from './Statistic';
+export {default as Claim} from './Claim';
+export {default as Info} from './Info';
+export {default as Panel} from './Panel';
+export {default as History} from './History';

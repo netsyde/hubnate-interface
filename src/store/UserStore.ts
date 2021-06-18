@@ -232,21 +232,6 @@ class UserStore {
         }
 
     }
-
-    async getLastDonates(donateContract: any, donateIdArray: number[], poolId: number) {
-        try {
-            let lastDonates = []
-            for (let i = 0; i < donateIdArray.length; i++) {
-                let donate = donateIdArray[i]
-                let donateInfo = await donateContract.methods.getBasicDonateInfo(poolId, donate).call()
-                lastDonates.push(donateInfo);
-            }
-            return lastDonates;
-        } catch (e) {
-            console.log(e)
-            return false;
-        }
-    }
     // get all donates id by donate amount
     getDonateIds (number: number) {
         let donateIds = []
@@ -261,7 +246,22 @@ class UserStore {
         for (let i = amount; i >= amount - numberFromEnd; i--) {
             donateIds.push(i)
         }
+        
         return donateIds
+    }
+
+    async getDonatesInfo (ids: number[], poolId: number, donateContract: any) {
+        try {
+            let lastDonates = []
+            for (let i = 0; i < ids.length; i++) {
+                let donate = ids[i]
+                let donateInfo = await donateContract.methods.getBasicDonateInfo(poolId, donate).call()
+                lastDonates.push(donateInfo);
+            }
+            return lastDonates;
+        } catch (e) {
+            console.log(e)
+        }
     }
 } 
  

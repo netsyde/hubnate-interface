@@ -8,7 +8,8 @@
 	"titles": {
 		"app": "App",
 		"community": "Gemeinschaft",
-		"documentation": "Dokumentation"
+		"documentation": "Dokumentation",
+		"information": "Information"
 	},
 	"info": {
 		"labels": {
@@ -55,11 +56,15 @@
 		"buttons": {
 			"claiming": "Claiming...",
 			"claim": "Claim"
-		},
-		"table": {
-			"amount": "Menge",
-			"requestID": "Request ID"
 		}
+	},
+	"history": {
+		"your": "You",
+		"amount": "Amount",
+		"requestID": "Request ID",
+		"donater": "Donater",
+		"reciever": "Reciever",
+		"id": "ID"
 	},
 	"txs": {
 		"approved": "Transaction successfully confirmed",

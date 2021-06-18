@@ -8,7 +8,8 @@
 	"titles": {
 		"app": "Приложение",
 		"community": "Сообщество",
-		"documentation": "Документация"
+		"documentation": "Документация",
+		"information": "Информация"
 	},
 	"info": {
 		"labels": {
@@ -56,11 +57,15 @@
 		"buttons": {
 			"claiming": "Подтверждение...",
 			"claim": "Забрать"
-		},
-		"table": {
-			"amount": "Сумма",
-			"requestID": "ID Запроса"
 		}
+	},
+	"history": {
+		"your": "Вы",
+		"amount": "Сумма",
+		"requestID": "ID Запроса",
+		"donater": "Донатер",
+		"reciever": "Получатель",
+		"id": "ID"
 	},
 	"txs": {
 		"approved": "Пул успешно включен. Теперь Вы можете совершать донаты",
